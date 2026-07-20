@@ -1,7 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
+    { "src": "api/applications.js", "use": "@vercel/node" },
+    { "src": "api/application.js", "use": "@vercel/node" },
+    { "src": "api/login.js", "use": "@vercel/node" },
+    { "src": "api/logout.js", "use": "@vercel/node" },
+    { "src": "api/session.js", "use": "@vercel/node" },
+    { "src": "api/file.js", "use": "@vercel/node" },
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "admin.html", "use": "@vercel/static" },
     { "src": "support.js", "use": "@vercel/static" },
@@ -37,6 +42,7 @@
       },
       "continue": true
     },
+    { "src": "/api/([a-zA-Z0-9_-]+)/?", "dest": "/api/$1.js" },
     { "handle": "filesystem" },
     { "src": "/", "dest": "/index.html" }
   ]

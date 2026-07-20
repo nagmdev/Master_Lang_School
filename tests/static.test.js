@@ -621,6 +621,23 @@ test('vercel.json exists and is valid JSON', () => {
   assert(hasHeaders, 'no security headers configured');
 });
 
+test('BUG: every API endpoint is declared as a function and reachable without .js', () => {
+  // Legacy `builds` does not strip the .js extension the way zero-config does,
+  // so the lambda lives at /api/session.js while the browser asks for
+  // /api/session — which 404s unless an explicit rewrite maps them.
+  const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+  const nodeBuilds = (cfg.builds || []).filter(b => b.use === '@vercel/node').map(b => b.src);
+  const endpoints = fs.readdirSync(path.join(ROOT, 'api'))
+    .filter(f => f.endsWith('.js') && !f.startsWith('_'));
+  for (const f of endpoints) {
+    assert(nodeBuilds.includes('api/' + f), `api/${f} is not declared as a function — it will 404`);
+  }
+  // shared modules must NOT be built as public endpoints
+  assert(!nodeBuilds.some(s => /\/_/.test(s)), 'an underscore-prefixed shared module is exposed as an endpoint');
+  const rewrite = (cfg.routes || []).find(r => r.dest && /^\/api\/\$1\.js$/.test(r.dest));
+  assert(rewrite, 'no /api/<name> -> /api/<name>.js rewrite — every API call will 404');
+});
+
 test('BUG: static files are declared as build output, not left to auto-detection', () => {
   // Auto-detection built this as a Node app and produced only a function, so
   // every static path fell through to server.js and 404'd ("Not found:
