@@ -669,17 +669,33 @@ test('the postgres driver implements the full store interface', () => {
   assert(JSON.stringify(pg.STATUSES) === JSON.stringify(local.STATUSES), 'drivers disagree on the status list');
 });
 
-test('BUG: the start script uses no version-gated Node flags', () => {
-  // A flag the deployed Node build does not recognise kills the process at boot.
-  // Nothing then listens, so every request — static files included — hangs with
-  // no HTTP response at all. Production must not depend on newer-Node flags;
-  // the platform injects env vars directly.
+test('BUG: no "start" script — it would make the host run server.js as a catch-all', () => {
+  // With a "start" script the platform runs server.js for EVERY route, which
+  // shadows CDN static serving. Static assets are not bundled into a function,
+  // so index.html then 404s ("Not found: /index.html"). Static files must be
+  // served by the CDN and only api/* by functions.
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-  const start = pkg.scripts.start || '';
+  assert(!pkg.scripts.start,
+    'a "start" script is defined — the host will run server.js as a catch-all and static files will 404. Use "serve" for local runs.');
+});
+
+test('BUG: auto-run scripts use no version-gated Node flags', () => {
+  // A flag the deployed Node build does not recognise kills the process at boot,
+  // so nothing listens and every request hangs with no HTTP response at all.
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const risky = ['--env-file', '--experimental', '--loader', '--watch'];
-  const hit = risky.filter(f => start.includes(f));
-  assert(hit.length === 0,
-    `"start" uses ${hit.join(', ')} — if the deployed Node is older, it exits at boot and every request hangs. Keep such flags in "dev" only.`);
+  for (const name of ['start', 'build', 'serve']) {
+    const script = pkg.scripts[name] || '';
+    const hit = risky.filter(f => script.includes(f));
+    assert(hit.length === 0,
+      `"${name}" uses ${hit.join(', ')} — an older deployed Node exits at boot. Keep such flags in "dev" only.`);
+  }
+});
+
+test('static assets exist at the repo root for the CDN to serve', () => {
+  for (const f of ['index.html', 'admin.html', 'support.js', 'image-slot.js']) {
+    assert(fs.existsSync(path.join(ROOT, f)), `${f} missing from the repo root — the CDN has nothing to serve`);
+  }
 });
 
 test('the Node version is pinned to a major, not an open range', () => {

@@ -10,7 +10,7 @@ Three suites, all dependency-free (no npm install, no test framework).
 
 ```bash
 npm test          # static + api
-npm start         # dev server on http://localhost:8123
+npm run serve         # dev server on http://localhost:8123
 ```
 
 ## 1. Static suite
@@ -58,7 +58,7 @@ admin.html           the admin dashboard
 data/                submitted applications + uploads  (gitignored)
 ```
 
-Run `npm start`, then:
+Run `npm run serve`, then:
 
 - site → <http://localhost:8123>
 - admin → <http://localhost:8123/admin.html> (dev password `masters-dev`)

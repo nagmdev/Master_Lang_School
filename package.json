@@ -4,8 +4,8 @@
   "private": true,
   "description": "Masters Language School \u2014 bilingual website with an admissions backend and admin dashboard",
   "scripts": {
-    "start": "node server.js",
     "dev": "node --env-file-if-exists=.env server.js",
+    "serve": "node server.js",
     "test": "node tests/static.test.js && node tests/store.test.js && node tests/api.test.js",
     "test:static": "node tests/static.test.js",
     "test:store": "node tests/store.test.js",
