@@ -110,15 +110,37 @@ async function deleteApplication(req, res, url) {
   return json(res, 200, { ok: true, id: id, deletedFiles: (removed.files || []).length });
 }
 
+// Human-readable name per upload field, so a download is "Birth-Certificate.pdf"
+// rather than the raw "d2-scan.pdf" the parent happened to name it.
+const FIELD_NAMES = {
+  photo: 'Personal-Photo',
+  d1: 'Guardian-National-ID',
+  d2: 'Student-Birth-Certificate',
+  d3: 'Last-Stage-Certificate',
+  d4: 'Additional-Document',
+};
+function documentName(meta) {
+  const base = FIELD_NAMES[meta.field] || 'Document';
+  const ext = (/\.([A-Za-z0-9]+)$/.exec(meta.filename || '') || [, ''])[1];
+  return ext ? base + '.' + ext.toLowerCase() : base;
+}
+// Serving an uploaded HTML/SVG inline in the admin origin would be an XSS vector,
+// so inline is allowed only for PDFs and images; everything else is forced to
+// download regardless of the requested mode.
+function inlineSafe(contentType) {
+  return contentType === 'application/pdf' || /^image\//.test(contentType || '');
+}
+
 // Uploaded documents are private: served only to an authenticated admin.
 async function downloadFile(req, res, url) {
   if (!requireAdmin(req, res)) return;
   const found = await store.readFile(url.searchParams.get('id'), url.searchParams.get('name'));
   if (!found) return json(res, 404, { error: 'not found' });
+  const wantsInline = url.searchParams.get('mode') === 'inline' && inlineSafe(found.meta.contentType);
+  const disposition = wantsInline ? 'inline' : 'attachment';
   return send(res, 200, found.buffer, {
     'Content-Type': found.meta.contentType,
-    // attachment: never render an uploaded file inline in the admin's origin
-    'Content-Disposition': 'attachment; filename="' + found.meta.filename.replace(/"/g, '') + '"',
+    'Content-Disposition': disposition + '; filename="' + documentName(found.meta).replace(/"/g, '') + '"',
     'X-Content-Type-Options': 'nosniff',
   });
 }

@@ -14,7 +14,7 @@
 const crypto = require('crypto');
 const { Pool } = require('pg');
 
-const STATUSES = ['new', 'reviewing', 'assessment_booked', 'accepted', 'rejected', 'withdrawn'];
+const STATUSES = ['new', 'reviewing', 'accepted', 'provisionally_accepted', 'rejected', 'waiting_list'];
 
 const connectionString =
   process.env.DATABASE_URL ||

@@ -80,7 +80,7 @@
     const sel = $('#d-status');
     assert(sel, 'no status dropdown in the drawer');
     const opts = [...sel.options].map(o => o.value);
-    for (const s of ['new', 'reviewing', 'assessment_booked', 'accepted', 'rejected', 'withdrawn']) {
+    for (const s of ['new', 'reviewing', 'accepted', 'provisionally_accepted', 'rejected', 'waiting_list']) {
       assert(opts.includes(s), 'missing status option: ' + s);
     }
     sel.value = 'reviewing';
@@ -132,14 +132,37 @@
   });
 
   await check('an empty status bucket shows zero rows, not everything', async () => {
-    const withdrawn = chip(/Withdrawn/i);
-    const count = Number((withdrawn.innerText.match(/(\d+)\s*$/) || [0, 0])[1]);
-    withdrawn.click();
+    const bucket = chip(/Waiting List/i);
+    const count = Number((bucket.innerText.match(/(\d+)\s*$/) || [0, 0])[1]);
+    bucket.click();
     await sleep(SETTLE);
     assert(rows().length === count, `chip says ${count} but ${rows().length} rows rendered`);
     chip(/^All/).click();
     await sleep(SETTLE);
     return count + ' matches the chip';
+  });
+
+  await check('View link is present for viewable documents and opens inline', async () => {
+    // Requires an application with an uploaded pdf/image. Find one.
+    let opened = null;
+    for (const r of rows()) {
+      r.click();
+      await sleep(SETTLE);
+      const view = [...document.querySelectorAll('#d-body .filelinks a')].find(a => /View/i.test(a.textContent));
+      if (view) {
+        assert(/mode=inline/.test(view.getAttribute('href')), 'View link does not request inline mode');
+        assert(view.getAttribute('target') === '_blank', 'View should open in a new tab');
+        // the paired Download link must still exist
+        const dl = [...document.querySelectorAll('#d-body .filelinks a')].find(a => /Download/i.test(a.textContent));
+        assert(dl && !/mode=inline/.test(dl.getAttribute('href')), 'Download link missing or wrongly inline');
+        opened = view.getAttribute('href');
+      }
+      $('#close-drawer').click();
+      await sleep(200);
+      if (opened) break;
+    }
+    if (!opened) return 'skipped — no viewable document in the data set';
+    return 'inline URL: ' + opened.replace(/id=[^&]+/, 'id=…');
   });
 
   /* --------------------------------- search --------------------------------- */

@@ -69,8 +69,11 @@
   .s-reviewing{background:#FFF3DC;color:#8A6100}
   .s-assessment_booked{background:#E7F2FF;color:#12507F}
   .s-accepted{background:#E4F6EA;color:#1B6B39}
+  .s-provisionally_accepted{background:#EAF5E9;color:#4A7A2E}
   .s-rejected{background:#FDECEA;color:#8E2C20}
+  .s-waiting_list{background:#FBEEDC;color:#8A5A12}
   .s-withdrawn{background:#EFEFEF;color:#5B6472}
+  .s-assessment_booked{background:#E7F2FF;color:#12507F}
 
   /* drawer */
   .backdrop{position:fixed;inset:0;background:rgba(11,35,70,.45);z-index:40}
@@ -89,6 +92,7 @@
         border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:13.5px}
   .file a{color:#a37e1f;font-weight:800;text-decoration:none;white-space:nowrap}
   .file a:hover{text-decoration:underline}
+  .filelinks{display:inline-flex;gap:14px;flex-shrink:0}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:8px}
   .saved{color:#1B6B39;font-size:13px;font-weight:700}
   .danger{background:#fff;color:#8E2C20;border:1px solid #E4A9A2;padding:13px 20px;
@@ -353,12 +357,16 @@ async function openDrawer(id) {
   }
 
   html += `<div class="sec">Documents</div>`;
+  const canView = x => x.contentType === 'application/pdf' || /^image\//.test(x.contentType || '');
   html += (r.files && r.files.length)
-    ? `<div class="files">` + r.files.map(x =>
-        `<div class="file"><span>${esc(LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
-         <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
-         <a href="/api/file?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}">Download</a></div>`
-      ).join('') + `</div>`
+    ? `<div class="files">` + r.files.map(x => {
+        const base = `/api/file?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}`;
+        const view = canView(x)
+          ? `<a href="${base}&mode=inline" target="_blank" rel="noopener">View</a>` : '';
+        return `<div class="file"><span>${esc(LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
+           <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
+           <span class="filelinks">${view}<a href="${base}">Download</a></span></div>`;
+      }).join('') + `</div>`
     : `<p style="color:var(--faint);font-size:14px;margin:0">No documents were uploaded.</p>`;
 
   // Status and notes are shown read-only: the Update control was removed, so

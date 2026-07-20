@@ -21,7 +21,7 @@ const DATA_DIR = process.env.MS_DATA_DIR || path.join(__dirname, '..', '..', 'da
 const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
 const INDEX_FILE = path.join(DATA_DIR, 'applications.json');
 
-const STATUSES = ['new', 'reviewing', 'assessment_booked', 'accepted', 'rejected', 'withdrawn'];
+const STATUSES = ['new', 'reviewing', 'accepted', 'provisionally_accepted', 'rejected', 'waiting_list'];
 
 function ensureDirs() {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });

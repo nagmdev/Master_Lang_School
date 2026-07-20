@@ -272,6 +272,51 @@ const VALID = { fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Has
     eq(r.headers.get('x-content-type-options'), 'nosniff', 'missing nosniff');
   });
 
+  await test('a downloaded document is named after its content, not the raw upload', async () => {
+    // upload as d2 (birth certificate) with a meaningless filename
+    const made = await req('POST', '/api/applications', {
+      body: form(VALID, [{ field: 'd2', name: 'IMG_2931.pdf', data: Buffer.from('%PDF x') }]),
+    });
+    const detail = await req('GET', '/api/application?id=' + made.json.applicationId, { auth: true });
+    const nm = detail.json.files[0].storedAs;
+    const r = await req('GET', `/api/file?id=${made.json.applicationId}&name=${nm}`, { auth: true });
+    const cd = r.headers.get('content-disposition') || '';
+    assert(/Student-Birth-Certificate\.pdf/i.test(cd), 'download name not derived from the field: ' + cd);
+    assert(/attachment/i.test(cd), 'default download should be an attachment');
+  });
+
+  await test('a pdf can be served inline for viewing, an html upload cannot', async () => {
+    const made = await req('POST', '/api/applications', {
+      body: form(VALID, [{ field: 'd1', name: 'id.pdf', data: Buffer.from('%PDF x'), type: 'application/pdf' }]),
+    });
+    const nm = (await req('GET', '/api/application?id=' + made.json.applicationId, { auth: true })).json.files[0].storedAs;
+    const inline = await req('GET', `/api/file?id=${made.json.applicationId}&name=${nm}&mode=inline`, { auth: true });
+    assert(/^inline/i.test(inline.headers.get('content-disposition') || ''), 'pdf was not served inline');
+    assert(inline.headers.get('x-content-type-options') === 'nosniff', 'missing nosniff on inline view');
+
+    // an uploaded HTML file must never render inline in the admin origin (XSS)
+    const evil = await req('POST', '/api/applications', {
+      body: form(VALID, [{ field: 'd4', name: 'x.html', data: Buffer.from('<script>alert(1)</script>'), type: 'text/html' }]),
+    });
+    const enm = (await req('GET', '/api/application?id=' + evil.json.applicationId, { auth: true })).json.files[0].storedAs;
+    const forced = await req('GET', `/api/file?id=${evil.json.applicationId}&name=${enm}&mode=inline`, { auth: true });
+    assert(/^attachment/i.test(forced.headers.get('content-disposition') || ''),
+      'an HTML upload was served inline — that is an XSS vector');
+  });
+
+  await test('the admission status set matches the requested options', async () => {
+    const list = await req('GET', '/api/applications', { auth: true });
+    for (const s of ['accepted', 'provisionally_accepted', 'rejected', 'waiting_list']) {
+      assert(list.json.statuses.includes(s), 'missing status: ' + s);
+    }
+    const made = await req('POST', '/api/applications', { body: form(VALID) });
+    const up = await req('POST', '/api/application?id=' + made.json.applicationId, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'provisionally_accepted' }),
+    });
+    eq(up.json.status, 'provisionally_accepted', 'new status not accepted');
+  });
+
   await test('documents are NOT downloadable without a session', async () => {
     const r = await req('GET', `/api/file?id=${docId}&name=${docName}`);
     eq(r.status, 401, 'a birth certificate was served to an anonymous caller');

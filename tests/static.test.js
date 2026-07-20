@@ -350,6 +350,29 @@ test('every option array has the same length in Arabic as in English', () => {
   }
 });
 
+test('phone fields declare a validation pattern and numeric inputmode', () => {
+  const tels = FORM.match(/<input[^>]*type="tel"[^>]*>/g) || [];
+  assert(tels.length >= 2, 'expected phone inputs in the form');
+  for (const t of tels) {
+    assert(/pattern="/.test(t), 'a phone field has no validation pattern: ' + t.slice(0, 70));
+    assert(/inputmode="tel"/.test(t), 'a phone field has no numeric inputmode');
+  }
+});
+
+test('the phone pattern rejects garbage and accepts real numbers', () => {
+  // Browsers enforce `pattern`; this proves the pattern itself is correct,
+  // independent of any browser.
+  const m = /<input[^>]*type="tel"[^>]*pattern="([^"]+)"/.exec(FORM);
+  assert(m, 'no phone pattern found');
+  const re = new RegExp('^(?:' + m[1] + ')$');
+  for (const bad of ['abc', 'abc!!', '', '12', 'hello world', '123-abc']) {
+    assert(!re.test(bad), 'pattern wrongly accepts invalid input: ' + JSON.stringify(bad));
+  }
+  for (const good of ['01012345678', '+20 100 123 4567', '0100 000 0000', '(010) 1234567']) {
+    assert(re.test(good), 'pattern wrongly rejects a valid number: ' + JSON.stringify(good));
+  }
+});
+
 test('radio groups all declare a name attribute', () => {
   for (const tag of FORM.match(/<input type="radio"[^>]*>/g) || []) {
     assert(/name="/.test(tag), 'radio without name: ' + tag);
