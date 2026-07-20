@@ -616,7 +616,33 @@ const apiFiles = fs.readdirSync(API_DIR).filter(f => f.endsWith('.js'));
 test('vercel.json exists and is valid JSON', () => {
   const raw = fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8');
   const cfg = JSON.parse(raw);
-  assert(cfg.headers && cfg.headers.length, 'no security headers configured');
+  const hasHeaders = (cfg.headers && cfg.headers.length)
+    || (cfg.routes || []).some(r => r.headers);
+  assert(hasHeaders, 'no security headers configured');
+});
+
+test('BUG: static files are declared as build output, not left to auto-detection', () => {
+  // Auto-detection built this as a Node app and produced only a function, so
+  // every static path fell through to server.js and 404'd ("Not found:
+  // /index.html"). Declaring builds explicitly removes the guesswork.
+  const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+  const builds = cfg.builds || [];
+  assert(builds.length, 'no explicit builds — the host may not emit static output at all');
+  const staticSrcs = builds.filter(b => b.use === '@vercel/static').map(b => b.src);
+  for (const f of ['index.html', 'admin.html', 'support.js', 'image-slot.js']) {
+    assert(staticSrcs.includes(f), `${f} is not declared as static output — it will 404`);
+  }
+  assert(builds.some(b => b.use === '@vercel/node' && /^api\//.test(b.src)),
+    'api/*.js is not declared as serverless functions');
+});
+
+test('every declared static build actually exists on disk', () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+  for (const b of (cfg.builds || []).filter(x => x.use === '@vercel/static')) {
+    if (b.src.includes('*')) continue; // globs checked by their directory
+    assert(fs.existsSync(path.join(ROOT, b.src)),
+      `vercel.json declares "${b.src}" but it is not in the repo`);
+  }
 });
 
 test('every API route has a matching serverless entry point', () => {
