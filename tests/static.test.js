@@ -636,6 +636,19 @@ test('BUG: static files are declared as build output, not left to auto-detection
     'api/*.js is not declared as serverless functions');
 });
 
+test('BUG: no catch-all rewrite that would swallow /api requests', () => {
+  // A `/(.*) -> /index.html` fallback matches /api/* too, so the API returns the
+  // homepage HTML instead of JSON and POSTs get 405 from the static handler.
+  // This site has no client-side routing, so no SPA fallback is needed.
+  const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
+  for (const r of cfg.routes || []) {
+    if (!r.dest || r.continue) continue;
+    const catchesEverything = r.src === '/(.*)' || r.src === '/.*';
+    assert(!(catchesEverything && /index\.html/.test(r.dest)),
+      `route "${r.src}" -> "${r.dest}" also captures /api/* and breaks the API. Exclude /api or drop the fallback.`);
+  }
+});
+
 test('every declared static build actually exists on disk', () => {
   const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
   for (const b of (cfg.builds || []).filter(x => x.use === '@vercel/static')) {
