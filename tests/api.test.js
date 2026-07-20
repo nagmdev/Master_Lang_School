@@ -18,7 +18,11 @@ process.env.MS_DATA_DIR = DATA;
 process.env.MS_ADMIN_PASSWORD = 'test-password-1234';
 process.env.MS_SESSION_SECRET = 'test-secret-for-suite-only';
 
+// server.js only binds a port when executed directly, so that a serverless
+// platform importing it gets the request handler instead of a hung invocation.
+// The suite therefore starts it explicitly.
 const server = require('../server');
+server.listen(PORT);
 const BASE = 'http://127.0.0.1:' + PORT;
 
 let pass = 0, fail = 0;

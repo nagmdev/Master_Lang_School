@@ -57,7 +57,8 @@ async function serveStatic(req, res, url) {
   }
 }
 
-const server = http.createServer(async (req, res) => {
+/** Single request handler, usable both by a listening server and as a function. */
+async function handler(req, res) {
   const url = new URL(req.url, 'http://' + (req.headers.host || 'localhost'));
   try {
     if (await api.handle(req, res, url)) return;
@@ -67,14 +68,27 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end('Internal error');
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log('  Masters School — dev server');
-  console.log('  site      http://localhost:' + PORT + '/');
-  console.log('  admin     http://localhost:' + PORT + '/admin.html');
-  if (!process.env.MS_ADMIN_PASSWORD) console.log('  password  masters-dev  (dev default — set MS_ADMIN_PASSWORD to change)');
-  console.log('');
-});
+const server = http.createServer(handler);
 
-module.exports = server;
+// Only bind a port when this file is actually executed (local dev, or a host
+// that runs `npm start`). If a serverless platform imports the module instead,
+// binding would never produce a response and the invocation would run until it
+// hits FUNCTION_INVOCATION_TIMEOUT — so the export below is what it uses.
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log('  Masters School — server');
+    console.log('  site      http://localhost:' + PORT + '/');
+    console.log('  admin     http://localhost:' + PORT + '/admin.html');
+    if (!process.env.MS_ADMIN_PASSWORD) console.log('  password  masters-dev  (dev default — set MS_ADMIN_PASSWORD to change)');
+    console.log('');
+  });
+}
+
+// Exported as a request handler so an importing platform can serve with it.
+// `.listen`/`.close` are kept so existing callers (the test suite) still work.
+module.exports = handler;
+module.exports.server = server;
+module.exports.listen = (...args) => server.listen(...args);
+module.exports.close = (...args) => server.close(...args);
