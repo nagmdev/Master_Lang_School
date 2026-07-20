@@ -1,0 +1,7 @@
+.vercel
+.env*
+node_modules
+
+# Submitted applications and uploaded documents (birth certificates, national IDs).
+# Never commit these — they are personal data belonging to families.
+data/

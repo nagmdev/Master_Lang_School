@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B2346'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23C89A2B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<title>Masters Language School — Bilingual Education in El Santa, Gharbia</title>
+<meta name="description" content="Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process.">
+<script>
+  // Where submitted applications are sent. A relative path keeps this working
+  // in local dev and in production without per-environment configuration.
+  window.MS_CONFIG = { applicationsEndpoint: "/api/applications" };
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  a{color:#C89A2B;text-decoration:none}
+  a:hover{color:#0B2346}
+  ::selection{background:#C89A2B;color:#0B2346}
+  input,select,textarea,button{font-family:inherit}
+  @keyframes msFadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+  /* Responsive: inline styles set fixed grid tracks, so these overrides need !important.
+     Attribute-substring selectors let the layout collapse without touching every element.
+     NOTE: the runtime re-serialises inline styles with a space after the colon
+     ("grid-template-columns: 1fr 1fr"), so both spellings must be matched. */
+  @media (max-width:980px){
+    [style*="grid-template-columns: 1.6fr 1fr"],
+    [style*="grid-template-columns:1.6fr 1fr"]{grid-template-columns:1fr!important}
+    nav > div{flex-wrap:wrap!important;justify-content:center!important}
+  }
+  @media (max-width:720px){
+    [style*="grid-template-columns: 1fr 1fr"],
+    [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+    form{padding:24px!important}
+    h1{font-size:40px!important}
+    h2{font-size:32px!important}
+  }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="min-height:100vh;background:#FBFAF7;color:#0B2346;font-family:'Plus Jakarta Sans','Tajawal',sans-serif;-webkit-font-smoothing:antialiased">
+
+  <div style="background:#0B2346;color:rgba(255,255,255,.9);font-size:13px">
+    <div style="max-width:1200px;margin:0 auto;padding:9px 32px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg>{{ t.top.phone }}</span>
+        <span style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>{{ t.top.loc }}</span>
+      </div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <span style="opacity:.85">{{ t.top.portal }}</span>
+        <button onClick="{{ toggleLang }}" style="background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.02em">{{ langLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <nav style="position:sticky;top:0;z-index:50;background:rgba(251,250,247,.85);backdrop-filter:blur(16px);border-bottom:1px solid #ECEAE3">
+    <div style="max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;padding:0">
+        <img src="uploads/mssters-logo.png" alt="Masters" style="height:46px;width:auto;display:block">
+        <span style="display:flex;flex-direction:column;line-height:1.05;text-align:start">
+          <span style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:21px;color:#0B2346;letter-spacing:.02em">{{ t.brand.name }}</span>
+          <span style="font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#C89A2B;font-weight:700">{{ t.brand.tag }}</span>
+        </span>
+      </button>
+      <div style="display:flex;align-items:center;gap:1px">
+        <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
+        <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
+        <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
+        <button onClick="{{ goAdmissions }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.admissions }}</button>
+        <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
+        <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
+        <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
+        <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= HOME ================= -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <section style="position:relative;height:90vh;min-height:660px;max-height:920px;overflow:hidden;background:#0B2346">
+      <div style="position:absolute;inset:0"><image-slot id="ms-hero" shape="rect" fit="cover" placeholder="Drop a hero image — campus, students, graduation"></image-slot></div>
+      <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(11,35,70,.62) 0%,rgba(11,35,70,.38) 38%,rgba(11,35,70,.88) 100%)"></div>
+      <div style="position:relative;height:100%;display:flex;align-items:center">
+        <div style="max-width:1200px;margin:0 auto;padding:0 32px;width:100%">
+          <div style="max-width:720px;animation:msFadeUp .9s ease both">
+            <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:8px 16px;border-radius:30px;font-size:13px;font-weight:600;letter-spacing:.02em;backdrop-filter:blur(6px)"><span style="width:7px;height:7px;border-radius:50%;background:#C89A2B;display:inline-block"></span>{{ t.hero.eyebrow }}</div>
+            <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;color:#fff;font-size:66px;line-height:1.04;margin:22px 0 0;letter-spacing:-.01em;text-wrap:balance">{{ t.hero.title }}</h1>
+            <p style="color:rgba(255,255,255,.9);font-size:20px;line-height:1.6;margin:22px 0 0;max-width:600px;text-wrap:pretty">{{ t.hero.sub }}</p>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:34px">
+              <button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px 30px;border-radius:13px;box-shadow:0 18px 40px -16px rgba(200,154,43,.9)" style-hover="background:#d9a835;transform:translateY(-2px)">{{ t.hero.cta1 }}</button>
+              <button onClick="{{ goAdmissions }}" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.5);cursor:pointer;font-size:16px;font-weight:700;padding:16px 30px;border-radius:13px;backdrop-filter:blur(6px)" style-hover="background:rgba(255,255,255,.2)">{{ t.hero.cta2 }}</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:30px;color:rgba(255,255,255,.85);font-size:14px;font-weight:500">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>{{ t.hero.trust }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="background:#fff;border-bottom:1px solid #ECEAE3">
+      <div style="max-width:1200px;margin:0 auto;padding:20px 32px;display:flex;flex-wrap:wrap;gap:14px 34px;justify-content:center;align-items:center">
+        <sc-for list="{{ t.marquee }}" as="m" hint-placeholder-count="5">
+          <span style="display:inline-flex;align-items:center;gap:34px;color:#5B6472;font-size:14px;font-weight:600;letter-spacing:.02em"><span style="width:6px;height:6px;background:#C89A2B;border-radius:50%;display:inline-block"></span>{{ m }}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- WHY -->
+    <section style="max-width:1200px;margin:0 auto;padding:104px 32px">
+      <div style="text-align:center;max-width:660px;margin:0 auto 56px">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.why.eyebrow }}</div>
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:50px;line-height:1.08;margin:14px 0 0;color:#0B2346">{{ t.why.heading }}</h2>
+        <p style="color:#5B6472;font-size:18px;line-height:1.6;margin:16px 0 0">{{ t.why.sub }}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -44px rgba(11,35,70,.4);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-6px);box-shadow:0 40px 70px -40px rgba(11,35,70,.45)">
+          <div style="width:56px;height:56px;border-radius:15px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:22px"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 9px;color:#0B2346">{{ t.why.i1t }}</h3>
+          <p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0">{{ t.why.i1d }}</p>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -44px rgba(11,35,70,.4);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-6px);box-shadow:0 40px 70px -40px rgba(11,35,70,.45)">
+          <div style="width:56px;height:56px;border-radius:15px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:22px"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 9px;color:#0B2346">{{ t.why.i2t }}</h3>
+          <p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0">{{ t.why.i2d }}</p>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -44px rgba(11,35,70,.4);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-6px);box-shadow:0 40px 70px -40px rgba(11,35,70,.45)">
+          <div style="width:56px;height:56px;border-radius:15px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:22px"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M12 2 3 7v6c0 5 3.8 8.5 9 9 5.2-.5 9-4 9-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 9px;color:#0B2346">{{ t.why.i3t }}</h3>
+          <p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0">{{ t.why.i3d }}</p>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -44px rgba(11,35,70,.4);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-6px);box-shadow:0 40px 70px -40px rgba(11,35,70,.45)">
+          <div style="width:56px;height:56px;border-radius:15px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:22px"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 9px;color:#0B2346">{{ t.why.i4t }}</h3>
+          <p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0">{{ t.why.i4d }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-120px;inset-inline-end:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:1200px;margin:0 auto;padding:84px 32px;position:relative">
+        <div style="text-align:center;margin-bottom:52px">
+          <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.stats.eyebrow }}</div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:46px;color:#fff;margin:12px 0 0">{{ t.stats.heading }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px">
+          <div style="text-align:center;padding:14px"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s1n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s1l }}</div></div>
+          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s2n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s2l }}</div></div>
+          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s3n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s3l }}</div></div>
+          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s4n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s4l }}</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRAMS -->
+    <section style="max-width:1200px;margin:0 auto;padding:104px 32px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:48px">
+        <div style="max-width:600px">
+          <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.prog.eyebrow }}</div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:50px;line-height:1.08;margin:14px 0 0;color:#0B2346">{{ t.prog.heading }}</h2>
+          <p style="color:#5B6472;font-size:18px;line-height:1.6;margin:14px 0 0">{{ t.prog.sub }}</p>
+        </div>
+        <button onClick="{{ goAcademics }}" style="background:transparent;border:1px solid #0B2346;color:#0B2346;cursor:pointer;font-size:15px;font-weight:700;padding:13px 24px;border-radius:11px;white-space:nowrap" style-hover="background:#0B2346;color:#fff">{{ t.prog.explore }} →</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-kg" shape="rect" fit="cover" placeholder="Kindergarten photo"></image-slot></div>
+          <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.kgg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.kgt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.kgd }}</p></div>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-pr" shape="rect" fit="cover" placeholder="Primary photo"></image-slot></div>
+          <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.prg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.prt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.prd }}</p></div>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-pp" shape="rect" fit="cover" placeholder="Preparatory photo"></image-slot></div>
+          <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.ppg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.ppt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.ppd }}</p></div>
+        </div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-sc" shape="rect" fit="cover" placeholder="Secondary photo"></image-slot></div>
+          <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.scg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.sct }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.scd }}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section style="background:#F1EFE8">
+      <div style="max-width:1200px;margin:0 auto;padding:100px 32px">
+        <div style="text-align:center;margin-bottom:52px">
+          <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.test.eyebrow }}</div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:50px;color:#0B2346;margin:12px 0 0">{{ t.test.heading }}</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px">
+          <div style="background:#fff;border-radius:22px;padding:36px 32px;box-shadow:0 30px 60px -48px rgba(11,35,70,.5)">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:64px;color:#C89A2B;line-height:.6;height:34px">“</div>
+            <p style="color:#2b3648;font-size:17px;line-height:1.65;margin:0 0 24px;font-weight:500">{{ t.test.q1 }}</p>
+            <div style="display:flex;align-items:center;gap:13px"><div style="width:46px;height:46px;border-radius:50%;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">M</div><div><div style="font-weight:700;color:#0B2346;font-size:15px">{{ t.test.n1 }}</div><div style="color:#8A93A1;font-size:13px">{{ t.test.r1 }}</div></div></div>
+          </div>
+          <div style="background:#fff;border-radius:22px;padding:36px 32px;box-shadow:0 30px 60px -48px rgba(11,35,70,.5)">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:64px;color:#C89A2B;line-height:.6;height:34px">“</div>
+            <p style="color:#2b3648;font-size:17px;line-height:1.65;margin:0 0 24px;font-weight:500">{{ t.test.q2 }}</p>
+            <div style="display:flex;align-items:center;gap:13px"><div style="width:46px;height:46px;border-radius:50%;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">H</div><div><div style="font-weight:700;color:#0B2346;font-size:15px">{{ t.test.n2 }}</div><div style="color:#8A93A1;font-size:13px">{{ t.test.r2 }}</div></div></div>
+          </div>
+          <div style="background:#fff;border-radius:22px;padding:36px 32px;box-shadow:0 30px 60px -48px rgba(11,35,70,.5)">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:64px;color:#C89A2B;line-height:.6;height:34px">“</div>
+            <p style="color:#2b3648;font-size:17px;line-height:1.65;margin:0 0 24px;font-weight:500">{{ t.test.q3 }}</p>
+            <div style="display:flex;align-items:center;gap:13px"><div style="width:46px;height:46px;border-radius:50%;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">S</div><div><div style="font-weight:700;color:#0B2346;font-size:15px">{{ t.test.n3 }}</div><div style="color:#8A93A1;font-size:13px">{{ t.test.r3 }}</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="max-width:1200px;margin:0 auto;padding:90px 32px">
+      <div style="background:linear-gradient(135deg,#0B2346 0%,#123763 100%);border-radius:30px;padding:70px 56px;position:relative;overflow:hidden;text-align:center">
+        <div style="position:absolute;bottom:-140px;inset-inline-start:-60px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.28),transparent 70%);pointer-events:none"></div>
+        <div style="position:relative">
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:52px;color:#fff;margin:0;line-height:1.1;text-wrap:balance">{{ t.cta.heading }}</h2>
+          <p style="color:rgba(255,255,255,.85);font-size:18px;margin:16px auto 0;max-width:560px;line-height:1.6">{{ t.cta.sub }}</p>
+          <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px">
+            <button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px 32px;border-radius:13px" style-hover="background:#d9a835;transform:translateY(-2px)">{{ t.cta.c1 }}</button>
+            <button onClick="{{ goAdmissions }}" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.5);cursor:pointer;font-size:16px;font-weight:700;padding:16px 32px;border-radius:13px" style-hover="background:rgba(255,255,255,.2)">{{ t.cta.c2 }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= ACADEMICS ================= -->
+  <sc-if value="{{ isAcademics }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:96px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.ac.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:56px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.ac.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:620px">{{ t.ac.sub }}</p>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:90px 32px;display:flex;flex-direction:column;gap:72px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-kg" shape="rect" fit="cover" placeholder="Kindergarten classroom"></image-slot></div>
+        <div><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.kgtag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.kgt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.kgd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.kgb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div style="order:2"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.prtag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.prt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.prd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.prb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
+        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pr" shape="rect" fit="cover" placeholder="Primary students"></image-slot></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pp" shape="rect" fit="cover" placeholder="Preparatory lab"></image-slot></div>
+        <div><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.pptag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.ppt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.ppd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.ppb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+        <div style="order:2"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.sctag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.sct }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.scd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.scb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
+        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-sc" shape="rect" fit="cover" placeholder="Secondary graduation"></image-slot></div>
+      </div>
+    </section>
+
+    <section style="background:#F1EFE8">
+      <div style="max-width:820px;margin:0 auto;padding:90px 32px">
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;text-align:center;margin:0 0 40px">{{ t.ac.faqh }}</h2>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;overflow:hidden">
+            <button onClick="{{ toggleFaq0 }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;cursor:pointer;padding:22px 24px;text-align:start;font-size:17px;font-weight:700;color:#0B2346;font-family:inherit"><span>{{ t.ac.f0q }}</span><span style="color:#C89A2B;font-size:24px;flex-shrink:0">+</span></button>
+            <sc-if value="{{ faq0 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 24px 22px;color:#5B6472;font-size:15.5px;line-height:1.65">{{ t.ac.f0a }}</div></sc-if>
+          </div>
+          <div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;overflow:hidden">
+            <button onClick="{{ toggleFaq1 }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;cursor:pointer;padding:22px 24px;text-align:start;font-size:17px;font-weight:700;color:#0B2346;font-family:inherit"><span>{{ t.ac.f1q }}</span><span style="color:#C89A2B;font-size:24px;flex-shrink:0">+</span></button>
+            <sc-if value="{{ faq1 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 24px 22px;color:#5B6472;font-size:15.5px;line-height:1.65">{{ t.ac.f1a }}</div></sc-if>
+          </div>
+          <div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;overflow:hidden">
+            <button onClick="{{ toggleFaq2 }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;cursor:pointer;padding:22px 24px;text-align:start;font-size:17px;font-weight:700;color:#0B2346;font-family:inherit"><span>{{ t.ac.f2q }}</span><span style="color:#C89A2B;font-size:24px;flex-shrink:0">+</span></button>
+            <sc-if value="{{ faq2 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 24px 22px;color:#5B6472;font-size:15.5px;line-height:1.65">{{ t.ac.f2a }}</div></sc-if>
+          </div>
+          <div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;overflow:hidden">
+            <button onClick="{{ toggleFaq3 }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;cursor:pointer;padding:22px 24px;text-align:start;font-size:17px;font-weight:700;color:#0B2346;font-family:inherit"><span>{{ t.ac.f3q }}</span><span style="color:#C89A2B;font-size:24px;flex-shrink:0">+</span></button>
+            <sc-if value="{{ faq3 }}" hint-placeholder-val="{{ false }}"><div style="padding:0 24px 22px;color:#5B6472;font-size:15.5px;line-height:1.65">{{ t.ac.f3a }}</div></sc-if>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:44px"><button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px 32px;border-radius:13px" style-hover="background:#b98a1f">{{ t.nav.apply }}</button></div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= ADMISSIONS ================= -->
+  <sc-if value="{{ isAdmissions }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.adm.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:56px;line-height:1.08;color:#fff;margin:16px 0 0">{{ t.adm.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:600px">{{ t.adm.sub }}</p>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:70px 32px 30px">
+      <div style="text-align:center;max-width:740px;margin:0 auto 48px">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.adm.journeyEyebrow }}</div>
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;line-height:1.1;margin:12px 0 0;color:#0B2346">{{ t.adm.journeyHeading }}</h2>
+        <p style="color:#5B6472;font-size:17px;line-height:1.65;margin:16px 0 0">{{ t.adm.journeyIntro }}</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">1</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s1t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s1d }}</p>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">2</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s2t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s2d }}</p>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-top:13px">
+              <sc-for list="{{ t.adm.s2bullets }}" as="b" hint-placeholder-count="2">
+                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:15px;line-height:1.55"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div>
+              </sc-for>
+            </div>
+            <div style="margin-top:14px;background:#F7F5EF;border-inline-start:3px solid #C89A2B;border-radius:8px;padding:12px 16px;color:#5B6472;font-size:14px;line-height:1.55">{{ t.adm.s2note }}</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">3</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s3t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s3d }}</p>
+            <div style="margin-top:14px;display:inline-flex;gap:11px;align-items:center;background:rgba(200,154,43,.13);border:1px solid rgba(200,154,43,.4);border-radius:11px;padding:12px 18px;color:#0B2346;font-size:14.5px;font-weight:700;line-height:1.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>{{ t.adm.s3fee }}</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#C89A2B;color:#0B2346;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">4</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s4t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s4d }}</p>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">5</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s5t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s5d }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px 24px;margin-top:14px">
+              <sc-for list="{{ t.adm.s5docs }}" as="d" hint-placeholder-count="8">
+                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:14.5px;line-height:1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ d }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px">
+        <div style="background:#F1EFE8;border-radius:20px;padding:28px 30px">
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0;color:#0B2346">{{ t.adm.visitsH }}</h3></div>
+          <p style="color:#5B6472;font-size:15px;line-height:1.65;margin:0">{{ t.adm.visitsD }}</p>
+        </div>
+        <div style="background:#0B2346;border-radius:20px;padding:28px 30px;color:#fff">
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0 0 16px;color:#fff">{{ t.adm.contactH }}</h3>
+          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700;margin-bottom:12px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><span dir="ltr">{{ t.adm.contactPhone }}</span></div>
+          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg><span dir="ltr">{{ t.adm.contactEmail }}</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1120px;margin:0 auto;padding:20px 32px 96px">
+      <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+        <div style="max-width:620px;margin:20px auto;background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 40px 80px -50px rgba(11,35,70,.4)">
+          <div style="width:74px;height:74px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:38px;color:#0B2346;margin:0 0 12px">{{ t.adm.conf.h }}</h2>
+          <p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 28px">{{ t.adm.conf.sub }}</p>
+          <div style="background:#F7F5EF;border:1px dashed #C89A2B;border-radius:14px;padding:20px;margin-bottom:24px"><div style="color:#8A93A1;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">{{ t.adm.conf.idlabel }}</div><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:32px;color:#0B2346;letter-spacing:.04em;margin-top:4px">{{ appId }}</div></div>
+          <p style="color:#8A93A1;font-size:13.5px;margin:0 0 24px">{{ t.adm.conf.note }}</p>
+          <sc-if value="{{ demoMode }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:10px;align-items:flex-start;text-align:start;background:#FDF4E3;border:1px solid #E8C97A;border-radius:12px;padding:14px 16px;margin:0 0 24px;color:#7A5B12;font-size:13px;line-height:1.55"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>{{ t.adm.conf.demoNote }}</div>
+          </sc-if>
+          <button onClick="{{ goHome }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:14px 28px;border-radius:12px" style-hover="background:#123763">{{ t.adm.conf.back }}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:32px;align-items:start">
+        <form onSubmit="{{ submit }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0">{{ t.adm.formh }}</h2><span style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.04em">{{ t.adm.formsub }}</span></div>
+          <p style="color:#8A93A1;font-size:13px;margin:0 0 28px">{{ t.adm.f.required }}</p>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.student }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+            <label style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }}</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label>
+            <div style="grid-column:1/-1"><label for="ms-year" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.year }} *</label><select name="year" id="ms-year" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.yearOpts }}" as="y" hint-placeholder-count="2"><option>{{ y }}</option></sc-for></select></div>
+            <div><label for="ms-fname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.fname }} *</label><input name="fname" id="ms-fname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-mname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.mname }}</label><input name="mname" id="ms-mname" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-lname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lname }} *</label><input name="lname" id="ms-lname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }}</label><input name="sname" id="ms-sname" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }}</label><input name="arname" id="ms-arname" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select></div>
+            <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" style="width:100%;padding:12px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" min="2" max="20" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
+            <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }}</label><input name="citizenship" id="ms-citizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="4"><option>{{ c }}</option></sc-for></select></div>
+            <div style="grid-column:1/-1"><label for="ms-address" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.address }}</label><input name="address" id="ms-address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-araddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.araddress }}</label><input name="araddress" id="ms-araddress" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-email" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.email }}</label><input name="email" id="ms-email" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+            <div><label for="ms-psName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psName }}</label><input name="psName" id="ms-psName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-psSystem" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psSystem }}</label><input name="psSystem" id="ms-psSystem" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-psGrades" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psGrades }}</label><input name="psGrades" id="ms-psGrades" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-psYears" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psYears }}</label><input name="psYears" id="ms-psYears" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-psLocation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psLocation }}</label><input name="psLocation" id="ms-psLocation" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.parent }}</div>
+          <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.fatherH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+            <div><label for="ms-faName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faName }} *</label><input name="faName" id="ms-faName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOcc }}</label><input name="faOcc" id="ms-faOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOccCat }}</label><select name="faOccCat" id="ms-faOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatFatherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-faMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faMobile }} *</label><input name="faMobile" id="ms-faMobile" required="required" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faNid }}</label><input name="faNid" id="ms-faNid" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faCitizenship }}</label><input name="faCitizenship" id="ms-faCitizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faEmail }}</label><input name="faEmail" id="ms-faEmail" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faAddress }}</label><input name="faAddress" id="ms-faAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+          <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.motherH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+            <div><label for="ms-moName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moName }}</label><input name="moName" id="ms-moName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOcc }}</label><input name="moOcc" id="ms-moOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOccCat }}</label><select name="moOccCat" id="ms-moOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatMotherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-moMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moMobile }}</label><input name="moMobile" id="ms-moMobile" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moCitizenship }}</label><input name="moCitizenship" id="ms-moCitizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moEmail }}</label><input name="moEmail" id="ms-moEmail" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-moAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moAddress }}</label><input name="moAddress" id="ms-moAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+          <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.familyH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
+            <div><label for="ms-siblingsNo" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.siblingsNo }}</label><input name="siblingsNo" id="ms-siblingsNo" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-birthOrder" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.birthOrder }}</label><input name="birthOrder" id="ms-birthOrder" type="number" min="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }}</label><select name="guardian" id="ms-guardian" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.sibH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+            <div><label for="ms-sibName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibName }}</label><input name="sibName" id="ms-sibName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-sibSchool" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibSchool }}</label><input name="sibSchool" id="ms-sibSchool" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-sibAge" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibAge }}</label><input name="sibAge" id="ms-sibAge" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-sibGrade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibGrade }}</label><input name="sibGrade" id="ms-sibGrade" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibApply }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sibApply" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sibApply" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px">{{ t.adm.f.emergencyH }}</div>
+          <p style="color:#8A93A1;font-size:12.5px;margin:0 0 16px">{{ t.adm.f.emergencyNote }}</p>
+          <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person1 }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+            <div><label for="ms-eName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName" id="ms-eName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-ePhone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone" id="ms-ePhone" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-eRelation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation" id="ms-eRelation" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress" id="ms-eAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+          <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person2 }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+            <div><label for="ms-eName-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName_2" id="ms-eName-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-ePhone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone_2" id="ms-ePhone-2" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-eRelation-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation_2" id="ms-eRelation-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eAddress-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress_2" id="ms-eAddress-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.concernsH }}</div>
+          <div style="display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:28px">
+            <div><label for="ms-cHealth" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.cHealth }}</label><textarea name="cHealth" id="ms-cHealth" rows="2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+            <div><label for="ms-cPsych" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.cPsych }}</label><textarea name="cPsych" id="ms-cPsych" rows="2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+            <div><label for="ms-cAcademic" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.cAcademic }}</label><textarea name="cAcademic" id="ms-cAcademic" rows="2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.otherH }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+            <div><label for="ms-busRoute" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRoute }}</label><select name="busRoute" id="ms-busRoute" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.busRouteOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+          </div>
+
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.docs }}</div>
+          <sc-if value="{{ hasFileError }}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 14px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div>
+          </sc-if>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px">
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d1 }} *</div><div style="{{ styleD1 }}">{{ labelD1 }}</div><input type="file" name="d1" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label>
+          </div>
+
+          <sc-if value="{{ hasSendError }}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="display:flex;gap:11px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:14px 16px;margin:0 0 18px;color:#8E2C20;font-size:13.5px;line-height:1.55"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span><strong style="display:block;margin-bottom:2px">{{ t.adm.f.errorH }}</strong>{{ t.adm.f.errorHint }}</span></div>
+          </sc-if>
+          <sc-if value="{{ sending }}" hint-placeholder-val="{{ true }}">
+            <div style="margin:0 0 16px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:700;color:#0B2346;margin-bottom:8px"><span>{{ t.adm.f.uploadingLabel }}</span><span style="font-variant-numeric:tabular-nums">{{ pctLabel }}</span></div>
+              <div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ uploadPercent }}" aria-label="{{ t.adm.f.uploadingLabel }}" style="height:10px;background:#EFEDE6;border-radius:999px;overflow:hidden">
+                <div style="{{ barStyle }}"></div>
+              </div>
+              <div style="font-size:12px;color:#8A93A1;margin-top:7px">{{ t.adm.f.uploadingHint }}</div>
+            </div>
+          </sc-if>
+          <button type="submit" disabled="{{ sending }}" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ submitLabel }}</button>
+        </form>
+
+        <aside style="display:flex;flex-direction:column;gap:20px;position:sticky;top:100px">
+          <div style="background:#0B2346;border-radius:20px;padding:30px 28px;color:#fff">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 18px">{{ t.adm.need.h }}</h3>
+            <div style="display:flex;flex-direction:column;gap:13px"><sc-for list="{{ t.adm.need.items }}" as="it" hint-placeholder-count="4"><div style="display:flex;gap:11px;align-items:flex-start;color:rgba(255,255,255,.9);font-size:14.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ it }}</div></sc-for></div>
+          </div>
+          <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin:0 0 16px;color:#0B2346">{{ t.adm.need.datesh }}</h3>
+            <div style="display:flex;flex-direction:column;gap:12px"><sc-for list="{{ t.adm.need.dates }}" as="d" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid #F1EFE8;font-size:14.5px"><span style="color:#5B6472">{{ d.l }}</span><span style="color:#0B2346;font-weight:700">{{ d.v }}</span></div></sc-for></div>
+          </div>
+          <div style="background:rgba(200,154,43,.1);border:1px solid rgba(200,154,43,.35);border-radius:20px;padding:28px">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#0B2346">{{ t.adm.need.helph }}</h3>
+            <p style="color:#5B6472;font-size:14.5px;margin:0 0 14px;line-height:1.55">{{ t.adm.need.helpd }}</p>
+            <div style="display:inline-flex;align-items:center;gap:9px;color:#0B2346;font-weight:800;font-size:16px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><span dir="ltr">{{ t.adm.need.helpphone }}</span></div>
+            <div style="display:inline-flex;align-items:center;gap:9px;color:#0B2346;font-weight:800;font-size:16px;margin-top:10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg><span dir="ltr">{{ t.adm.need.helpemail }}</span></div>
+          </div>
+        </aside>
+      </div>
+      </sc-if>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= ABOUT ================= -->
+  <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.about.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.about.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:640px">{{ t.about.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:88px 32px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -46px rgba(11,35,70,.4)"><div style="width:54px;height:54px;border-radius:14px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:0 0 9px;color:#0B2346">{{ t.about.mh }}</h3><p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.about.md }}</p></div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -46px rgba(11,35,70,.4)"><div style="width:54px;height:54px;border-radius:14px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:0 0 9px;color:#0B2346">{{ t.about.vh }}</h3><p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.about.vd }}</p></div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;padding:34px 30px;box-shadow:0 30px 60px -46px rgba(11,35,70,.4)"><div style="width:54px;height:54px;border-radius:14px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:0 0 9px;color:#0B2346">{{ t.about.vah }}</h3><p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.about.vad }}</p></div>
+      </div>
+    </section>
+    <section style="background:#F1EFE8">
+      <div style="max-width:1120px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:1fr 1.2fr;gap:52px;align-items:center">
+        <div style="border-radius:24px;overflow:hidden;height:440px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-principal" shape="rect" fit="cover" placeholder="Principal portrait"></image-slot></div>
+        <div>
+          <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.about.prineyebrow }}</div>
+          <p style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:500;font-size:30px;line-height:1.4;color:#0B2346;margin:18px 0 24px;text-wrap:pretty">“{{ t.about.prinq }}”</p>
+          <div style="display:flex;align-items:center;gap:14px"><div style="width:4px;height:44px;background:#C89A2B;border-radius:4px"></div><div><div style="font-weight:800;color:#0B2346;font-size:17px">{{ t.about.prinname }}</div><div style="color:#8A93A1;font-size:14px">{{ t.about.prinrole }}</div></div></div>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:88px 32px">
+      <div style="text-align:center;margin-bottom:48px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;margin:0">{{ t.about.leadh }}</h2><p style="color:#5B6472;font-size:17px;margin:12px 0 0">{{ t.about.leadsub }}</p></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px">
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-1" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="font-weight:800;color:#0B2346;font-size:16.5px">{{ t.about.p1n }}</div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p1r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-2" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="font-weight:800;color:#0B2346;font-size:16.5px">{{ t.about.p2n }}</div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p2r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-3" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="font-weight:800;color:#0B2346;font-size:16.5px">{{ t.about.p3n }}</div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p3r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-4" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="font-weight:800;color:#0B2346;font-size:16.5px">{{ t.about.p4n }}</div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p4r }}</div></div>
+      </div>
+    </section>
+    <section style="background:#F1EFE8">
+      <div style="max-width:1120px;margin:0 auto;padding:88px 32px">
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;text-align:center;margin:0 0 48px">{{ t.about.histh }}</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:26px">
+          <sc-for list="{{ t.about.hist }}" as="h" hint-placeholder-count="4"><div style="border-top:2px solid rgba(200,154,43,.4);padding-top:22px;position:relative"><div style="position:absolute;top:-8px;inset-inline-start:0;width:14px;height:14px;border-radius:50%;background:#C89A2B"></div><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:40px;color:#0B2346;line-height:1">{{ h.y }}</div><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:12px 0 0">{{ h.t }}</p></div></sc-for>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:80px 32px 96px">
+      <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 36px">{{ t.about.accredh }}</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+        <sc-for list="{{ t.about.accred }}" as="a" hint-placeholder-count="4"><div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E0DCCF;border-radius:14px;padding:15px 22px;font-weight:700;color:#0B2346;font-size:15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M12 2 3 7v6c0 5 3.8 8.5 9 9 5.2-.5 9-4 9-9V7z"/><path d="m9 12 2 2 4-4"/></svg>{{ a }}</div></sc-for>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= STUDENT LIFE ================= -->
+  <sc-if value="{{ isLife }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.life.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.life.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:640px">{{ t.life.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1200px;margin:0 auto;padding:88px 32px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px">
+        <sc-for list="{{ t.life.items }}" as="it" hint-placeholder-count="8"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:30px 28px;box-shadow:0 30px 60px -48px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)"><div style="width:48px;height:48px;border-radius:13px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:18px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M12 2 15 9l7 .5-5.4 4.6 1.8 6.9L12 17.5 5.6 21l1.8-6.9L2 9.5 9 9z"/></svg></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0 0 8px;color:#0B2346">{{ it.t }}</h3><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:0">{{ it.d }}</p></div></sc-for>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:0 32px 96px">
+      <div style="background:linear-gradient(135deg,#0B2346 0%,#123763 100%);border-radius:28px;padding:64px 48px;text-align:center;position:relative;overflow:hidden">
+        <div style="position:absolute;bottom:-140px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.28),transparent 70%);pointer-events:none"></div>
+        <div style="position:relative"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#fff;margin:0">{{ t.life.ctah }}</h2><p style="color:rgba(255,255,255,.85);font-size:17.5px;margin:14px auto 26px;max-width:520px">{{ t.life.ctasub }}</p><button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px 32px;border-radius:13px" style-hover="background:#d9a835;transform:translateY(-2px)">{{ t.life.ctabtn }}</button></div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= CAREERS ================= -->
+  <sc-if value="{{ isCareers }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.careers.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0">{{ t.careers.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:620px">{{ t.careers.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:80px 32px 40px">
+      <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 40px">{{ t.careers.perksh }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px">
+        <sc-for list="{{ t.careers.perks }}" as="pk" hint-placeholder-count="4"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 26px;box-shadow:0 30px 60px -48px rgba(11,35,70,.4)"><div style="width:46px;height:46px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:16px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin:0 0 7px;color:#0B2346">{{ pk.t }}</h3><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:0">{{ pk.d }}</p></div></sc-for>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:40px 32px">
+      <div style="text-align:center;margin-bottom:36px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:0">{{ t.careers.posh }}</h2><p style="color:#5B6472;font-size:17px;margin:10px 0 0">{{ t.careers.possub }}</p></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ t.careers.positions }}" as="p" hint-placeholder-count="8"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;padding:20px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap" style-hover="border-color:#C89A2B"><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><span style="font-weight:700;color:#0B2346;font-size:16.5px">{{ p.r }}</span><span style="background:rgba(11,35,70,.06);color:#0B2346;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px">{{ p.d }}</span><span style="color:#8A93A1;font-size:13.5px">{{ p.ty }}</span></div><button onClick="{{ scrollCareer }}" style="background:transparent;border:1px solid #C89A2B;color:#a37e1f;cursor:pointer;font-size:14px;font-weight:800;padding:9px 22px;border-radius:10px;white-space:nowrap" style-hover="background:#C89A2B;color:#0B2346">{{ t.careers.apply }}</button></div></sc-for>
+      </div>
+    </section>
+    <section id="ms-career-form" style="max-width:760px;margin:0 auto;padding:40px 32px 96px">
+      <sc-if value="{{ careerSubmitted }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 40px 80px -50px rgba(11,35,70,.4)">
+          <div style="width:74px;height:74px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:36px;color:#0B2346;margin:0 0 12px">{{ t.careers.conf.h }}</h2>
+          <p style="color:#5B6472;font-size:16px;line-height:1.65;margin:0 0 24px">{{ t.careers.conf.sub }}</p>
+          <div style="background:#F7F5EF;border:1px dashed #C89A2B;border-radius:14px;padding:18px;margin-bottom:22px"><div style="color:#8A93A1;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">{{ t.careers.conf.idlabel }}</div><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;color:#0B2346;letter-spacing:.04em;margin-top:4px">{{ careerId }}</div></div>
+          <p style="color:#8A93A1;font-size:13.5px;margin:0 0 22px">{{ t.careers.conf.note }}</p>
+          <button onClick="{{ goHome }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:14px 28px;border-radius:12px" style-hover="background:#123763">{{ t.careers.conf.back }}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ careerNot }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submitCareer }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 4px">{{ t.careers.formh }}</h2>
+          <p style="color:#8A93A1;font-size:13px;margin:0 0 26px">{{ t.careers.f.required }}</p>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.personal }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
+            <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-position" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.position }} *</label><select name="position" id="ms-position" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.careers.posOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+          </div>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.exp }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
+            <div><label for="ms-years" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.years }}</label><input name="years" id="ms-years" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-edu" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.edu }}</label><input name="edu" id="ms-edu" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-linkedin" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.linkedin }}</label><input name="linkedin" id="ms-linkedin" type="url" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-cover" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.cover }}</label><textarea name="cover" id="ms-cover" rows="3" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+          </div>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.docs }}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:30px">
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cv" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cert" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="portfolio" onChange="{{ onFilePick }}" style="display:none"></label>
+          </div>
+          <button type="submit" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ t.careers.f.submit }}</button>
+        </form>
+      </sc-if>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= GALLERY ================= -->
+  <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.gallery.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0">{{ t.gallery.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:620px">{{ t.gallery.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1200px;margin:0 auto;padding:56px 32px 96px">
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:40px;border-bottom:1px solid #ECEAE3;padding-bottom:0">
+        <button onClick="{{ setGalPhotos }}" style="background:none;border:none;border-bottom:3px solid #C89A2B;cursor:pointer;font-size:16px;font-weight:700;color:#0B2346;padding:12px 22px;margin-bottom:-1px">{{ t.gallery.tphotos }}</button>
+        <button onClick="{{ setGalVideos }}" style="background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-size:16px;font-weight:700;color:#8A93A1;padding:12px 22px;margin-bottom:-1px" style-hover="color:#0B2346">{{ t.gallery.tvideos }}</button>
+        <button onClick="{{ setGalTour }}" style="background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-size:16px;font-weight:700;color:#8A93A1;padding:12px 22px;margin-bottom:-1px" style-hover="color:#0B2346">{{ t.gallery.ttour }}</button>
+      </div>
+      <sc-if value="{{ galPhotos }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));grid-auto-rows:200px;gap:14px">
+          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-1" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-2" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-3" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-4" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-5" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-6" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-7" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-8" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ galVideos }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-1" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-2" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-3" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ galTour }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;height:440px;border-radius:22px;overflow:hidden"><image-slot id="ms-gal-tour" shape="rect" fit="cover" placeholder="Virtual tour cover"></image-slot><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,35,70,.25),rgba(11,35,70,.8));pointer-events:none"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#fff;margin:0">{{ t.gallery.tourh }}</h2><p style="color:rgba(255,255,255,.9);font-size:17px;margin:12px 0 24px;max-width:480px">{{ t.gallery.tourd }}</p><button style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:15px 30px;border-radius:13px" style-hover="background:#d9a835">{{ t.gallery.tourbtn }}</button></div></div>
+      </sc-if>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= NEWS & EVENTS ================= -->
+  <sc-if value="{{ isNews }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.news.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0">{{ t.news.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:620px">{{ t.news.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:80px 32px 40px">
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center;background:#fff;border:1px solid #ECEAE3;border-radius:24px;overflow:hidden;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <div style="position:relative;height:360px"><image-slot id="ms-news-feat" shape="rect" fit="cover" placeholder="Featured news photo"></image-slot></div>
+        <div style="padding:12px 40px 12px 8px">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px"><span style="background:#C89A2B;color:#0B2346;font-size:12px;font-weight:800;padding:5px 12px;border-radius:20px">{{ t.news.feattag }}</span><span style="color:#8A93A1;font-size:13.5px;font-weight:600">{{ t.news.featdate }}</span></div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:34px;line-height:1.15;color:#0B2346;margin:0 0 12px">{{ t.news.feattitle }}</h2>
+          <p style="color:#5B6472;font-size:16px;line-height:1.65;margin:0 0 18px">{{ t.news.featexc }}</p>
+          <span style="color:#a37e1f;font-weight:800;font-size:14.5px">{{ t.news.readmore }} →</span>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:20px 32px 40px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+        <sc-for list="{{ t.news.items }}" as="n" hint-placeholder-count="3"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -50px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)"><div style="height:180px;position:relative"><image-slot id="ms-news-{{ $index }}" shape="rect" fit="cover" placeholder="News photo"></image-slot></div><div style="padding:22px 24px 26px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:11px"><span style="background:rgba(11,35,70,.06);color:#0B2346;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:16px">{{ n.tag }}</span><span style="color:#8A93A1;font-size:12.5px;font-weight:600">{{ n.date }}</span></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;line-height:1.2;color:#0B2346;margin:0 0 8px">{{ n.t }}</h3><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:0">{{ n.e }}</p></div></div></sc-for>
+      </div>
+    </section>
+    <section style="background:#F1EFE8">
+      <div style="max-width:900px;margin:0 auto;padding:80px 32px">
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 36px">{{ t.news.eventsh }}</h2>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ t.news.events }}" as="ev" hint-placeholder-count="3"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:16px;padding:18px 24px;display:flex;align-items:center;gap:22px"><div style="width:64px;text-align:center;flex-shrink:0"><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:34px;color:#C89A2B;line-height:1">{{ ev.d }}</div><div style="font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#0B2346">{{ ev.m }}</div></div><div style="width:1px;height:44px;background:#ECEAE3"></div><div style="font-weight:700;color:#0B2346;font-size:16.5px">{{ ev.t }}</div></div></sc-for>
+        </div>
+      </div>
+    </section>
+    <section style="max-width:820px;margin:0 auto;padding:70px 32px 96px;text-align:center">
+      <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:34px;color:#0B2346;margin:0 0 8px">{{ t.news.newsh }}</h2>
+      <p style="color:#5B6472;font-size:16px;margin:0 0 24px">{{ t.news.newsd }}</p>
+      <div style="display:flex;gap:12px;max-width:520px;margin:0 auto;flex-wrap:wrap;justify-content:center">
+        <input name="newsletterEmail" type="email" placeholder="{{ t.news.newsph }}" style="flex:1;min-width:220px;padding:15px 18px;border:1px solid #DCDAD2;border-radius:12px;font-size:15px;background:#fff;color:#0B2346">
+        <button style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:15px 28px;border-radius:12px" style-hover="background:#123763">{{ t.news.newsbtn }}</button>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= CONTACT ================= -->
+  <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:90px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.contact.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0">{{ t.contact.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:600px">{{ t.contact.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:70px 32px 20px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.visitT }}</div><div style="color:#5B6472;font-size:14px;line-height:1.5">{{ t.contact.visitD }}</div></div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.callT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.callD }}</div></div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.waT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.waD }}</div></div>
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.mailT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.mailD }}</div></div>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:30px 32px 96px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch">
+        <div>
+          <sc-if value="{{ contactSubmitted }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:52px 44px;text-align:center;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)"><div style="width:70px;height:70px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 22px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 10px">{{ t.contact.conf.h }}</h2><p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0 0 22px">{{ t.contact.conf.sub }}</p><button onClick="{{ goHome }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:13px 26px;border-radius:12px" style-hover="background:#123763">{{ t.contact.conf.back }}</button></div>
+          </sc-if>
+          <sc-if value="{{ contactNot }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ submitContact }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+              <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:30px;color:#0B2346;margin:0 0 22px">{{ t.contact.formh }}</h2>
+              <div style="display:grid;gap:15px">
+                <div><label for="ms-name-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.name }} *</label><input name="name_2" id="ms-name-2" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px"><div><label for="ms-email-3" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.email }} *</label><input name="email_3" id="ms-email-3" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div><div><label for="ms-phone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.phone }}</label><input name="phone_2" id="ms-phone-2" type="tel" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div></div>
+                <div><label for="ms-subject" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.subject }}</label><input name="subject" id="ms-subject" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div><label for="ms-message" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.message }} *</label><textarea name="message" id="ms-message" required="required" rows="5" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+                <button type="submit" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px;border-radius:13px" style-hover="background:#b98a1f">{{ t.contact.f.submit }}</button>
+              </div>
+            </form>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="flex:1;min-height:300px;position:relative;border-radius:20px;overflow:hidden;border:1px solid #ECEAE3"><image-slot id="ms-map" shape="rect" fit="cover" placeholder="Map of El Santa campus"></image-slot></div>
+          <div style="background:#0B2346;border-radius:20px;padding:26px 28px;color:#fff"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin-bottom:8px">{{ t.contact.hoursh }}</div><div style="color:rgba(255,255,255,.85);font-size:15px">{{ t.contact.hours }}</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="ms-footer" style="background:#0A1F3D;color:rgba(255,255,255,.75)">
+    <div style="max-width:1200px;margin:0 auto;padding:72px 32px 40px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px">
+      <div>
+        <img src="uploads/masters-logo-white.png" alt="Masters" style="height:64px;width:auto;display:block;margin-bottom:18px">
+        <p style="font-size:14.5px;line-height:1.7;margin:0 0 20px;max-width:300px">{{ t.foot.about }}</p>
+        <div style="display:flex;gap:11px">
+          <a href="https://wa.me/201037993762" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+          <a href="tel:01037993762" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.explore }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;align-items:flex-start">
+          <button onClick="{{ goAbout }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.about }}</button>
+          <button onClick="{{ goAcademics }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.academics }}</button>
+          <button onClick="{{ goLife }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.life }}</button>
+          <button onClick="{{ goNews }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.news.eyebrow }}</button>
+          <button onClick="{{ goGallery }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.gallery.eyebrow }}</button>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.admissions }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;align-items:flex-start">
+          <button onClick="{{ goAdmissions }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.admissions }}</button>
+          <button onClick="{{ goCareers }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.careers }}</button>
+          <button onClick="{{ goContact }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.contact }}</button>
+          <button onClick="{{ goAcademics }}" style="background:none;border:none;padding:0;text-align:start;cursor:pointer;font-family:inherit;color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.ac.faqh }}</button>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.contactc }}</div>
+        <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
+          <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>{{ t.foot.addr }}</div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg>{{ t.foot.phone }}</div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg>{{ t.foot.email }}</div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1)"><div style="max-width:1200px;margin:0 auto;padding:22px 32px;font-size:13px;color:rgba(255,255,255,.55)">{{ t.foot.rights }}</div></div>
+  </footer>
+
+  <!-- FLOATING CTA -->
+  <div style="position:fixed;bottom:26px;inset-inline-end:26px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+    <a href="https://wa.me/201037993762" target="_blank" style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7)" style-hover="transform:scale(1.06)" title="WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+    <button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:15px;font-weight:800;padding:14px 22px;border-radius:30px;box-shadow:0 14px 32px -10px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-2px)">{{ t.nav.apply }}</button>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { lang: "en", page: "home", submitted: false, appId: "", faq: [false, false, false, false], careerSubmitted: false, careerId: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
+
+  scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
+  go(page) { this.setState({ page: page, submitted: false, careerSubmitted: false, contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
+  goContact() {
+    const f = document.getElementById("ms-footer");
+    if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
+  }
+  toggleLang() {
+    const next = this.state.lang === "en" ? "ar" : "en";
+    this.applyDocLang(next);
+    this.setState({ lang: next });
+  }
+  // Keep <html lang>/<dir>, the page title and the meta description in step with
+  // the active language — screen readers and search engines read these, and the
+  // inner dir="" binding alone does not update them.
+  applyDocLang(lang) {
+    try {
+      const el = document.documentElement;
+      el.setAttribute("lang", lang);
+      el.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+      const meta = this.content()[lang].meta;
+      if (meta) {
+        document.title = meta.title;
+        const tag = document.querySelector('meta[name="description"]');
+        if (tag) tag.setAttribute("content", meta.desc);
+      }
+    } catch (e) {}
+  }
+  toggleFaq(i) { this.setState(s => { const f = s.faq.slice(); f[i] = !f[i]; return { faq: f }; }); }
+  // Where applications are sent. Until this is configured the site runs in DEMO
+  // MODE: nothing is stored anywhere and the confirmation says so explicitly.
+  // To go live, set window.MS_CONFIG = { applicationsEndpoint: "https://..." }
+  // before support.js loads (see tests/README.md).
+  endpoint() {
+    return (typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.applicationsEndpoint) || "";
+  }
+  localId() { return "MST-2026-" + Math.floor(1000 + Math.random() * 9000); }
+
+  submit(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const form = e && e.target && e.target.tagName === "FORM" ? e.target : null;
+    this.sendApplication(form);
+  }
+
+  sendApplication(form) {
+    const url = this.endpoint();
+    if (!url) {
+      // No backend wired up yet — keep the flow usable but never claim it was saved.
+      try {
+        console.warn("[Masters] DEMO MODE: no applicationsEndpoint configured, so this " +
+          "application was NOT saved or emailed. Configure window.MS_CONFIG.applicationsEndpoint.");
+      } catch (err) {}
+      this.setState({ submitted: true, demoMode: true, appId: this.localId(), sending: false, sendError: "" });
+      this.scrollTop();
+      return;
+    }
+    const body = form ? new FormData(form) : new FormData();
+
+    // Refuse oversized payloads before sending: serverless hosts cap a request
+    // body at ~4.5 MB, and a rejected upload after a long wait is far worse
+    // than an instant, explanatory error.
+    const total = Object.keys(this.state.picked)
+      .reduce((sum, k) => sum + (this.state.picked[k].size || 0), 0);
+    if (total > this.maxTotalBytes()) {
+      const t = this.content()[this.state.lang].adm.f;
+      this.setState({
+        sending: false, uploadPercent: 0,
+        fileError: t.totalTooLarge
+          .replace("{size}", this.humanSize(total))
+          .replace("{max}", this.humanSize(this.maxTotalBytes()))
+      });
+      return;
+    }
+
+    this.setState({ sending: true, sendError: "", fileError: "", uploadPercent: 0 });
+
+    // XMLHttpRequest rather than fetch: only XHR reports upload progress, which
+    // is what drives the 0-100% bar while documents are being transferred.
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.timeout = 120000;
+
+    xhr.upload.onprogress = (ev) => {
+      if (!ev.lengthComputable) return;
+      // hold at 99% until the server actually answers
+      const pct = Math.max(1, Math.min(99, Math.round((ev.loaded / ev.total) * 100)));
+      this.setState({ uploadPercent: pct });
+    };
+    xhr.upload.onload = () => this.setState({ uploadPercent: 99 });
+
+    const fail = (msg) => this.setState({
+      sending: false, uploadPercent: 0, submitted: false, sendError: String(msg)
+    });
+
+    xhr.onload = () => {
+      let data = {};
+      try { data = JSON.parse(xhr.responseText || "{}"); } catch (err) {}
+      if (xhr.status >= 200 && xhr.status < 300) {
+        this.setState({
+          sending: false, uploadPercent: 100, submitted: true, demoMode: false,
+          sendError: "", picked: {},
+          appId: (data && (data.applicationId || data.id)) || this.localId()
+        });
+        this.scrollTop();
+      } else {
+        // Never show a success screen for a submission that failed.
+        fail((data && data.error) || ("HTTP " + xhr.status));
+      }
+    };
+    xhr.onerror = () => fail("network error");
+    xhr.ontimeout = () => fail("timeout");
+    xhr.send(body);
+  }
+
+  maxFileBytes() {
+    return Number((typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.maxFileBytes)) || 4 * 1024 * 1024;
+  }
+  maxTotalBytes() {
+    return Number((typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.maxTotalBytes)) || 4 * 1024 * 1024;
+  }
+  humanSize(n) {
+    if (n < 1024) return n + " B";
+    if (n < 1048576) return Math.round(n / 1024) + " KB";
+    return (n / 1048576).toFixed(1) + " MB";
+  }
+
+  // Confirms to the parent that a document was actually attached — without this
+  // the tile still reads "Upload file" after picking a file, so there is no way
+  // to tell whether it registered.
+  onFilePick(e) {
+    const el = e && e.target;
+    if (!el || !el.files) return;
+    const files = Array.prototype.slice.call(el.files);
+    const picked = Object.assign({}, this.state.picked);
+    const t = this.content()[this.state.lang].adm.f;
+
+    const tooBig = files.filter(f => f.size > this.maxFileBytes());
+    if (tooBig.length) {
+      el.value = "";
+      delete picked[el.name];
+      this.setState({
+        picked: picked,
+        fileError: t.tooLarge
+          .replace("{name}", tooBig[0].name)
+          .replace("{max}", this.humanSize(this.maxFileBytes()))
+      });
+      return;
+    }
+    if (!files.length) delete picked[el.name];
+    else picked[el.name] = {
+      name: files[0].name,
+      count: files.length,
+      size: files.reduce((a, f) => a + f.size, 0)
+    };
+    this.setState({ picked: picked, fileError: "" });
+  }
+
+  slotLabel(key, fallback) {
+    const p = this.state.picked[key];
+    if (!p) return fallback;
+    const t = this.content()[this.state.lang].adm.f;
+    const what = p.count > 1 ? p.count + " " + t.filesWord : p.name;
+    return "✓ " + what + " · " + this.humanSize(p.size);
+  }
+  slotStyle(key) {
+    return this.state.picked[key]
+      ? "font-size:11.5px;color:#1B6B39;font-weight:700;margin-top:3px;word-break:break-word"
+      : "font-size:11.5px;color:#8A93A1;margin-top:3px";
+  }
+
+  scrollToEl(id) { const el = document.getElementById(id); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (e) { window.scrollTo(0, el.offsetTop); } } }
+  submitCareer(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ careerSubmitted: true, careerId: "MST-HR-" + Math.floor(1000 + Math.random() * 9000) }); this.scrollTop(); }
+  submitContact(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ contactSubmitted: true }); this.scrollTop(); }
+  setGallery(tab) { this.setState({ galleryTab: tab }); }
+
+  renderVals() {
+    const C = this.content();
+    const t = C[this.state.lang];
+    return {
+      t: t,
+      lang: this.state.lang,
+      dir: this.state.lang === "ar" ? "rtl" : "ltr",
+      langLabel: this.state.lang === "en" ? "العربية" : "English",
+      isHome: this.state.page === "home",
+      isAcademics: this.state.page === "academics",
+      isAdmissions: this.state.page === "admissions",
+      isAbout: this.state.page === "about",
+      isLife: this.state.page === "life",
+      isCareers: this.state.page === "careers",
+      isGallery: this.state.page === "gallery",
+      isNews: this.state.page === "news",
+      isContact: this.state.page === "contact",
+      careerSubmitted: this.state.careerSubmitted,
+      careerNot: !this.state.careerSubmitted,
+      careerId: this.state.careerId,
+      contactSubmitted: this.state.contactSubmitted,
+      contactNot: !this.state.contactSubmitted,
+      galPhotos: this.state.galleryTab === "photos",
+      galVideos: this.state.galleryTab === "videos",
+      galTour: this.state.galleryTab === "tour",
+      submitted: this.state.submitted,
+      notSubmitted: !this.state.submitted,
+      appId: this.state.appId,
+      sending: this.state.sending,
+      demoMode: this.state.demoMode,
+      notDemoMode: !this.state.demoMode,
+      hasSendError: !!this.state.sendError,
+      sendError: this.state.sendError,
+      submitLabel: this.state.sending ? t.adm.f.sending : t.adm.f.submit,
+      uploadPercent: this.state.uploadPercent,
+      pctLabel: this.state.uploadPercent + "%",
+      barStyle: "height:100%;background:#C89A2B;border-radius:999px;transition:width .25s ease;width:"
+        + this.state.uploadPercent + "%",
+      hasFileError: !!this.state.fileError,
+      fileError: this.state.fileError,
+      onFilePick: (e) => this.onFilePick(e),
+      labelPhoto: this.slotLabel("photo", t.adm.f.upload), stylePhoto: this.slotStyle("photo"),
+      labelD1: this.slotLabel("d1", t.adm.f.upload), styleD1: this.slotStyle("d1"),
+      labelD2: this.slotLabel("d2", t.adm.f.upload), styleD2: this.slotStyle("d2"),
+      labelD3: this.slotLabel("d3", t.adm.f.upload), styleD3: this.slotStyle("d3"),
+      labelD4: this.slotLabel("d4", t.adm.f.d4hint), styleD4: this.slotStyle("d4"),
+      faq0: this.state.faq[0], faq1: this.state.faq[1], faq2: this.state.faq[2], faq3: this.state.faq[3],
+      goHome: () => this.go("home"),
+      goAcademics: () => this.go("academics"),
+      goAdmissions: () => this.go("admissions"),
+      goContact: () => this.go("contact"),
+      goAbout: () => this.go("about"),
+      goLife: () => this.go("life"),
+      goCareers: () => this.go("careers"),
+      goGallery: () => this.go("gallery"),
+      goNews: () => this.go("news"),
+      scrollCareer: () => this.scrollToEl("ms-career-form"),
+      submitCareer: (e) => this.submitCareer(e),
+      submitContact: (e) => this.submitContact(e),
+      setGalPhotos: () => this.setGallery("photos"),
+      setGalVideos: () => this.setGallery("videos"),
+      setGalTour: () => this.setGallery("tour"),
+      toggleLang: () => this.toggleLang(),
+      toggleFaq0: () => this.toggleFaq(0), toggleFaq1: () => this.toggleFaq(1),
+      toggleFaq2: () => this.toggleFaq(2), toggleFaq3: () => this.toggleFaq(3),
+      submit: (e) => this.submit(e)
+    };
+  }
+
+  content() {
+    return {
+      en: {
+        meta: { title: "Masters Language School — Bilingual Education in El Santa, Gharbia", desc: "Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process." },
+        brand: { name: "Masters", tag: "Language School" },
+        nav: { home: "Home", about: "About", academics: "Academics", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
+        top: { phone: "010 3799 3762", loc: "El Santa · Gharbia", portal: "Parent Portal" },
+        hero: {
+          eyebrow: "Masters Language School · Est. 2004",
+          title: "Where bright minds are shaped for a global future.",
+          sub: "A premier bilingual language school in El Santa — nurturing curious, confident and compassionate learners from Kindergarten to Secondary.",
+          cta1: "Apply for Admission", cta2: "Book a Campus Tour",
+          trust: "Trusted by 1,600+ families across Gharbia"
+        },
+        marquee: ["British & American Curriculum", "Cambridge Assessment", "Ministry Accredited", "Bilingual · EN / AR", "Est. 2004"],
+        why: {
+          eyebrow: "Why Masters", heading: "Why families choose Masters",
+          sub: "Every decision we make begins with one question — what is best for the child?",
+          i1t: "Academic Excellence", i1d: "A rigorous bilingual curriculum with 96% top-grade outcomes and personalised learning paths.",
+          i2t: "Small Classes, Big Attention", i2d: "An 18-to-1 student–teacher ratio, so every child is known, challenged and supported.",
+          i3t: "Whole-Child Development", i3d: "Sport, music, robotics and the arts are woven into daily life — never an afterthought.",
+          i4t: "Safe, Modern Campus", i4d: "Secured grounds, smart classrooms and bright, purpose-built learning spaces."
+        },
+        stats: {
+          eyebrow: "By the numbers", heading: "Two decades of measurable excellence",
+          s1n: "20", s1l: "Years shaping futures", s2n: "1,600+", s2l: "Students enrolled",
+          s3n: "120+", s3l: "Expert educators", s4n: "96%", s4l: "Parent satisfaction"
+        },
+        prog: {
+          eyebrow: "Academic Programs", heading: "A continuous bilingual journey",
+          sub: "From first steps to graduation — one connected path of growth.",
+          kgt: "Kindergarten", kgg: "KG1 – KG2 · Ages 4–6", kgd: "Play-based bilingual foundations in literacy, numeracy and social confidence.",
+          prt: "Primary", prg: "Grades 1 – 6", prd: "Core subjects in English and Arabic with a lasting love of reading and inquiry.",
+          ppt: "Preparatory", ppg: "Grades 7 – 9", ppd: "Deeper academics, critical thinking and the first steps toward specialisation.",
+          sct: "Secondary", scg: "Grades 10 – 12", scd: "University-ready pathways with rigorous exams, guidance and leadership.",
+          explore: "Explore academics"
+        },
+        test: {
+          eyebrow: "Testimonials", heading: "What our families say",
+          q1: "Choosing Masters was the best decision we made for our daughter. She is thriving — academically and as a person.", n1: "Mona A.", r1: "Parent · Grade 5",
+          q2: "The teachers know my son by name and by heart. He actually looks forward to school every morning.", n2: "Hossam E.", r2: "Parent · Grade 2",
+          q3: "Bilingual, disciplined and genuinely warm. Masters has raised the bar for schools in El Santa.", n3: "Salma R.", r3: "Parent · Grade 8"
+        },
+        cta: { heading: "Give your child a Masters start.", sub: "Admissions for the 2026–2027 year are now open. Seats per grade are limited.", c1: "Apply Now", c2: "Book a Campus Tour" },
+        foot: {
+          about: "A premier bilingual language school in El Santa, Gharbia — shaping curious, confident and compassionate learners since 2004.",
+          explore: "Explore", admissions: "Admissions", contactc: "Contact",
+          rights: "© 2026 Masters Language School. All rights reserved.",
+          addr: "El Santa, Gharbia Governorate, Egypt", phone: "010 3799 3762", email: "info@masters-school.edu.eg",
+          links: ["About Us", "Academics", "Student Life", "News & Events", "Gallery"],
+          alinks: ["Apply Online", "Book a Tour", "Tuition & Fees", "Requirements", "FAQ"]
+        },
+        ac: {
+          eyebrow: "Academics", title: "A bilingual education, built stage by stage.",
+          sub: "A carefully sequenced curriculum that grows in rigour and independence as your child does.",
+          kgtag: "Ages 4–6", kgt: "Kindergarten", kgd: "Where school begins with joy. Our KG program builds bilingual language, early numeracy and social confidence through structured play, music and discovery.",
+          kgb: ["Bilingual phonics & storytelling", "Sensory & motor-skill development", "Gentle routines & independence"],
+          prtag: "Grades 1–6", prt: "Primary", prd: "The foundation years. Students master reading, writing and mathematics in both English and Arabic while developing curiosity across science, arts and technology.",
+          prb: ["Cambridge-aligned core subjects", "Daily reading & writing workshops", "Introduction to coding & robotics"],
+          pptag: "Grades 7–9", ppt: "Preparatory", ppd: "The bridge to specialisation. Deeper subject knowledge, stronger study skills and the confidence to think critically and independently.",
+          ppb: ["Advanced sciences & humanities", "Critical thinking & research projects", "Guidance & study-skills coaching"],
+          sctag: "Grades 10–12", sct: "Secondary", scd: "University-ready. A demanding academic program paired with personal guidance, leadership opportunities and exam mastery.",
+          scb: ["University & career counselling", "Rigorous exam preparation", "Leadership & community service"],
+          faqh: "Frequently asked questions",
+          f0q: "What curriculum does Masters follow?", f0a: "A bilingual program combining the national curriculum with British and American language standards, accredited by the Ministry of Education.",
+          f1q: "What languages are taught?", f1a: "Instruction is bilingual in English and Arabic, with French offered as a third language from the Preparatory stage.",
+          f2q: "What is the class size?", f2a: "We cap classes to maintain an average 18-to-1 student–teacher ratio across all stages.",
+          f3q: "Do you offer school transport?", f3a: "Yes. Supervised school buses cover El Santa and the surrounding areas of Gharbia, with a dedicated supervisor on every route."
+        },
+        adm: {
+          eyebrow: "Admissions", title: "Admissions made simple.",
+          sub: "Applications are open year-round, but seats are offered based on availability — we warmly encourage families to begin the journey early.",
+          journeyEyebrow: "The Admissions Journey", journeyHeading: "Your step-by-step path to Masters",
+          journeyIntro: "Thank you for your interest in joining the Masters School community. While we accept applications year-round, placements are offered strictly based on seat availability — so we highly encourage families to begin the process as early as possible.",
+          s1t: "Online Application",
+          s1d: "Begin by carefully completing the online application form below. Incomplete applications, or those not meeting our admissions criteria, cannot be processed. Eligible candidates move forward subject to the availability of places in the requested grade.",
+          s2t: "Document Submission & Scheduling",
+          s2d: "To set an appointment for the student's assessment and the parent interview, please submit the following initial documents:",
+          s2bullets: ["Early Childhood (Pre-K & KG1): a copy of the student's current nursery report.", "Transfer students: academic reports for the previous two years, plus a Letter of Good Conduct from the current school."],
+          s2note: "The Admissions Office then schedules the assessment and parent interview on the same day. Please note that an invitation to attend an assessment does not guarantee a place offer.",
+          s3t: "Student Assessment",
+          s3d: "Applicants undergo an age-appropriate academic and personal assessment tailored to the grade they are applying for.",
+          s3fee: "Assessment fee: 600 EGP (non-refundable), paid at the Business Office on the morning of the assessment.",
+          s4t: "Results & Preliminary Registration",
+          s4d: "Families are officially notified of the assessment results and the admission decision within five (5) working days. Upon acceptance, payment of the first installment fee is required within five working days to confirm and reserve the student's seat for the upcoming academic year.",
+          s5t: "Final Required Documents (After Acceptance)",
+          s5d: "To complete enrollment, the following documents must be submitted to the Student Affairs Office before the 1st of August:",
+          s5docs: ["Six (6) recent passport-sized colored photographs.", "Original computerized birth certificate (Egyptian nationals) or a copy of the passport (foreign nationals).", "Copy of both parents' National IDs (or passports).", "Copy of the student's vaccination certificate.", "Original end-of-year reports for the past two years (including the latest report from the current school).", "Confidential Letter of Good Conduct from the current school.", "Study Sequence Certificate.", "Four (4) official transfer forms from the current educational zone."],
+          visitsH: "School Visits & Tours",
+          visitsD: "We warmly invite prospective parents to schedule a campus tour during a regular school day to experience the Masters environment and learn more about our community.",
+          contactH: "Contact the Admissions Office",
+          contactPhone: "+20 103 799 3762", contactEmail: "admission@masters-edu.com",
+          formh: "Online Application Form", formsub: "Academic Year 2026–2027",
+          gradeOpts: ["Pre-K", "KG1", "KG2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+          yearOpts: ["2026 / 2027", "2027 / 2028"],
+          countryOpts: ["Egypt", "Saudi Arabia (KSA)", "United Arab Emirates (UAE)", "Other"],
+          occCatFatherOpts: ["Public sector", "Private sector", "Self-employed"],
+          occCatMotherOpts: ["Public sector", "Private sector", "Housewife"],
+          guardianOpts: ["Father", "Mother", "Grandfather", "Maternal uncle", "Paternal uncle", "Other"],
+          relationOpts: ["Uncle", "Aunt", "Grandparent", "Family friend", "Other"],
+          busRouteOpts: ["El Santa", "Tanta", "Basyoun", "Qutur", "Kafr El Zayat", "Other"],
+          f: {
+            required: "Fields marked * are required. Please upload files as PDF, JPG or PNG.",
+            student: "Student information",
+            photo: "Personal photo", year: "Academic year",
+            fname: "First name", mname: "Middle name", lname: "Last name",
+            sname: "Student full name", arname: "Full name in Arabic",
+            grade: "Grade applying for", gender: "Gender", gm: "Male", gf: "Female",
+            dob: "Date of birth", age: "Age", citizenship: "Citizenship", country: "Country of residence",
+            address: "Address", araddress: "Address in Arabic", email: "Email address",
+            lang2: "Second language", l2a: "French", l2b: "German",
+            religion: "Religion", relA: "Muslim", relB: "Christian", relC: "Other",
+            prevH: "Previous school / nursery",
+            psName: "School name", psSystem: "Education system", psGrades: "Grades", psYears: "Years attended", psLocation: "School location",
+            parent: "Parent / Guardian information",
+            fatherH: "Father's data", motherH: "Mother's data", familyH: "Family data",
+            faName: "Father's name", faOcc: "Occupation", faOccCat: "Occupation category", faEmail: "Father's email", faAddress: "Father's address", faCitizenship: "Father's citizenship", faMobile: "Father's mobile", faNid: "National ID",
+            moName: "Mother's name", moOcc: "Occupation", moOccCat: "Occupation category", moEmail: "Mother's email", moAddress: "Mother's address", moCitizenship: "Mother's citizenship", moMobile: "Mother's mobile",
+            marital: "Parents' marital status", mMarried: "Married", mSeparated: "Separated", mDivorced: "Divorced", mWidowed: "Widowed",
+            siblingsNo: "Number of siblings", birthOrder: "Student's birth order",
+            tongue: "Mother tongue", tA: "Arabic", tB: "English", tC: "Other",
+            guardian: "Responsible guardian",
+            sibH: "Sibling data (if any)",
+            sibName: "Name", sibSchool: "Current school", sibAge: "Age", sibGrade: "Grade", sibApply: "Applying to Masters?", yes: "Yes", no: "No",
+            emergencyH: "Emergency contacts", emergencyNote: "Two persons other than the parents.",
+            eName: "Contact name", ePhone: "Contact number", eRelation: "Relationship", eAddress: "Address", person1: "Contact 1", person2: "Contact 2",
+            concernsH: "Important notes",
+            cHealth: "Health concerns", cPsych: "Psychological concerns", cAcademic: "Academic concerns",
+            otherH: "Other information",
+            bus: "School bus service", busRoute: "Bus route",
+            docs: "Required attachments",
+            d1: "Guardian's National ID", d2: "Student's birth certificate", d3: "Certificate of last educational stage", d4: "Other attachments",
+            d4hint: "Multiple files allowed", upload: "Upload file", submit: "Submit application",
+            sending: "Sending…", errorH: "We could not send your application",
+            errorHint: "Please check your connection and try again — your answers are still in the form.",
+            uploadingLabel: "Uploading your application…",
+            uploadingHint: "Please keep this page open until it finishes.",
+            filesWord: "files",
+            tooLarge: "“{name}” is too large. Each file must be under {max}. Try a smaller scan or photo.",
+            totalTooLarge: "Your documents total {size}, which is over the {max} limit. Please upload smaller scans or photos."
+          },
+          need: {
+            h: "To schedule your assessment", items: ["Pre-K & KG1: current nursery report", "Transfer students: last two years' reports", "Letter of Good Conduct from current school", "Assessment fee: 600 EGP (non-refundable)"],
+            datesh: "Key dates", dates: [{ l: "Applications", v: "Year-round" }, { l: "Results notified", v: "Within 5 working days" }, { l: "Final documents", v: "Before 1 Aug" }],
+            helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+20 103 799 3762", helpemail: "admission@masters-edu.com"
+          },
+          conf: {
+            h: "Application received!", sub: "Thank you. Our admissions team will review your application and contact eligible applicants to schedule the assessment and parent interview.",
+            idlabel: "Your application ID", back: "Back to home", note: "Please keep your application ID for follow-up.",
+            demoNote: "Demo mode — this application was NOT saved or sent anywhere. Configure an applications endpoint before going live."
+          }
+        },
+        about: {
+          eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "For two decades, Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
+          mh: "Our Mission", md: "To prepare confident, bilingual and principled young people ready to lead in a connected world.",
+          vh: "Our Vision", vd: "To be the most trusted language school in Gharbia — the first choice for families who expect more.",
+          vah: "Our Values", vad: "Respect, curiosity, discipline and compassion guide every classroom, corridor and conversation.",
+          prineyebrow: "Principal’s Message", prinq: "At Masters, we believe every child carries a spark. Our task is simple and sacred — to protect that spark, feed it with knowledge, and let it grow into confidence that lasts a lifetime.", prinname: "Dr. Amina Farouk", prinrole: "School Principal",
+          leadh: "Meet our leadership", leadsub: "Experienced educators dedicated to your child’s success.",
+          p1n: "Dr. Amina Farouk", p1r: "Principal", p2n: "Mr. Karim Nabil", p2r: "Vice Principal — Academics", p3n: "Ms. Rania Adel", p3r: "Head of Primary", p4n: "Mr. Tarek Sami", p4r: "Head of Student Affairs",
+          accredh: "Accreditations & partnerships", accred: ["Ministry of Education — Egypt", "Cambridge Assessment English", "British Council Partner", "Bilingual Curriculum Certified"],
+          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Celebrated 20 years and 1,600+ students across all stages." }]
+        },
+        life: {
+          eyebrow: "Student Life", title: "Learning that lives beyond the classroom.", sub: "Sport, art, music and service turn knowledge into character. Here is where our students discover who they are.",
+          items: [{ t: "Sports", d: "Football, basketball, athletics and swimming with inter-school leagues." }, { t: "Music", d: "Choir, instruments and an annual concert that fills the hall." }, { t: "Art & Design", d: "Studios for drawing, painting and digital creativity." }, { t: "Robotics & STEM", d: "Coding, robotics teams and hands-on science challenges." }, { t: "Trips & Adventure", d: "Educational trips that take learning into the real world." }, { t: "Competitions", d: "Debate, spelling, math and science olympiad teams." }, { t: "Leadership", d: "Student council and prefect programs that build responsibility." }, { t: "Community Service", d: "Giving back to El Santa through year-round initiatives." }],
+          ctah: "There’s a place for every passion.", ctasub: "Come see student life in action — book a campus tour today.", ctabtn: "Book a Campus Tour"
+        },
+        careers: {
+          eyebrow: "Careers", title: "Build your career with Masters.", sub: "Join a team that shapes the future of El Santa — one classroom, one child, one day at a time.",
+          perksh: "Why work with us", perks: [{ t: "Purpose", d: "Work that genuinely changes young lives every day." }, { t: "Growth", d: "Ongoing training, mentorship and clear paths to advance." }, { t: "Community", d: "A supportive, family-minded team that has your back." }, { t: "Recognition", d: "Competitive packages and a culture that values great work." }],
+          posh: "Open positions", possub: "We’re hiring across teaching and operations.",
+          positions: [{ r: "Teachers — English / Arabic / Science", d: "Teaching", ty: "Full-time" }, { r: "HR Specialist", d: "Human Resources", ty: "Full-time" }, { r: "IT Support Engineer", d: "IT", ty: "Full-time" }, { r: "Marketing Officer", d: "Marketing", ty: "Full-time" }, { r: "Receptionist", d: "Administration", ty: "Full-time" }, { r: "Accountant", d: "Finance", ty: "Full-time" }, { r: "School Nurse", d: "Health", ty: "Full-time" }, { r: "Administration Officer", d: "Administration", ty: "Full-time" }, { r: "Security Personnel", d: "Security", ty: "Full-time" }, { r: "Bus Drivers", d: "Transport", ty: "Full-time" }, { r: "Bus Supervisors", d: "Transport", ty: "Full-time" }],
+          apply: "Apply", formh: "Application form", formsub: "Tell us about yourself",
+          posOpts: ["Teacher", "HR Specialist", "IT Support", "Marketing Officer", "Receptionist", "Accountant", "Nurse", "Administration", "Security", "Bus Driver", "Bus Supervisor"],
+          f: { personal: "Personal information", name: "Full name", phone: "Phone number", email: "Email address", position: "Position applying for", exp: "Experience & education", years: "Years of experience", edu: "Highest qualification", linkedin: "LinkedIn profile (optional)", docs: "Documents", cv: "CV / Résumé", cert: "Certificates", portfolio: "Portfolio (optional)", cover: "Cover letter", upload: "Upload file", submit: "Submit application", required: "Fields marked * are required." },
+          conf: { h: "Thank you for applying!", sub: "Our HR team will review your application and contact shortlisted candidates within 5 working days.", idlabel: "Your reference number", back: "Back to home", note: "A confirmation email has been sent to you." }
+        },
+        gallery: {
+          eyebrow: "Gallery", title: "A glimpse of life at Masters.", sub: "Moments from our classrooms, fields, stages and celebrations.",
+          tphotos: "Photos", tvideos: "Videos", ttour: "Virtual Tour",
+          tourh: "Take a virtual tour", tourd: "Walk through our campus from anywhere — classrooms, labs, library and playgrounds.", tourbtn: "Start virtual tour"
+        },
+        news: {
+          eyebrow: "News & Events", title: "What’s happening at Masters.", sub: "Announcements, achievements and upcoming events from our community.",
+          feattag: "Featured", featdate: "May 2026", feattitle: "Masters students win the regional robotics championship", featexc: "Our robotics team took first place among 24 schools across Gharbia, earning a spot in the national finals.", readmore: "Read more",
+          items: [{ tag: "Academics", date: "Apr 2026", t: "98% of secondary students pass with distinction", e: "A record-breaking year for our graduating class." }, { tag: "Community", date: "Mar 2026", t: "Annual charity drive supports 200 local families", e: "Students and staff came together for our biggest initiative yet." }, { tag: "Events", date: "Feb 2026", t: "Family Science Night draws a full house", e: "An evening of experiments, curiosity and fun for all ages." }],
+          eventsh: "Upcoming events", events: [{ d: "12", m: "Sep", t: "First day of the 2026–2027 school year" }, { d: "03", m: "Oct", t: "Open house & campus tour for new families" }, { d: "20", m: "Nov", t: "Annual science & robotics exhibition" }],
+          newsh: "Stay in the loop", newsd: "Subscribe for school news and event updates.", newsph: "Your email address", newsbtn: "Subscribe"
+        },
+        contact: {
+          eyebrow: "Contact", title: "We’d love to hear from you.", sub: "Questions about admissions, careers or a campus visit? Reach out — we reply fast.",
+          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "010 3799 3762", waT: "WhatsApp", waD: "010 3799 3762", mailT: "Email", mailD: "info@masters-school.edu.eg",
+          hoursh: "Office hours", hours: "Sunday – Thursday · 8:00 AM – 3:00 PM",
+          formh: "Send us a message", f: { name: "Your name", email: "Email address", phone: "Phone number", subject: "Subject", message: "Message", submit: "Send message", required: "Fields marked * are required." },
+          maplabel: "Find us on the map", conf: { h: "Message sent!", sub: "Thank you for reaching out. Our team will reply within one working day.", back: "Back to home" }
+        }
+      },
+      ar: {
+        meta: { title: "مدرسة ماسترز للغات — تعليم ثنائي اللغة في السنطة، الغربية", desc: "مدرسة ماسترز للغات مدرسة رائدة ثنائية اللغة (عربي/إنجليزي) في السنطة بمحافظة الغربية — من رياض الأطفال حتى الثانوية. قدّم إلكترونيًا، واحجز زيارة للحرم المدرسي، وتعرّف على خطوات القبول." },
+        brand: { name: "ماسترز", tag: "مدرسة اللغات" },
+        nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
+        top: { phone: "010 3799 3762", loc: "السنطة · الغربية", portal: "بوابة أولياء الأمور" },
+        hero: {
+          eyebrow: "مدرسة ماسترز للغات · تأسست 2004",
+          title: "حيث تُصقَل العقول النيّرة لمستقبلٍ عالمي.",
+          sub: "مدرسة لغات ثنائية رائدة في السنطة — نُنشئ متعلّمين فضوليين واثقين ومتعاطفين من رياض الأطفال حتى الثانوية.",
+          cta1: "قدّم للالتحاق", cta2: "احجز زيارة للحرم",
+          trust: "محل ثقة أكثر من 1,600 أسرة في الغربية"
+        },
+        marquee: ["منهج بريطاني وأمريكي", "تقييم كامبريدج", "معتمدة من الوزارة", "ثنائية اللغة · عربي / إنجليزي", "تأسست 2004"],
+        why: {
+          eyebrow: "لماذا ماسترز", heading: "لماذا تختار الأسر مدرسة ماسترز",
+          sub: "كل قرار نتخذه يبدأ بسؤال واحد — ما الأفضل للطفل؟",
+          i1t: "التميّز الأكاديمي", i1d: "منهج ثنائي اللغة صارم بنسبة 96% من الدرجات العليا ومسارات تعلّم مخصصة.",
+          i2t: "فصول صغيرة واهتمام كبير", i2d: "نسبة معلّم لكل 18 طالبًا، فيُعرَف كل طفل ويُتحدّى ويُدعَم.",
+          i3t: "تنمية الطفل بالكامل", i3d: "الرياضة والموسيقى والروبوتات والفنون جزء من اليوم الدراسي، لا هامش لها.",
+          i4t: "حرم آمن وحديث", i4d: "مبانٍ مؤمّنة وفصول ذكية ومساحات تعلّم مضيئة ومصمّمة بعناية."
+        },
+        stats: {
+          eyebrow: "بالأرقام", heading: "عقدان من التميّز الملموس",
+          s1n: "20", s1l: "عامًا نصنع المستقبل", s2n: "1,600+", s2l: "طالب وطالبة",
+          s3n: "120+", s3l: "معلّم متخصّص", s4n: "96%", s4l: "رضا أولياء الأمور"
+        },
+        prog: {
+          eyebrow: "البرامج الأكاديمية", heading: "رحلة تعليمية ثنائية متّصلة",
+          sub: "من الخطوات الأولى حتى التخرّج — مسار نموٍّ واحد متكامل.",
+          kgt: "رياض الأطفال", kgg: "KG1 – KG2 · 4–6 سنوات", kgd: "أسس ثنائية اللغة قائمة على اللعب في القراءة والحساب والثقة الاجتماعية.",
+          prt: "المرحلة الابتدائية", prg: "الصفوف 1 – 6", prd: "المواد الأساسية بالإنجليزية والعربية مع حبٍّ دائم للقراءة والاستكشاف.",
+          ppt: "المرحلة الإعدادية", ppg: "الصفوف 7 – 9", ppd: "تعمّق أكاديمي وتفكير نقدي وخطوات أولى نحو التخصّص.",
+          sct: "المرحلة الثانوية", scg: "الصفوف 10 – 12", scd: "مسارات جاهزة للجامعة مع اختبارات صارمة وإرشاد وقيادة.",
+          explore: "استكشف البرامج"
+        },
+        test: {
+          eyebrow: "آراء الأسر", heading: "ماذا تقول أسرنا",
+          q1: "كان اختيار ماسترز أفضل قرار اتخذناه لابنتنا. إنها تزدهر أكاديميًا وكإنسانة.", n1: "منى أحمد", r1: "ولية أمر · الصف 5",
+          q2: "المعلّمون يعرفون ابني بالاسم وبالقلب. صار ينتظر المدرسة كل صباح.", n2: "حسام السيد", r2: "ولي أمر · الصف 2",
+          q3: "ثنائية اللغة ومنضبطة ودافئة حقًا. رفعت ماسترز مستوى المدارس في السنطة.", n3: "سلمى رمضان", r3: "ولية أمر · الصف 8"
+        },
+        cta: { heading: "امنح طفلك انطلاقة ماسترز.", sub: "التقديم للعام 2026–2027 مفتوح الآن. المقاعد محدودة لكل صف.", c1: "قدّم الآن", c2: "احجز زيارة للحرم" },
+        foot: {
+          about: "مدرسة لغات ثنائية رائدة في السنطة، الغربية — نصنع متعلّمين فضوليين واثقين ومتعاطفين منذ 2004.",
+          explore: "استكشف", admissions: "القبول", contactc: "تواصل معنا",
+          rights: "© 2026 مدرسة ماسترز للغات. جميع الحقوق محفوظة.",
+          addr: "السنطة، محافظة الغربية، مصر", phone: "010 3799 3762", email: "info@masters-school.edu.eg",
+          links: ["عن المدرسة", "البرامج الأكاديمية", "الحياة الطلابية", "الأخبار والفعاليات", "معرض الصور"],
+          alinks: ["التقديم أونلاين", "احجز زيارة", "المصروفات", "المتطلبات", "الأسئلة الشائعة"]
+        },
+        ac: {
+          eyebrow: "البرامج الأكاديمية", title: "تعليمٌ ثنائي اللغة، مبنيٌّ مرحلةً تلو الأخرى.",
+          sub: "منهجٌ متدرّج بعناية يزداد صرامةً واستقلاليةً مع نموّ طفلك.",
+          kgtag: "4–6 سنوات", kgt: "رياض الأطفال", kgd: "حيث تبدأ المدرسة بالبهجة. يبني برنامجنا اللغة الثنائية والحساب المبكر والثقة الاجتماعية عبر اللعب المنظّم والموسيقى والاكتشاف.",
+          kgb: ["صوتيات وقصص ثنائية اللغة", "تنمية الحواس والمهارات الحركية", "روتين لطيف واستقلالية"],
+          prtag: "الصفوف 1–6", prt: "المرحلة الابتدائية", prd: "سنوات التأسيس. يتقن الطلاب القراءة والكتابة والرياضيات بالإنجليزية والعربية مع تنمية الفضول في العلوم والفنون والتكنولوجيا.",
+          prb: ["مواد أساسية وفق كامبريدج", "ورش قراءة وكتابة يومية", "مقدمة في البرمجة والروبوتات"],
+          pptag: "الصفوف 7–9", ppt: "المرحلة الإعدادية", ppd: "الجسر نحو التخصّص. معرفة أعمق ومهارات دراسة أقوى وثقة في التفكير النقدي والمستقل.",
+          ppb: ["علوم وإنسانيات متقدّمة", "تفكير نقدي ومشاريع بحثية", "إرشاد وتدريب على مهارات الدراسة"],
+          sctag: "الصفوف 10–12", sct: "المرحلة الثانوية", scd: "جاهزية للجامعة. برنامج أكاديمي صارم مقترن بإرشاد شخصي وفرص قيادية وإتقان للاختبارات.",
+          scb: ["إرشاد جامعي ومهني", "إعداد صارم للاختبارات", "قيادة وخدمة مجتمعية"],
+          faqh: "الأسئلة الشائعة",
+          f0q: "ما المنهج الذي تتبعه ماسترز؟", f0a: "برنامج ثنائي اللغة يجمع المنهج الوطني مع معايير اللغة البريطانية والأمريكية، ومعتمد من وزارة التربية والتعليم.",
+          f1q: "ما اللغات التي تُدرَّس؟", f1a: "التدريس ثنائي اللغة بالإنجليزية والعربية، مع الفرنسية كلغة ثالثة من المرحلة الإعدادية.",
+          f2q: "ما حجم الفصل؟", f2a: "نحدّد أعداد الفصول للحفاظ على متوسط معلّم لكل 18 طالبًا في جميع المراحل.",
+          f3q: "هل يتوفّر نقل مدرسي؟", f3a: "نعم. حافلات مدرسية بإشراف تغطّي السنطة والمناطق المحيطة في الغربية، مع مشرف مخصّص لكل خط."
+        },
+        adm: {
+          eyebrow: "القبول والتسجيل", title: "قبولٌ ميسّرٌ وبسيط.",
+          sub: "باب التقديم مفتوح طوال العام، لكن الأماكن تُمنح وفقًا للمتاح — لذا نشجّع الأسر على بدء إجراءات التقديم مبكرًا.",
+          journeyEyebrow: "رحلة القبول", journeyHeading: "طريقك إلى ماسترز خطوةً بخطوة",
+          journeyIntro: "نشكركم على اهتمامكم بالانضمام إلى مجتمع مدرسة ماسترز التعليمي. باب التقديم مفتوح طوال العام، ولكن نظرًا لأن قبول الطلاب يعتمد على الأماكن المتاحة، فإننا نوصي بشدة ببدء إجراءات التقديم مبكرًا.",
+          s1t: "التقديم الإلكتروني",
+          s1d: "تبدأ رحلة القبول بتعبئة نموذج التقديم الإلكتروني أدناه بدقة وعناية. لن يتم النظر في الطلبات غير المكتملة أو التي لا تستوفي معايير القبول. سيتم التواصل مع المتقدمين المؤهلين للانتقال للخطوات التالية بحسب الأماكن الشاغرة في الصف المطلوب.",
+          s2t: "تقديم المستندات المبدئية وتحديد الموعد",
+          s2d: "لتحديد موعد التقييم ومقابلة أولياء الأمور، يجب تقديم المستندات المبدئية التالية:",
+          s2bullets: ["مرحلتا رياض الأطفال (Pre-K و KG1): نسخة من التقرير الأكاديمي للحضانة.", "الطلاب المحوّلون من مدارس أخرى: نسخة من الشهادات الأكاديمية لآخر عامين دراسيين، وخطاب حسن سير وسلوك من المدرسة الحالية."],
+          s2note: "بعد ذلك يحدّد قسم القبول موعدًا لإجراء تقييم الطالب ومقابلة الوالدين في نفس اليوم. يُرجى ملاحظة أن الدعوة لإجراء التقييم لا تضمن بالضرورة قبول الطالب بصورة نهائية.",
+          s3t: "تقييم الطالب والمقابلة",
+          s3d: "يُجرى تقييم أكاديمي وشخصي للمتقدمين يتناسب مع المرحلة الدراسية المطلوبة لضمان تلبية احتياجاتهم التعليمية.",
+          s3fee: "رسوم التقييم: 600 جنيه مصري (غير مستردة)، تُدفع في الخزينة المدرسية صباح يوم التقييم.",
+          s4t: "النتائج والتسجيل المبدئي",
+          s4d: "يتم إبلاغ أولياء الأمور بنتيجة التقييم وقرار القبول خلال خمسة (5) أيام عمل كحد أقصى. في حالة القبول، يُشترط دفع رسوم القسط الأول خلال خمسة أيام عمل من تاريخ الإخطار بالقبول لتأكيد وحجز مقعد الطالب للعام الدراسي الجديد.",
+          s5t: "المستندات النهائية المطلوبة (بعد القبول)",
+          s5d: "لاستكمال ملف الطالب رسميًا، يجب تسليم المستندات التالية إلى مسؤول شؤون الطلبة قبل الأول من أغسطس:",
+          s5docs: ["6 صور شخصية حديثة ملونة (بحجم صورة الجواز).", "أصل شهادة ميلاد كمبيوتر (للطلاب المصريين) أو صورة من جواز السفر (للطلاب الأجانب).", "صورة من بطاقة الرقم القومي أو جواز السفر لكلا الوالدين.", "صورة من شهادة تطعيمات الطالب.", "أصول الشهادات الأكاديمية لآخر عامين دراسيين (بما في ذلك أحدث شهادة من المدرسة الحالية).", "خطاب سري لحسن السير والسلوك من المدرسة الحالية.", "بيان تسلسل دراسي.", "4 استمارات تحويل رسمية من المدرسة/الإدارة التعليمية الحالية."],
+          visitsH: "زيارة المدرسة والجولات الميدانية",
+          visitsD: "نشجّع أولياء الأمور على تحديد موعد لزيارة الحرم المدرسي خلال يوم دراسي عادي للاطلاع على بيئتنا التعليمية والحصول على إجابات وافية حول نظام القبول.",
+          contactH: "تواصل مع قسم القبول والتسجيل",
+          contactPhone: "+201037993762", contactEmail: "admission@masters-edu.com",
+          formh: "نموذج التقديم الإلكتروني", formsub: "العام الدراسي 2026–2027",
+          gradeOpts: ["Pre-K", "KG1", "KG2", "الصف 1", "الصف 2", "الصف 3", "الصف 4", "الصف 5", "الصف 6", "الصف 7", "الصف 8", "الصف 9", "الصف 10", "الصف 11", "الصف 12"],
+          yearOpts: ["2026 / 2027", "2027 / 2028"],
+          countryOpts: ["مصر", "السعودية", "الإمارات", "أخرى"],
+          occCatFatherOpts: ["قطاع عام", "قطاع خاص", "عمل حر"],
+          occCatMotherOpts: ["قطاع عام", "قطاع خاص", "ربة منزل"],
+          guardianOpts: ["الأب", "الأم", "الجد", "الخال", "العم", "أخرى"],
+          relationOpts: ["عم/خال", "عمة/خالة", "جد/جدة", "صديق العائلة", "أخرى"],
+          busRouteOpts: ["السنطة", "طنطا", "بسيون", "قطور", "كفر الزيات", "أخرى"],
+          f: {
+            required: "الحقول المعلّمة بـ * مطلوبة. يُرجى رفع الملفات بصيغة PDF أو JPG أو PNG.",
+            student: "بيانات الطالب",
+            photo: "الصورة الشخصية", year: "العام الدراسي",
+            fname: "الاسم الأول", mname: "الاسم الأوسط", lname: "الاسم الأخير",
+            sname: "اسم الطالب بالكامل", arname: "الاسم باللغة العربية",
+            grade: "الصف المتقدَّم إليه", gender: "النوع", gm: "ذكر", gf: "أنثى",
+            dob: "تاريخ الميلاد", age: "العمر", citizenship: "الجنسية", country: "بلد الإقامة",
+            address: "العنوان", araddress: "العنوان باللغة العربية", email: "البريد الإلكتروني",
+            lang2: "اللغة الثانية", l2a: "فرنسي", l2b: "ألماني",
+            religion: "الديانة", relA: "مسلم", relB: "مسيحي", relC: "أخرى",
+            prevH: "المدرسة/الحضانة السابقة",
+            psName: "اسم المدرسة", psSystem: "نظام التعليم", psGrades: "الصفوف", psYears: "سنوات الحضور", psLocation: "موقع المدرسة",
+            parent: "بيانات ولي الأمر",
+            fatherH: "بيانات الأب", motherH: "بيانات الأم", familyH: "بيانات العائلة",
+            faName: "اسم الأب", faOcc: "الوظيفة", faOccCat: "قطاع الوظيفة", faEmail: "البريد الإلكتروني للأب", faAddress: "عنوان الأب", faCitizenship: "جنسية الأب", faMobile: "رقم محمول الأب", faNid: "الرقم القومي",
+            moName: "اسم الأم", moOcc: "وظيفة الأم", moOccCat: "قطاع وظيفة الأم", moEmail: "البريد الإلكتروني للأم", moAddress: "عنوان الأم", moCitizenship: "جنسية الأم", moMobile: "رقم محمول الأم",
+            marital: "الحالة الاجتماعية للوالدين", mMarried: "متزوج", mSeparated: "منفصل", mDivorced: "مطلق", mWidowed: "أرمل",
+            siblingsNo: "عدد الإخوة", birthOrder: "ترتيب الطالب بين إخوته",
+            tongue: "اللغة الأم", tA: "عربي", tB: "إنجليزي", tC: "أخرى",
+            guardian: "ولي الأمر المسؤول / الوصي",
+            sibH: "بيانات الإخوة (إن وُجدوا)",
+            sibName: "الاسم", sibSchool: "المدرسة الحالية", sibAge: "العمر", sibGrade: "الصف", sibApply: "التقديم إلى ماسترز؟", yes: "نعم", no: "لا",
+            emergencyH: "جهات الاتصال في حالات الطوارئ", emergencyNote: "شخصان بخلاف الوالدين.",
+            eName: "اسم جهة الاتصال", ePhone: "رقم التواصل", eRelation: "صلة القرابة", eAddress: "العنوان", person1: "جهة الاتصال 1", person2: "جهة الاتصال 2",
+            concernsH: "ملاحظات هامة",
+            cHealth: "ملاحظات صحية", cPsych: "ملاحظات نفسية", cAcademic: "ملاحظات أكاديمية",
+            otherH: "بيانات أخرى",
+            bus: "حافلة المدرسة", busRoute: "خط سير الحافلة",
+            docs: "المرفقات الإلزامية",
+            d1: "بطاقة الرقم القومي لولي الأمر", d2: "شهادة ميلاد الطالب", d3: "شهادة آخر مرحلة دراسية", d4: "مرفقات إضافية",
+            d4hint: "يمكن رفع أكثر من ملف", upload: "رفع ملف", submit: "إرسال الطلب",
+            sending: "جارٍ الإرسال…", errorH: "تعذّر إرسال طلبك",
+            errorHint: "يرجى التحقق من الاتصال والمحاولة مرة أخرى — إجاباتك ما زالت موجودة في النموذج.",
+            uploadingLabel: "جارٍ رفع طلبك…",
+            uploadingHint: "يُرجى إبقاء الصفحة مفتوحة حتى اكتمال الرفع.",
+            filesWord: "ملفات",
+            tooLarge: "الملف «{name}» كبير جدًا. يجب ألا يتجاوز حجم كل ملف {max}. جرّب صورة أو نسخة ممسوحة أصغر.",
+            totalTooLarge: "إجمالي حجم مستنداتك {size} وهو يتجاوز الحد المسموح {max}. يُرجى رفع نسخ أو صور أصغر حجمًا."
+          },
+          need: {
+            h: "لتحديد موعد التقييم", items: ["Pre-K و KG1: تقرير الحضانة الحالي", "الطلاب المحوّلون: تقارير آخر عامين", "خطاب حسن سير وسلوك من المدرسة الحالية", "رسوم التقييم: 600 جنيه (غير مستردة)"],
+            datesh: "مواعيد مهمة", dates: [{ l: "التقديم", v: "طوال العام" }, { l: "إعلان النتائج", v: "خلال 5 أيام عمل" }, { l: "المستندات النهائية", v: "قبل 1 أغسطس" }],
+            helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201037993762", helpemail: "admission@masters-edu.com"
+          },
+          conf: {
+            h: "تم استلام طلبك!", sub: "شكرًا لك. سيراجع فريق القبول طلبك ويتواصل مع المتقدمين المؤهلين لتحديد موعد التقييم ومقابلة الوالدين.",
+            idlabel: "رقم طلبك", back: "العودة للرئيسية", note: "يُرجى الاحتفاظ برقم الطلب للمتابعة.",
+            demoNote: "وضع تجريبي — لم يتم حفظ هذا الطلب أو إرساله إلى أي جهة. يجب ضبط نقطة استقبال الطلبات قبل التشغيل الفعلي."
+          }
+        },
+        about: {
+          eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "على مدى عقدين، كانت مدرسة ماسترز للغات بيتًا ثانيًا لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
+          mh: "رسالتنا", md: "إعداد نشءٍ واثقٍ ثنائي اللغة صاحب مبادئ، جاهزٍ للقيادة في عالمٍ متّصل.",
+          vh: "رؤيتنا", vd: "أن نكون مدرسة اللغات الأكثر ثقةً في الغربية — الخيار الأول للأسر التي تطمح للأفضل.",
+          vah: "قيمنا", vad: "الاحترام والفضول والانضباط والتعاطف تُوجّه كل فصلٍ وكل ممرٍّ وكل حوار.",
+          prineyebrow: "كلمة المديرة", prinq: "في ماسترز نؤمن أن كل طفلٍ يحمل شرارة. ومهمتنا بسيطةٌ ومقدّسة — أن نحمي تلك الشرارة، ونغذّيها بالمعرفة، وندعها تكبر لتصير ثقةً تدوم مدى الحياة.", prinname: "د. أمينة فاروق", prinrole: "مديرة المدرسة",
+          leadh: "تعرّف على قيادتنا", leadsub: "معلّمون ذوو خبرة مكرّسون لنجاح طفلك.",
+          p1n: "د. أمينة فاروق", p1r: "المديرة", p2n: "أ. كريم نبيل", p2r: "وكيل المدرسة — الشؤون الأكاديمية", p3n: "أ. رانيا عادل", p3r: "رئيسة المرحلة الابتدائية", p4n: "أ. طارق سامي", p4r: "رئيس شؤون الطلاب",
+          accredh: "الاعتمادات والشراكات", accred: ["وزارة التربية والتعليم — مصر", "تقييم كامبريدج للإنجليزية", "شريك المجلس الثقافي البريطاني", "منهج ثنائي اللغة معتمد"],
+          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "الاحتفال بعشرين عامًا وأكثر من 1,600 طالب في كل المراحل." }]
+        },
+        life: {
+          eyebrow: "الحياة الطلابية", title: "تعلّمٌ يمتدّ خارج الفصل.", sub: "الرياضة والفن والموسيقى والخدمة تحوّل المعرفة إلى شخصية. هنا يكتشف طلابنا حقيقة أنفسهم.",
+          items: [{ t: "الرياضة", d: "كرة قدم وسلة وألعاب قوى وسباحة مع دوريات بين المدارس." }, { t: "الموسيقى", d: "كورال وآلات وحفلٌ سنوي يملأ القاعة." }, { t: "الفن والتصميم", d: "استوديوهات للرسم والتلوين والإبداع الرقمي." }, { t: "الروبوتات وSTEM", d: "برمجة وفرق روبوتات وتحدّيات علمية عملية." }, { t: "الرحلات والمغامرة", d: "رحلات تعليمية تأخذ التعلّم إلى العالم الحقيقي." }, { t: "المسابقات", d: "فرق مناظرة وإملاء ورياضيات وأولمبياد علوم." }, { t: "القيادة", d: "مجلس طلابي وبرامج ريادة تبني المسؤولية." }, { t: "خدمة المجتمع", d: "العطاء لأهل السنطة عبر مبادرات على مدار العام." }],
+          ctah: "لكلّ شغفٍ مكان.", ctasub: "تعال شاهد الحياة الطلابية على الطبيعة — احجز زيارة اليوم.", ctabtn: "احجز زيارة للحرم"
+        },
+        careers: {
+          eyebrow: "الوظائف", title: "ابنِ مستقبلك المهني مع ماسترز.", sub: "انضمّ لفريقٍ يصنع مستقبل السنطة — فصلًا بعد فصل، وطفلًا بعد طفل.",
+          perksh: "لماذا تعمل معنا", perks: [{ t: "المعنى", d: "عملٌ يغيّر حياة النشء كل يوم بحق." }, { t: "النموّ", d: "تدريب مستمر وإرشاد ومسارات واضحة للترقّي." }, { t: "المجتمع", d: "فريقٌ داعمٌ بروح العائلة يسندك دائمًا." }, { t: "التقدير", d: "حزم رواتب تنافسية وثقافة تقدّر العمل المتميّز." }],
+          posh: "الوظائف المتاحة", possub: "نوظّف في التدريس والتشغيل.",
+          positions: [{ r: "معلمون — إنجليزي / عربي / علوم", d: "التدريس", ty: "دوام كامل" }, { r: "أخصائي موارد بشرية", d: "الموارد البشرية", ty: "دوام كامل" }, { r: "مهندس دعم تقني", d: "تكنولوجيا المعلومات", ty: "دوام كامل" }, { r: "مسؤول تسويق", d: "التسويق", ty: "دوام كامل" }, { r: "موظف استقبال", d: "الإدارة", ty: "دوام كامل" }, { r: "محاسب", d: "الحسابات", ty: "دوام كامل" }, { r: "ممرضة مدرسية", d: "الصحة", ty: "دوام كامل" }, { r: "موظف إداري", d: "الإدارة", ty: "دوام كامل" }, { r: "أفراد أمن", d: "الأمن", ty: "دوام كامل" }, { r: "سائقو حافلات", d: "النقل", ty: "دوام كامل" }, { r: "مشرفو حافلات", d: "النقل", ty: "دوام كامل" }],
+          apply: "تقديم", formh: "نموذج التقديم", formsub: "عرّفنا بنفسك",
+          posOpts: ["معلم", "أخصائي موارد بشرية", "دعم تقني", "مسؤول تسويق", "موظف استقبال", "محاسب", "ممرضة", "موظف إداري", "أمن", "سائق حافلة", "مشرف حافلة"],
+          f: { personal: "البيانات الشخصية", name: "الاسم بالكامل", phone: "رقم الهاتف", email: "البريد الإلكتروني", position: "الوظيفة المتقدَّم لها", exp: "الخبرة والتعليم", years: "سنوات الخبرة", edu: "أعلى مؤهل", linkedin: "حساب لينكدإن (اختياري)", docs: "المستندات", cv: "السيرة الذاتية", cert: "الشهادات", portfolio: "معرض الأعمال (اختياري)", cover: "خطاب التقديم", upload: "رفع ملف", submit: "إرسال الطلب", required: "الحقول المعلّمة بـ * مطلوبة." },
+          conf: { h: "شكرًا لتقديمك!", sub: "سيراجع فريق الموارد البشرية طلبك ويتواصل مع المرشحين خلال 5 أيام عمل.", idlabel: "رقمك المرجعي", back: "العودة للرئيسية", note: "تم إرسال بريد تأكيد إليك." }
+        },
+        gallery: {
+          eyebrow: "معرض الصور", title: "لمحة من الحياة في ماسترز.", sub: "لحظات من فصولنا وملاعبنا ومسارحنا واحتفالاتنا.",
+          tphotos: "صور", tvideos: "فيديوهات", ttour: "جولة افتراضية",
+          tourh: "خُذ جولة افتراضية", tourd: "تجوّل في حرمنا من أي مكان — الفصول والمعامل والمكتبة والملاعب.", tourbtn: "ابدأ الجولة الافتراضية"
+        },
+        news: {
+          eyebrow: "الأخبار والفعاليات", title: "ماذا يحدث في ماسترز.", sub: "إعلانات وإنجازات وفعاليات قادمة من مجتمعنا.",
+          feattag: "مميّز", featdate: "مايو 2026", feattitle: "طلاب ماسترز يفوزون ببطولة الروبوتات الإقليمية", featexc: "حصل فريق الروبوتات على المركز الأول بين 24 مدرسة في الغربية، وتأهّل للنهائيات الوطنية.", readmore: "اقرأ المزيد",
+          items: [{ tag: "أكاديمي", date: "أبريل 2026", t: "98% من طلاب الثانوية ينجحون بامتياز", e: "عامٌ قياسي لدفعة التخرّج لدينا." }, { tag: "مجتمع", date: "مارس 2026", t: "حملة الخير السنوية تدعم 200 أسرة", e: "تكاتف الطلاب والموظفون في أكبر مبادراتنا حتى الآن." }, { tag: "فعاليات", date: "فبراير 2026", t: "ليلة العلوم العائلية تجذب حضورًا كاملًا", e: "أمسيةٌ من التجارب والفضول والمتعة لكل الأعمار." }],
+          eventsh: "الفعاليات القادمة", events: [{ d: "12", m: "سبت", t: "أول أيام العام الدراسي 2026–2027" }, { d: "03", m: "أكت", t: "يوم مفتوح وجولة للأسر الجديدة" }, { d: "20", m: "نوف", t: "معرض العلوم والروبوتات السنوي" }],
+          newsh: "ابقَ على اطّلاع", newsd: "اشترك لتصلك أخبار المدرسة والفعاليات.", newsph: "بريدك الإلكتروني", newsbtn: "اشترك"
+        },
+        contact: {
+          eyebrow: "تواصل معنا", title: "يسعدنا أن نسمع منك.", sub: "أسئلة عن القبول أو الوظائف أو زيارة الحرم؟ تواصل معنا — نردّ بسرعة.",
+          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "010 3799 3762", waT: "واتساب", waD: "010 3799 3762", mailT: "البريد", mailD: "info@masters-school.edu.eg",
+          hoursh: "مواعيد العمل", hours: "الأحد – الخميس · 8:00 ص – 3:00 م",
+          formh: "أرسل لنا رسالة", f: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", subject: "الموضوع", message: "الرسالة", submit: "إرسال الرسالة", required: "الحقول المعلّمة بـ * مطلوبة." },
+          maplabel: "موقعنا على الخريطة", conf: { h: "تم إرسال رسالتك!", sub: "شكرًا لتواصلك. سيردّ فريقنا خلال يوم عمل واحد.", back: "العودة للرئيسية" }
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

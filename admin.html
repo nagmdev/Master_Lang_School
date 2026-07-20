@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B2346'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23C89A2B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<meta name="robots" content="noindex, nofollow">
+<title>Admissions Admin — Masters Language School</title>
+<style>
+  :root{
+    --navy:#0B2346; --gold:#C89A2B; --bg:#FBFAF7; --line:#ECEAE3;
+    --muted:#5B6472; --faint:#8A93A1; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--navy);
+       font-family:'Plus Jakarta Sans',-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;cursor:pointer}
+  input,select,textarea{font:inherit;color:inherit}
+  .hidden{display:none!important}
+
+  header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;
+         align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:17px;margin:0;font-weight:800;letter-spacing:.01em}
+  header .sub{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;
+         padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700}
+  .ghost:hover{background:rgba(255,255,255,.12)}
+
+  main{max-width:1180px;margin:0 auto;padding:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+
+  /* login */
+  .login{max-width:380px;margin:12vh auto}
+  .login h2{margin:0 0 6px;font-size:22px}
+  .login p{margin:0 0 20px;color:var(--muted);font-size:14px}
+  label{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
+  .field{width:100%;padding:12px 14px;border:1px solid #DCDAD2;border-radius:10px;
+         font-size:15px;background:#FCFBF8}
+  .primary{background:var(--gold);color:var(--navy);border:none;padding:13px 20px;
+           border-radius:11px;font-weight:800;font-size:15px}
+  .primary:hover{background:#b98a1f}
+  .primary[disabled]{opacity:.55;cursor:not-allowed}
+  .error{background:#FDECEA;border:1px solid #F0B4AE;color:#8E2C20;
+         padding:11px 14px;border-radius:10px;font-size:13.5px;margin-bottom:14px}
+  .warn{background:#FDF4E3;border:1px solid #E8C97A;color:#7A5B12;
+        padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
+
+  /* toolbar */
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .toolbar .field{flex:1;min-width:220px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:20px;
+        padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .chip .n{opacity:.65;margin-inline-start:5px;font-weight:600}
+
+  /* table */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+  table{border-collapse:collapse;width:100%;min-width:720px}
+  th,td{text-align:start;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px}
+  th{background:#F7F5EF;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FAF9F5;cursor:pointer}
+  .id{font-weight:800;white-space:nowrap}
+  .empty{padding:44px 20px;text-align:center;color:var(--faint);font-size:14.5px}
+
+  .status{display:inline-block;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:800;white-space:nowrap}
+  .s-new{background:#E8F0FE;color:#1A4B8F}
+  .s-reviewing{background:#FFF3DC;color:#8A6100}
+  .s-assessment_booked{background:#E7F2FF;color:#12507F}
+  .s-accepted{background:#E4F6EA;color:#1B6B39}
+  .s-rejected{background:#FDECEA;color:#8E2C20}
+  .s-withdrawn{background:#EFEFEF;color:#5B6472}
+
+  /* drawer */
+  .backdrop{position:fixed;inset:0;background:rgba(11,35,70,.45);z-index:40}
+  .drawer{position:fixed;inset-block:0;inset-inline-end:0;width:min(560px,100%);
+          background:#fff;z-index:41;overflow-y:auto;box-shadow:-24px 0 60px -30px rgba(11,35,70,.5)}
+  .drawer .head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);
+                padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .drawer .body{padding:22px}
+  .sec{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);
+       font-weight:800;margin:22px 0 10px}
+  .kv{display:grid;grid-template-columns:minmax(120px,38%) 1fr;gap:6px 14px;font-size:14px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0;font-weight:600;word-break:break-word}
+  .files{display:flex;flex-direction:column;gap:8px}
+  .file{display:flex;justify-content:space-between;align-items:center;gap:12px;
+        border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:13.5px}
+  .file a{color:#a37e1f;font-weight:800;text-decoration:none;white-space:nowrap}
+  .file a:hover{text-decoration:underline}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:8px}
+  .saved{color:#1B6B39;font-size:13px;font-weight:700}
+  .danger{background:#fff;color:#8E2C20;border:1px solid #E4A9A2;padding:13px 20px;
+          border-radius:11px;font-weight:800;font-size:15px}
+  .danger:hover{background:#FDECEA;border-color:#C0392B}
+  .danger[disabled]{opacity:.55;cursor:not-allowed}
+  .danger-solid{background:#C0392B;color:#fff;border:none;padding:13px 20px;
+                border-radius:11px;font-weight:800;font-size:15px}
+  .danger-solid:hover{background:#a5301f}
+  .confirm{background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;
+           padding:16px 18px;margin-top:14px}
+  .confirm h4{margin:0 0 6px;font-size:15px;color:#8E2C20}
+  .confirm p{margin:0 0 14px;font-size:13.5px;color:#8E2C20;line-height:1.55}
+  @media (max-width:640px){ .kv{grid-template-columns:1fr} main{padding:14px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="sub">Masters Language School</div>
+    <h1>Admissions Administration</h1>
+  </div>
+  <div id="hdr-actions" class="hidden">
+    <button class="ghost" id="refresh">Refresh</button>
+    <button class="ghost" id="logout">Sign out</button>
+  </div>
+</header>
+
+<!-- login -->
+<main id="login-view">
+  <div class="card login">
+    <h2>Sign in</h2>
+    <p>Enter the admissions password to view applications.</p>
+    <div id="login-error" class="error hidden"></div>
+    <div id="config-error" class="warn hidden"></div>
+    <form id="login-form">
+      <label for="pw">Password</label>
+      <input class="field" type="password" id="pw" autocomplete="current-password" required>
+      <div style="margin-top:16px"><button class="primary" type="submit" id="login-btn">Sign in</button></div>
+    </form>
+  </div>
+</main>
+
+<!-- dashboard -->
+<main id="app-view" class="hidden">
+  <div class="toolbar">
+    <input class="field" id="q" type="search" placeholder="Search by name, ID, mobile, grade…">
+    <button class="primary" id="search-btn">Search</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>Application</th><th>Student</th><th>Grade</th><th>Parent</th><th>Mobile</th><th>Received</th><th>Status</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty hidden"></div>
+  </div>
+</main>
+
+<div id="backdrop" class="backdrop hidden"></div>
+<aside id="drawer" class="drawer hidden" aria-label="Application detail">
+  <div class="head">
+    <div><div class="sub" style="color:var(--gold)">Application</div><strong id="d-id" class="id"></strong></div>
+    <button class="ghost" id="close-drawer" style="border-color:#DCDAD2;color:var(--navy)">Close</button>
+  </div>
+  <div class="body" id="d-body"></div>
+</aside>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+let STATUSES = [];
+let activeStatus = '';
+
+const LABELS = {
+  fname: 'First name', mname: 'Middle name', lname: 'Last name', sname: 'Full name',
+  arname: 'Name (Arabic)', year: 'Academic year', grade: 'Grade', dob: 'Date of birth',
+  age: 'Age', gender: 'Gender', citizenship: 'Citizenship', country: 'Country',
+  address: 'Address', araddress: 'Address (Arabic)', email: 'Email',
+  lang2: 'Second language', religion: 'Religion',
+  psName: 'Previous school', psSystem: 'Education system', psGrades: 'Grades',
+  psYears: 'Years attended', psLocation: 'School location',
+  faName: 'Father', faOcc: 'Occupation', faOccCat: 'Sector', faEmail: 'Father email',
+  faAddress: 'Father address', faCitizenship: 'Father citizenship',
+  faMobile: 'Father mobile', faNid: 'National ID',
+  moName: 'Mother', moOcc: 'Occupation', moOccCat: 'Sector', moEmail: 'Mother email',
+  moAddress: 'Mother address', moCitizenship: 'Mother citizenship', moMobile: 'Mother mobile',
+  marital: 'Marital status', siblingsNo: 'Siblings', birthOrder: 'Birth order',
+  tongue: 'Mother tongue', guardian: 'Guardian',
+  sibName: 'Sibling name', sibSchool: 'Sibling school', sibAge: 'Sibling age',
+  sibGrade: 'Sibling grade', sibApply: 'Sibling applying',
+  eName: 'Emergency contact', ePhone: 'Emergency phone', eRelation: 'Relationship',
+  eAddress: 'Emergency address', eName_2: 'Emergency contact 2', ePhone_2: 'Emergency phone 2',
+  eRelation_2: 'Relationship 2', eAddress_2: 'Emergency address 2',
+  cHealth: 'Health notes', cPsych: 'Psychological notes', cAcademic: 'Academic notes',
+  bus: 'School bus', busRoute: 'Bus route',
+};
+const GROUPS = [
+  ['Student', ['fname', 'mname', 'lname', 'sname', 'arname', 'year', 'grade', 'dob', 'age', 'gender', 'citizenship', 'country', 'address', 'araddress', 'email', 'lang2', 'religion']],
+  ['Previous school', ['psName', 'psSystem', 'psGrades', 'psYears', 'psLocation']],
+  ['Father', ['faName', 'faOcc', 'faOccCat', 'faMobile', 'faNid', 'faEmail', 'faAddress', 'faCitizenship']],
+  ['Mother', ['moName', 'moOcc', 'moOccCat', 'moMobile', 'moEmail', 'moAddress', 'moCitizenship']],
+  ['Family', ['marital', 'siblingsNo', 'birthOrder', 'tongue', 'guardian', 'sibName', 'sibSchool', 'sibAge', 'sibGrade', 'sibApply']],
+  ['Emergency', ['eName', 'ePhone', 'eRelation', 'eAddress', 'eName_2', 'ePhone_2', 'eRelation_2', 'eAddress_2']],
+  ['Notes', ['cHealth', 'cPsych', 'cAcademic']],
+  ['Transport', ['bus', 'busRoute']],
+];
+const pretty = s => String(s).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+async function api(path, opts) {
+  const res = await fetch(path, Object.assign({ credentials: 'same-origin' }, opts || {}));
+  let data = {};
+  try { data = await res.json(); } catch (e) {}
+  if (res.status === 401) { showLogin(); throw new Error('not authenticated'); }
+  if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+  return data;
+}
+
+function showLogin() {
+  $('#login-view').classList.remove('hidden');
+  $('#app-view').classList.add('hidden');
+  $('#hdr-actions').classList.add('hidden');
+}
+function showApp() {
+  $('#login-view').classList.add('hidden');
+  $('#app-view').classList.remove('hidden');
+  $('#hdr-actions').classList.remove('hidden');
+}
+
+$('#login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('#login-btn'), err = $('#login-error');
+  err.classList.add('hidden');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    await api('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: $('#pw').value }),
+    });
+    $('#pw').value = '';
+    showApp(); await load();
+  } catch (e2) {
+    err.textContent = e2.message; err.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign in';
+  }
+});
+
+$('#logout').addEventListener('click', async () => {
+  await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
+  showLogin();
+});
+$('#refresh').addEventListener('click', () => load());
+$('#search-btn').addEventListener('click', () => load());
+$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
+
+function renderChips(counts) {
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const items = [['', 'All', total]].concat(STATUSES.map(s => [s, pretty(s), counts[s] || 0]));
+  $('#chips').innerHTML = items.map(([v, label, n]) =>
+    `<button class="chip ${v === activeStatus ? 'on' : ''}" data-status="${esc(v)}">${esc(label)}<span class="n">${n}</span></button>`
+  ).join('');
+  $('#chips').querySelectorAll('.chip').forEach(c =>
+    c.addEventListener('click', () => { activeStatus = c.dataset.status; load(); }));
+}
+
+async function load() {
+  const params = new URLSearchParams();
+  if ($('#q').value.trim()) params.set('q', $('#q').value.trim());
+  if (activeStatus) params.set('status', activeStatus);
+  const data = await api('/api/applications?' + params.toString());
+  STATUSES = data.statuses || [];
+  renderChips(data.counts || {});
+
+  const rows = data.rows || [];
+  $('#rows').innerHTML = rows.map(r => {
+    const f = r.fields || {};
+    const student = [f.fname, f.mname, f.lname].filter(Boolean).join(' ') || f.sname || '—';
+    return `<tr data-id="${esc(r.id)}">
+      <td class="id">${esc(r.id)}</td>
+      <td>${esc(student)}</td>
+      <td>${esc(f.grade || '—')}</td>
+      <td>${esc(f.faName || f.moName || '—')}</td>
+      <td>${esc(f.faMobile || f.moMobile || '—')}</td>
+      <td>${esc(new Date(r.submittedAt).toLocaleDateString())}</td>
+      <td><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></td>
+    </tr>`;
+  }).join('');
+
+  const empty = $('#empty');
+  if (!rows.length) {
+    empty.classList.remove('hidden');
+    empty.textContent = ($('#q').value || activeStatus)
+      ? 'No applications match this search.'
+      : 'No applications yet. When a parent submits the admissions form, it appears here.';
+  } else {
+    empty.classList.add('hidden');
+  }
+  $('#rows').querySelectorAll('tr').forEach(tr =>
+    tr.addEventListener('click', () => openDrawer(tr.dataset.id)));
+}
+
+function closeDrawer() {
+  $('#drawer').classList.add('hidden');
+  $('#backdrop').classList.add('hidden');
+}
+$('#close-drawer').addEventListener('click', closeDrawer);
+$('#backdrop').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+async function openDrawer(id) {
+  const r = await api('/api/application?id=' + encodeURIComponent(id));
+  const f = r.fields || {};
+  const studentName = [f.fname, f.mname, f.lname].filter(Boolean).join(' ') || f.sname || '';
+  $('#d-id').textContent = r.id;
+
+  const used = new Set();
+  let html = '';
+  for (const [title, keys] of GROUPS) {
+    const present = keys.filter(k => String(f[k] || '').trim());
+    if (!present.length) continue;
+    present.forEach(k => used.add(k));
+    html += `<div class="sec">${esc(title)}</div><dl class="kv">` +
+      present.map(k => `<dt>${esc(LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') +
+      `</dl>`;
+  }
+  const extra = Object.keys(f).filter(k => !used.has(k) && String(f[k] || '').trim());
+  if (extra.length) {
+    html += `<div class="sec">Other</div><dl class="kv">` +
+      extra.map(k => `<dt>${esc(LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') + `</dl>`;
+  }
+
+  html += `<div class="sec">Documents</div>`;
+  html += (r.files && r.files.length)
+    ? `<div class="files">` + r.files.map(x =>
+        `<div class="file"><span>${esc(LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
+         <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
+         <a href="/api/file?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}">Download</a></div>`
+      ).join('') + `</div>`
+    : `<p style="color:var(--faint);font-size:14px;margin:0">No documents were uploaded.</p>`;
+
+  // Status and notes are shown read-only: the Update control was removed, so
+  // offering editable inputs with no way to save them would be a dead end.
+  html += `<div class="sec">Status</div>
+    <div><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></div>`;
+  if (r.notes) {
+    html += `<div class="sec">Internal notes</div>
+      <p style="font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${esc(r.notes)}</p>`;
+  }
+  html += `<div class="row" style="margin-top:22px;justify-content:flex-end">
+      <button class="danger" id="d-delete">Delete</button>
+    </div>
+    <div class="confirm hidden" id="d-confirm">
+      <h4>Delete this application permanently?</h4>
+      <p>
+        <strong>${esc(r.id)}</strong>${studentName ? ' — ' + esc(studentName) : ''} will be erased,
+        along with ${(r.files || []).length} uploaded document${(r.files || []).length === 1 ? '' : 's'}.
+        This cannot be undone.
+      </p>
+      <div class="row" style="margin-top:0">
+        <button class="danger-solid" id="d-delete-yes">Yes, delete permanently</button>
+        <button class="ghost" id="d-delete-no" style="border-color:#DCDAD2;color:var(--navy)">Cancel</button>
+      </div>
+    </div>
+    <p style="color:var(--faint);font-size:12.5px;margin-top:18px">
+      Received ${esc(new Date(r.submittedAt).toLocaleString())}${r.updatedAt ? ' · updated ' + esc(new Date(r.updatedAt).toLocaleString()) : ''}
+    </p>`;
+
+  $('#d-body').innerHTML = html;
+  $('#drawer').classList.remove('hidden');
+  $('#backdrop').classList.remove('hidden');
+
+  // Deletion is irreversible, so it takes two deliberate clicks: the first only
+  // reveals what will be destroyed.
+  $('#d-delete').addEventListener('click', () => {
+    $('#d-confirm').classList.remove('hidden');
+    $('#d-delete').disabled = true;
+    $('#d-delete-yes').focus();
+  });
+  $('#d-delete-no').addEventListener('click', () => {
+    $('#d-confirm').classList.add('hidden');
+    $('#d-delete').disabled = false;
+  });
+  $('#d-delete-yes').addEventListener('click', async () => {
+    const yes = $('#d-delete-yes');
+    yes.disabled = true; yes.textContent = 'Deleting…';
+    try {
+      await api('/api/application?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
+      closeDrawer();
+      await load();
+    } catch (e) {
+      alert('Could not delete: ' + e.message);
+      yes.disabled = false; yes.textContent = 'Yes, delete permanently';
+    }
+  });
+}
+
+(async function boot() {
+  try {
+    const s = await fetch('/api/session', { credentials: 'same-origin' }).then(r => r.json());
+    if (s.configError) {
+      $('#config-error').textContent = 'Server not configured: ' + s.configError;
+      $('#config-error').classList.remove('hidden');
+    }
+    if (s.authenticated) { showApp(); await load(); } else { showLogin(); }
+  } catch (e) { showLogin(); }
+})();
+</script>
+</body>
+</html>

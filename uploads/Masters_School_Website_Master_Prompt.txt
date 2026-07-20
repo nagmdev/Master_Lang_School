@@ -1,0 +1,152 @@
+MASTERS SCHOOL — WORLD-CLASS WEBSITE DESIGN MASTER PROMPT
+
+You are a Senior Brand Strategist, UX Researcher, Product Designer, UI
+Designer, Front-end Architect, and Creative Director.
+
+Your task is to design a premium, world-class website for Masters School
+that rivals the best international schools. This is NOT a template
+website. Every section must feel custom, modern, luxurious, trustworthy,
+and conversion-focused.
+
+Project Goal
+
+Create a bilingual (Arabic / English), responsive website that: - Builds
+trust with parents in under 5 seconds. - Highlights academic excellence
+and student life. - Makes student admissions effortless. - Includes a
+complete careers portal for hiring teachers and staff. - Is CMS-ready
+and scalable.
+
+Brand Personality
+
+-   Premium
+-   Modern
+-   Academic
+-   Warm
+-   Trustworthy
+-   Innovative
+-   Family-oriented
+
+Visual Identity
+
+Colors: - Navy Blue (#0B2346) - Gold (#C89A2B) - White - Light Gray
+
+Typography: - Elegant Serif for headings. - Modern Sans-Serif for body.
+
+Design Language: - Apple-level cleanliness - Stripe-level spacing -
+Harvard-inspired credibility - AISE Egypt quality (use only as
+inspiration, never copy)
+
+Reference: https://www.aisegypt.com/
+
+Pages
+
+1.  Home
+
+-   Cinematic hero video
+-   Apply Now
+-   Book a Campus Tour
+-   About
+-   Why Masters
+-   Academic Programs
+-   Facilities
+-   Student Life
+-   Statistics
+-   Testimonials
+-   Latest News
+-   Gallery
+-   CTA
+-   Footer
+
+2.  About Mission Vision Values History Principal Message Leadership
+    Faculty Accreditations
+
+3.  Academics Kindergarten Primary Preparatory Secondary Each with
+    curriculum, facilities, schedules, FAQs.
+
+4.  Admissions Full online admission workflow.
+
+Student form: - Student Name - DOB - Gender - Grade - Parent Info -
+Address - Medical Notes - Upload Birth Certificate - Upload Previous
+Reports - Upload Parent ID - Submit
+
+After submission: - Confirmation page - Application ID - Email
+notification - Admin dashboard - Status tracking
+
+5.  Careers Dedicated recruitment portal.
+
+Open Positions: - Teachers - HR - IT - Marketing - Reception -
+Accountant - Nurse - Administration - Security - Drivers - Bus
+Supervisors
+
+Application: - Personal Information - Experience - Education - CV
+Upload - Certificates - Cover Letter - Portfolio - LinkedIn - Submit
+
+6.  Student Life Sports Music Art Robotics Trips Competitions Leadership
+    Community Service
+
+7.  Gallery Photos Videos Virtual Tour
+
+8.  News & Events
+
+9.  Contact Google Maps WhatsApp Phone Email Inquiry Form
+
+Features
+
+-   Responsive
+-   SEO Optimized
+-   Accessibility WCAG
+-   Dark Footer
+-   Sticky Navbar
+-   Mega Menu
+-   Search
+-   Language Switch
+-   Live Chat
+-   WhatsApp Integration
+-   Parent Inquiry
+-   Appointment Booking
+-   Campus Tour Booking
+-   Teacher Directory
+-   Download Center
+-   School Calendar
+-   School Bus Information
+-   Uniform Guide
+-   Editable Fees Page
+-   CMS Dashboard
+-   Email Notifications
+-   Google Analytics
+
+Animation
+
+-   Smooth page transitions
+-   Fade-up sections
+-   Parallax
+-   Hover micro-interactions
+-   Glass cards
+-   Rounded components
+-   Soft shadows
+-   Floating CTA
+
+Tech Stack
+
+-   Next.js
+-   React
+-   TypeScript
+-   Tailwind CSS
+-   Framer Motion
+-   Component-based Design System
+
+Deliverables
+
+-   Complete UX flow
+-   High-fidelity UI
+-   Desktop / Tablet / Mobile
+-   Design System
+-   Components
+-   Icons
+-   Forms
+-   CMS-ready structure
+-   Developer handoff-ready files
+
+The final website must feel like a premium international school website
+that exceeds the quality of the provided reference while remaining
+completely original.
