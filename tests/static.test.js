@@ -669,6 +669,26 @@ test('the postgres driver implements the full store interface', () => {
   assert(JSON.stringify(pg.STATUSES) === JSON.stringify(local.STATUSES), 'drivers disagree on the status list');
 });
 
+test('BUG: the start script uses no version-gated Node flags', () => {
+  // A flag the deployed Node build does not recognise kills the process at boot.
+  // Nothing then listens, so every request — static files included — hangs with
+  // no HTTP response at all. Production must not depend on newer-Node flags;
+  // the platform injects env vars directly.
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const start = pkg.scripts.start || '';
+  const risky = ['--env-file', '--experimental', '--loader', '--watch'];
+  const hit = risky.filter(f => start.includes(f));
+  assert(hit.length === 0,
+    `"start" uses ${hit.join(', ')} — if the deployed Node is older, it exits at boot and every request hangs. Keep such flags in "dev" only.`);
+});
+
+test('the Node version is pinned to a major, not an open range', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const node = (pkg.engines || {}).node || '';
+  assert(node && !/^>=/.test(node),
+    `engines.node is "${node}" — an open range lets the platform pick an old Node. Pin a major (e.g. "22.x").`);
+});
+
 test('applicant data is gitignored', () => {
   const ig = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
   assertHas(ig, 'data/', 'submitted applications would be committed to git');
