@@ -140,6 +140,7 @@
     <button class="primary" id="search-btn">Search</button>
   </div>
   <div class="chips" id="chips"></div>
+  <div id="list-error" class="error hidden" role="alert"></div>
   <div class="tablewrap">
     <table>
       <thead><tr>
@@ -248,9 +249,32 @@ $('#logout').addEventListener('click', async () => {
   await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
   showLogin();
 });
-$('#refresh').addEventListener('click', () => load());
-$('#search-btn').addEventListener('click', () => load());
-$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
+// Every caller goes through this: a bare `load()` returns a promise whose
+// rejection is swallowed, so a failed refresh looked like nothing happened.
+async function refresh(btn) {
+  const label = btn ? btn.textContent : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+  hideError();
+  try {
+    await load();
+  } catch (e) {
+    showError('Could not load applications: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+  }
+}
+function showError(msg) {
+  const el = $('#list-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+function hideError() { $('#list-error').classList.add('hidden'); }
+
+$('#refresh').addEventListener('click', e => refresh(e.currentTarget));
+$('#search-btn').addEventListener('click', e => refresh(e.currentTarget));
+$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') refresh($('#search-btn')); });
+// clearing the box restores the full list without needing to press Search
+$('#q').addEventListener('search', () => refresh($('#search-btn')));
 
 function renderChips(counts) {
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -259,7 +283,7 @@ function renderChips(counts) {
     `<button class="chip ${v === activeStatus ? 'on' : ''}" data-status="${esc(v)}">${esc(label)}<span class="n">${n}</span></button>`
   ).join('');
   $('#chips').querySelectorAll('.chip').forEach(c =>
-    c.addEventListener('click', () => { activeStatus = c.dataset.status; load(); }));
+    c.addEventListener('click', () => { activeStatus = c.dataset.status; refresh(); }));
 }
 
 async function load() {
@@ -339,13 +363,17 @@ async function openDrawer(id) {
 
   // Status and notes are shown read-only: the Update control was removed, so
   // offering editable inputs with no way to save them would be a dead end.
+  // Status and notes save as soon as they change — no Update button to press.
   html += `<div class="sec">Status</div>
-    <div><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></div>`;
-  if (r.notes) {
-    html += `<div class="sec">Internal notes</div>
-      <p style="font-size:14px;line-height:1.6;margin:0;white-space:pre-wrap">${esc(r.notes)}</p>`;
-  }
-  html += `<div class="row" style="margin-top:22px;justify-content:flex-end">
+    <div class="row" style="margin-top:0;align-items:center">
+      <select class="field" id="d-status" style="flex:1;min-width:180px">${STATUSES.map(s =>
+        `<option value="${esc(s)}"${s === r.status ? ' selected' : ''}>${esc(pretty(s))}</option>`).join('')}</select>
+      <span id="d-saved" class="saved hidden">Saved</span>
+    </div>
+    <div class="sec">Internal notes</div>
+    <textarea class="field" id="d-notes" rows="3" placeholder="Visible to staff only">${esc(r.notes || '')}</textarea>
+    <p style="color:var(--faint);font-size:12px;margin:6px 0 0">Changes save automatically.</p>
+    <div class="row" style="margin-top:22px;justify-content:flex-end">
       <button class="danger" id="d-delete">Delete</button>
     </div>
     <div class="confirm hidden" id="d-confirm">
@@ -367,6 +395,38 @@ async function openDrawer(id) {
   $('#d-body').innerHTML = html;
   $('#drawer').classList.remove('hidden');
   $('#backdrop').classList.remove('hidden');
+
+  // Auto-save: status on change, notes on blur. Keeps the drawer button-free
+  // while making both editable again.
+  async function patch(payload, control) {
+    if (control) control.disabled = true;
+    try {
+      await api('/api/application?id=' + encodeURIComponent(r.id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      Object.assign(r, payload);
+      $('#d-saved').classList.remove('hidden');
+      setTimeout(() => { const s = $('#d-saved'); if (s) s.classList.add('hidden'); }, 1600);
+      await load(); // keep the row, chips and counts in step
+    } catch (e) {
+      alert('Could not save: ' + e.message);
+    } finally {
+      if (control) control.disabled = false;
+    }
+  }
+
+  $('#d-status').addEventListener('change', e =>
+    patch({ status: e.currentTarget.value }, e.currentTarget));
+
+  let lastNotes = r.notes || '';
+  $('#d-notes').addEventListener('blur', e => {
+    const v = e.currentTarget.value;
+    if (v === lastNotes) return;   // don't write on every focus change
+    lastNotes = v;
+    patch({ notes: v }, e.currentTarget);
+  });
 
   // Deletion is irreversible, so it takes two deliberate clicks: the first only
   // reveals what will be destroyed.
