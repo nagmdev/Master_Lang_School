@@ -189,6 +189,57 @@
     return matched + ' elements covered';
   });
 
+  await check('REGRESSION — radios submit real values, not "on"', () => {
+    const form = document.querySelector('form');
+    for (const [name, value] of [['gender', 'Female'], ['lang2', 'French'], ['religion', 'Muslim'], ['bus', 'Yes']]) {
+      const r = form.querySelector(`input[type=radio][name="${name}"][value="${value}"]`);
+      assert(r, `no ${name} radio with value "${value}" — it would submit "on"`);
+      r.checked = true;
+    }
+    const fd = new FormData(form);
+    assert(fd.get('gender') === 'Female', 'gender submitted "' + fd.get('gender') + '" instead of Female');
+    assert(fd.get('religion') === 'Muslim', 'religion submitted "' + fd.get('religion') + '"');
+    return 'gender/lang2/religion/bus carry real values';
+  });
+
+  await check('REGRESSION — age auto-calculates from date of birth', () => {
+    const form = document.querySelector('form');
+    const dob = form.querySelector('[name="dob"]');
+    const age = form.querySelector('[name="age"]');
+    age.value = '';
+    // set via the native setter so React's value tracker fires onChange (a real
+    // date-pick does this); a plain .value= would be deduped and never fire.
+    const nativeSet = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    nativeSet.call(dob, '2016-05-10');
+    dob.dispatchEvent(new Event('change', { bubbles: true }));
+    assert(age.readOnly, 'age should be read-only (derived, not typed)');
+    const n = Number(age.value);
+    assert(n >= 8 && n <= 12, 'age not computed from DOB — got "' + age.value + '"');
+    return 'DOB 2016 → age ' + age.value;
+  });
+
+  await check('REGRESSION — multiple siblings are captured, not just one', async () => {
+    const form = document.querySelector('form');
+    const addBtn = [...form.querySelectorAll('button')].find(b => /add sibling/i.test(b.textContent));
+    assert(addBtn, 'no "Add sibling" button');
+    while (form.querySelectorAll('#ms-sib-rows [data-sib-row]').length < 3) { addBtn.click(); await sleep(120); }
+    const rows = form.querySelectorAll('#ms-sib-rows [data-sib-row]');
+    assert(rows.length === 3, 'expected 3 sibling rows, got ' + rows.length);
+    rows.forEach((row, i) => { row.querySelector('[name$="_name"]').value = 'S' + (i + 1); });
+    const fd = new FormData(form);
+    assert(fd.get('sib1_name') === 'S1' && fd.get('sib2_name') === 'S2' && fd.get('sib3_name') === 'S3',
+      'siblings not all captured: ' + [fd.get('sib1_name'), fd.get('sib2_name'), fd.get('sib3_name')].join(','));
+    // removing a row renumbers the rest
+    rows[1].querySelector('[data-sib-remove]').click();
+    await sleep(120);
+    const after = form.querySelectorAll('#ms-sib-rows [data-sib-row]');
+    assert(after.length === 2, 'remove did not drop a row');
+    assert(after[1].querySelector('[name$="_name"]').name === 'sib2_name', 'rows not renumbered after remove');
+    // clean up so the extra rows don't pollute later control-count / submit tests
+    [...form.querySelectorAll('#ms-sib-rows [data-sib-row]')].forEach((r, i) => { if (i > 0) r.remove(); });
+    return '3 added, 1 removed, renumbered to sib1/sib2';
+  });
+
   await check('REGRESSION — the form actually serialises its data', () => {
     // Without name attributes FormData yields nothing, so any backend would
     // receive an empty application no matter how well it is wired up.
@@ -319,6 +370,9 @@
   });
 
   await check('progress bar tracks a slow upload from 0 → 100', async () => {
+    // Start from a fresh, un-mutated form so earlier tests can't leave it in a
+    // non-submittable state.
+    await goTo(/^Home$/i); await goTo(/^Admissions$/i);
     // Loopback uploads finish in ~60ms and emit a single 100% event, so a real
     // submission can never demonstrate the bar moving. Substitute a stand-in
     // XMLHttpRequest that emits staged progress, proving the wiring end to end.
@@ -403,7 +457,7 @@
       'claims a confirmation email was sent, but nothing sends one');
     if (live) {
       assert(!/Demo mode/i.test(t), 'shows a demo warning even though an endpoint is configured');
-      assert(/MST-\d{4}-\d{4}/.test(t), 'no application id shown');
+      assert(/20\d\d-\d{3,}/.test(t), 'no application id shown');
       return 'live — id issued by the server';
     }
     assert(/Demo mode/i.test(t),
@@ -413,7 +467,7 @@
 
   await check('a live submission is persisted, and its detail requires a session', async () => {
     if (!(window.MS_CONFIG && window.MS_CONFIG.applicationsEndpoint)) return 'skipped (demo mode)';
-    const id = (/MST-\d{4}-\d{4}/.exec(txt()) || [])[0];
+    const id = (/20\d\d-\d{3,}/.exec(txt()) || [])[0];
     assert(id, 'no application id on the confirmation screen');
     // Drop any admin session this browser may already hold, otherwise the check
     // below passes for the wrong reason (an authorised admin legitimately gets 200).

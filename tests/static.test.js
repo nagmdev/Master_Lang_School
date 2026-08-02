@@ -373,6 +373,33 @@ test('the phone pattern rejects garbage and accepts real numbers', () => {
   }
 });
 
+test('BUG: every radio has a value (a value-less radio submits "on")', () => {
+  const radios = FORM.match(/<input type="radio"[^>]*>/g) || [];
+  assert(radios.length >= 10, 'expected the radio groups in the form');
+  for (const r of radios) {
+    const m = /value="([^"]*)"/.exec(r);
+    assert(m && m[1].trim(), 'a radio has no value — it would submit "on": ' + r.slice(0, 80));
+    assert(m[1] !== 'on', 'a radio literally uses value="on"');
+  }
+});
+
+test('BUG: age is read-only and auto-calculated from date of birth', () => {
+  const age = /<input[^>]*name="age"[^>]*>/.exec(FORM);
+  assert(age, 'age field not found');
+  assert(/readonly/.test(age[0]), 'age is still manually editable, not derived');
+  const dob = /<input[^>]*name="dob"[^>]*>/.exec(FORM);
+  assert(dob && /onChange="\{\{ computeAge \}\}"/.test(dob[0]), 'date of birth does not trigger age calculation');
+  assert(/computeAge\(e\)\s*\{/.test(SCRIPT), 'computeAge handler is not defined');
+});
+
+test('BUG: siblings are a repeater, not a single fixed row', () => {
+  assert(/id="ms-sib-rows"/.test(FORM), 'no sibling container — only one sibling can ever be captured');
+  assert(/name="sib1_name"/.test(FORM), 'sibling fields are not indexed (sib1_, sib2_ …)');
+  assert(/onClick="\{\{ addSibling \}\}"/.test(FORM), 'no "add sibling" control');
+  assert(/addSibling\(\)\s*\{/.test(SCRIPT) && /removeSibling\(e\)\s*\{/.test(SCRIPT), 'sibling add/remove handlers missing');
+  assert(/renumberSiblings\(\)\s*\{/.test(SCRIPT), 'no renumbering — removing a row would leave gaps');
+});
+
 test('radio groups all declare a name attribute', () => {
   for (const tag of FORM.match(/<input type="radio"[^>]*>/g) || []) {
     assert(/name="/.test(tag), 'radio without name: ' + tag);

@@ -351,6 +351,25 @@ async function openDrawer(id) {
       present.map(k => `<dt>${esc(LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') +
       `</dl>`;
   }
+  // Siblings arrive as sib1_name, sib1_school, … sib2_name, … — group them by
+  // index into one row each so all siblings show, not just the first.
+  const sibFields = ['name', 'school', 'age', 'grade', 'apply'];
+  const sibLabels = { name: 'Name', school: 'Current school', age: 'Age', grade: 'Grade', apply: 'Applying?' };
+  const sibIdx = [...new Set(Object.keys(f)
+    .map(k => (/^sib(\d+)_/.exec(k) || [])[1]).filter(Boolean))].sort((a, b) => a - b);
+  const sibsWithData = sibIdx.filter(n => sibFields.some(p => String(f['sib' + n + '_' + p] || '').trim()));
+  if (sibsWithData.length) {
+    html += `<div class="sec">Siblings</div>`;
+    for (const n of sibsWithData) {
+      const parts = sibFields
+        .filter(p => String(f['sib' + n + '_' + p] || '').trim())
+        .map(p => `<dt>${esc(sibLabels[p])}</dt><dd>${esc(f['sib' + n + '_' + p])}</dd>`).join('');
+      html += `<div style="font-weight:800;color:var(--navy);font-size:13px;margin:10px 0 4px">Sibling ${esc(n)}</div>
+        <dl class="kv">${parts}</dl>`;
+    }
+    Object.keys(f).forEach(k => { if (/^sib\d+_/.test(k)) used.add(k); });
+  }
+
   const extra = Object.keys(f).filter(k => !used.has(k) && String(f[k] || '').trim());
   if (extra.length) {
     html += `<div class="sec">Other</div><dl class="kv">` +

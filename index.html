@@ -413,16 +413,16 @@
             <div><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }}</label><input name="sname" id="ms-sname" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }}</label><input name="arname" id="ms-arname" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select></div>
-            <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" style="width:100%;padding:12px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" min="2" max="20" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
+            <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" onChange="{{ computeAge }}" style="width:100%;padding:12px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" readonly placeholder="—" title="Calculated from date of birth" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#F1EFE8;color:#5B6472"></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Male" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Female" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
             <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }}</label><input name="citizenship" id="ms-citizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="4"><option>{{ c }}</option></sc-for></select></div>
             <div style="grid-column:1/-1"><label for="ms-address" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.address }}</label><input name="address" id="ms-address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-araddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.araddress }}</label><input name="araddress" id="ms-araddress" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-email" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.email }}</label><input name="email" id="ms-email" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="French" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="German" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Muslim" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Christian" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
           </div>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
@@ -458,21 +458,31 @@
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.familyH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
+            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Married" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Separated" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Divorced" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Widowed" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
             <div><label for="ms-siblingsNo" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.siblingsNo }}</label><input name="siblingsNo" id="ms-siblingsNo" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-birthOrder" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.birthOrder }}</label><input name="birthOrder" id="ms-birthOrder" type="number" min="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }}</label><select name="guardian" id="ms-guardian" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="Arabic" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="English" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
           </div>
 
-          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.sibH }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div><label for="ms-sibName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibName }}</label><input name="sibName" id="ms-sibName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-sibSchool" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibSchool }}</label><input name="sibSchool" id="ms-sibSchool" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-sibAge" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibAge }}</label><input name="sibAge" id="ms-sibAge" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-sibGrade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibGrade }}</label><input name="sibGrade" id="ms-sibGrade" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibApply }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sibApply" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sibApply" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">{{ t.adm.f.sibH }}</div>
+          <p style="color:#8A93A1;font-size:12.5px;margin:0 0 14px">{{ t.adm.f.sibHint }}</p>
+          <div id="ms-sib-rows">
+            <div data-sib-row style="border:1px solid #ECEAE3;border-radius:14px;padding:18px;margin-bottom:14px;background:#fff">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <span style="font-weight:800;color:#0B2346;font-size:13.5px">{{ t.adm.f.sibOne }} <span data-sib-num>1</span></span>
+                <button type="button" data-sib-remove style="display:none;background:none;border:none;color:#C0392B;font-weight:700;font-size:13px;cursor:pointer">{{ t.adm.f.remove }}</button>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div><label for="ms-sib1_name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibName }}</label><input name="sib1_name" id="ms-sib1_name" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div><label for="ms-sib1_school" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibSchool }}</label><input name="sib1_school" id="ms-sib1_school" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div><label for="ms-sib1_age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibAge }}</label><input name="sib1_age" id="ms-sib1_age" type="number" min="0" max="30" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div><label for="ms-sib1_grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibGrade }}</label><input name="sib1_grade" id="ms-sib1_grade" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibApply }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+              </div>
+            </div>
           </div>
+          <button type="button" onClick="{{ addSibling }}" style="background:transparent;border:1.5px dashed #C89A2B;color:#a37e1f;cursor:pointer;font-size:14px;font-weight:800;padding:11px 20px;border-radius:11px;margin-bottom:28px" style-hover="background:#FAF6EC">+ {{ t.adm.f.addSibling }}</button>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px">{{ t.adm.f.emergencyH }}</div>
           <p style="color:#8A93A1;font-size:12.5px;margin:0 0 16px">{{ t.adm.f.emergencyNote }}</p>
@@ -500,7 +510,7 @@
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.otherH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
             <div><label for="ms-busRoute" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRoute }}</label><select name="busRoute" id="ms-busRoute" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.busRouteOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
           </div>
 
@@ -1017,6 +1027,64 @@ class Component extends DCLogic {
   // Confirms to the parent that a document was actually attached — without this
   // the tile still reads "Upload file" after picking a file, so there is no way
   // to tell whether it registered.
+  // Fill the (read-only) age field from the date of birth.
+  computeAge(e) {
+    const el = e && e.target;
+    const form = el && el.form;
+    const ageEl = form && form.querySelector('[name="age"]');
+    if (!ageEl) return;
+    const v = el.value;
+    if (!v) { ageEl.value = ""; return; }
+    const dob = new Date(v);
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    const m = now.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+    ageEl.value = (age >= 0 && age < 100) ? age : "";
+  }
+
+  // Sibling entries are plain DOM rows (names sib1_*, sib2_*, …) so every
+  // sibling the parent adds is captured by FormData — the old single row only
+  // ever saved one.
+  siblingRows() { return Array.prototype.slice.call(document.querySelectorAll("#ms-sib-rows [data-sib-row]")); }
+  renumberSiblings() {
+    const rows = this.siblingRows();
+    rows.forEach((row, i) => {
+      const n = i + 1;
+      row.querySelectorAll("input,select,textarea").forEach(el => {
+        if (el.name) el.name = el.name.replace(/^sib\d+_/, "sib" + n + "_");
+        if (el.id) {
+          const nid = el.id.replace(/sib\d+_/, "sib" + n + "_");
+          const lab = row.querySelector('label[for="' + el.id + '"]');
+          if (lab) lab.setAttribute("for", nid);
+          el.id = nid;
+        }
+      });
+      const num = row.querySelector("[data-sib-num]"); if (num) num.textContent = n;
+      const rm = row.querySelector("[data-sib-remove]");
+      if (rm) {
+        rm.style.display = rows.length > 1 ? "" : "none";
+        // Cloned rows have no React fiber, so a {{ }} onClick never fires on
+        // them — wire removal natively so every row's Remove works.
+        rm.onclick = () => { if (this.siblingRows().length > 1) { row.remove(); this.renumberSiblings(); } };
+      }
+    });
+  }
+  addSibling() {
+    const rows = this.siblingRows();
+    if (!rows.length || rows.length >= 10) return;
+    const clone = rows[0].cloneNode(true);
+    clone.querySelectorAll("input,select,textarea").forEach(el => {
+      if (el.type === "radio") el.checked = false; else el.value = "";
+    });
+    document.getElementById("ms-sib-rows").appendChild(clone);
+    this.renumberSiblings();
+  }
+  removeSibling(e) {
+    const row = e && e.target && e.target.closest("[data-sib-row]");
+    if (row && this.siblingRows().length > 1) { row.remove(); this.renumberSiblings(); }
+  }
+
   onFilePick(e) {
     const el = e && e.target;
     if (!el || !el.files) return;
@@ -1104,6 +1172,9 @@ class Component extends DCLogic {
       hasFileError: !!this.state.fileError,
       fileError: this.state.fileError,
       onFilePick: (e) => this.onFilePick(e),
+      computeAge: (e) => this.computeAge(e),
+      addSibling: () => this.addSibling(),
+      removeSibling: (e) => this.removeSibling(e),
       labelPhoto: this.slotLabel("photo", t.adm.f.upload), stylePhoto: this.slotStyle("photo"),
       labelD1: this.slotLabel("d1", t.adm.f.upload), styleD1: this.slotStyle("d1"),
       labelD2: this.slotLabel("d2", t.adm.f.upload), styleD2: this.slotStyle("d2"),
@@ -1254,7 +1325,7 @@ class Component extends DCLogic {
             siblingsNo: "Number of siblings", birthOrder: "Student's birth order",
             tongue: "Mother tongue", tA: "Arabic", tB: "English", tC: "Other",
             guardian: "Responsible guardian",
-            sibH: "Sibling data (if any)",
+            sibH: "Sibling data (if any)", sibHint: "Add a row for each sibling.", sibOne: "Sibling", addSibling: "Add sibling", remove: "Remove",
             sibName: "Name", sibSchool: "Current school", sibAge: "Age", sibGrade: "Grade", sibApply: "Applying to Masters?", yes: "Yes", no: "No",
             emergencyH: "Emergency contacts", emergencyNote: "Two persons other than the parents.",
             eName: "Contact name", ePhone: "Contact number", eRelation: "Relationship", eAddress: "Address", person1: "Contact 1", person2: "Contact 2",
@@ -1450,7 +1521,7 @@ class Component extends DCLogic {
             siblingsNo: "عدد الإخوة", birthOrder: "ترتيب الطالب بين إخوته",
             tongue: "اللغة الأم", tA: "عربي", tB: "إنجليزي", tC: "أخرى",
             guardian: "ولي الأمر المسؤول / الوصي",
-            sibH: "بيانات الإخوة (إن وُجدوا)",
+            sibH: "بيانات الإخوة (إن وُجدوا)", sibHint: "أضف صفًا لكل أخ أو أخت.", sibOne: "الأخ/الأخت", addSibling: "إضافة أخ/أخت", remove: "حذف",
             sibName: "الاسم", sibSchool: "المدرسة الحالية", sibAge: "العمر", sibGrade: "الصف", sibApply: "التقديم إلى ماسترز؟", yes: "نعم", no: "لا",
             emergencyH: "جهات الاتصال في حالات الطوارئ", emergencyNote: "شخصان بخلاف الوالدين.",
             eName: "اسم جهة الاتصال", ePhone: "رقم التواصل", eRelation: "صلة القرابة", eAddress: "العنوان", person1: "جهة الاتصال 1", person2: "جهة الاتصال 2",
