@@ -139,10 +139,8 @@
           <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.stats.eyebrow }}</div>
           <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:46px;color:#fff;margin:12px 0 0">{{ t.stats.heading }}</h2>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px">
-          <div style="text-align:center;padding:14px"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s1n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s1l }}</div></div>
-          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s2n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s2l }}</div></div>
-          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s3n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s3l }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px;max-width:620px;margin:0 auto">
+          <div style="text-align:center;padding:14px"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s3n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s3l }}</div></div>
           <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s4n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s4l }}</div></div>
         </div>
       </div>
@@ -783,7 +781,7 @@ class Component extends DCLogic {
           title: "Where bright minds are shaped for a global future.",
           sub: "A premier bilingual language school in El Santa — nurturing curious, confident and compassionate learners from Kindergarten to Secondary.",
           cta1: "Apply for Admission", cta2: "Book a Campus Tour",
-          trust: "Trusted by 1,600+ families across Gharbia"
+          trust: "Bilingual education, accredited by the Ministry of Education"
         },
         marquee: ["British & American Curriculum", "Cambridge Assessment", "Ministry Accredited", "Bilingual · EN / AR", "Est. 2004"],
         why: {
@@ -795,8 +793,7 @@ class Component extends DCLogic {
           i4t: "Safe, Modern Campus", i4d: "Secured grounds, smart classrooms and bright, purpose-built learning spaces."
         },
         stats: {
-          eyebrow: "By the numbers", heading: "Two decades of measurable excellence",
-          s1n: "20", s1l: "Years shaping futures", s2n: "1,600+", s2l: "Students enrolled",
+          eyebrow: "By the numbers", heading: "Excellence you can measure",
           s3n: "120+", s3l: "Expert educators", s4n: "96%", s4l: "Parent satisfaction"
         },
         prog: {
@@ -809,7 +806,7 @@ class Component extends DCLogic {
           explore: "Explore academics"
         },
         test: {
-          eyebrow: "Testimonials", heading: "What our families say",
+          eyebrow: "Testimonials", heading: "Why parents choose us",
           q1: "Choosing Masters was the best decision we made for our daughter. She is thriving — academically and as a person.", n1: "Mona A.", r1: "Parent · Grade 5",
           q2: "The teachers know my son by name and by heart. He actually looks forward to school every morning.", n2: "Hossam E.", r2: "Parent · Grade 2",
           q3: "Bilingual, disciplined and genuinely warm. Masters has raised the bar for schools in El Santa.", n3: "Salma R.", r3: "Parent · Grade 8"
@@ -867,7 +864,7 @@ class Component extends DCLogic {
           }
         },
         about: {
-          eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "For two decades, Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
+          eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
           mh: "Our Mission", md: "To prepare confident, bilingual and principled young people ready to lead in a connected world.",
           vh: "Our Vision", vd: "To be the most trusted language school in Gharbia — the first choice for families who expect more.",
           vah: "Our Values", vad: "Respect, curiosity, discipline and compassion guide every classroom, corridor and conversation.",
@@ -875,11 +872,11 @@ class Component extends DCLogic {
           leadh: "Meet our leadership", leadsub: "Experienced educators dedicated to your child’s success.",
           p1n: "Dr. Amina Farouk", p1r: "Principal", p2n: "Mr. Karim Nabil", p2r: "Vice Principal — Academics", p3n: "Ms. Rania Adel", p3r: "Head of Primary", p4n: "Mr. Tarek Sami", p4r: "Head of Student Affairs",
           accredh: "Accreditations & partnerships", accred: ["Ministry of Education — Egypt", "Cambridge Assessment English", "British Council Partner", "Bilingual Curriculum Certified"],
-          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Celebrated 20 years and 1,600+ students across all stages." }]
+          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Expanded STEM, robotics and student-life programs across all stages." }]
         },
         life: {
           eyebrow: "Student Life", title: "Learning that lives beyond the classroom.", sub: "Sport, art, music and service turn knowledge into character. Here is where our students discover who they are.",
-          items: [{ t: "Sports", d: "Football, basketball, athletics and swimming with inter-school leagues." }, { t: "Music", d: "Choir, instruments and an annual concert that fills the hall." }, { t: "Art & Design", d: "Studios for drawing, painting and digital creativity." }, { t: "Robotics & STEM", d: "Coding, robotics teams and hands-on science challenges." }, { t: "Trips & Adventure", d: "Educational trips that take learning into the real world." }, { t: "Competitions", d: "Debate, spelling, math and science olympiad teams." }, { t: "Leadership", d: "Student council and prefect programs that build responsibility." }, { t: "Community Service", d: "Giving back to El Santa through year-round initiatives." }],
+          items: [{ t: "Sports", d: "Football, basketball and athletics with inter-school leagues." }, { t: "Music", d: "Choir, instruments and an annual concert that fills the hall." }, { t: "Art & Design", d: "Studios for drawing, painting and digital creativity." }, { t: "Robotics & STEM", d: "Coding, robotics teams and hands-on science challenges." }, { t: "Trips & Adventure", d: "Educational trips that take learning into the real world." }, { t: "Competitions", d: "Debate, spelling, math and science olympiad teams." }, { t: "Leadership", d: "Student council and prefect programs that build responsibility." }, { t: "Community Service", d: "Giving back to El Santa through year-round initiatives." }],
           ctah: "There’s a place for every passion.", ctasub: "Come see student life in action — book a campus tour today.", ctabtn: "Book a Campus Tour"
         },
         careers: {
@@ -921,7 +918,7 @@ class Component extends DCLogic {
           title: "حيث تُصقَل العقول النيّرة لمستقبلٍ عالمي.",
           sub: "مدرسة لغات ثنائية رائدة في السنطة — نُنشئ متعلّمين فضوليين واثقين ومتعاطفين من رياض الأطفال حتى الثانوية.",
           cta1: "قدّم للالتحاق", cta2: "احجز زيارة للحرم",
-          trust: "محل ثقة أكثر من 1,600 أسرة في الغربية"
+          trust: "تعليم ثنائي اللغة معتمد من وزارة التربية والتعليم"
         },
         marquee: ["منهج بريطاني وأمريكي", "تقييم كامبريدج", "معتمدة من الوزارة", "ثنائية اللغة · عربي / إنجليزي", "تأسست 2004"],
         why: {
@@ -933,8 +930,7 @@ class Component extends DCLogic {
           i4t: "حرم آمن وحديث", i4d: "مبانٍ مؤمّنة وفصول ذكية ومساحات تعلّم مضيئة ومصمّمة بعناية."
         },
         stats: {
-          eyebrow: "بالأرقام", heading: "عقدان من التميّز الملموس",
-          s1n: "20", s1l: "عامًا نصنع المستقبل", s2n: "1,600+", s2l: "طالب وطالبة",
+          eyebrow: "بالأرقام", heading: "تميّزٌ يمكن قياسه",
           s3n: "120+", s3l: "معلّم متخصّص", s4n: "96%", s4l: "رضا أولياء الأمور"
         },
         prog: {
@@ -947,7 +943,7 @@ class Component extends DCLogic {
           explore: "استكشف البرامج"
         },
         test: {
-          eyebrow: "آراء الأسر", heading: "ماذا تقول أسرنا",
+          eyebrow: "آراء الأسر", heading: "لماذا يختارنا أولياء الأمور",
           q1: "كان اختيار ماسترز أفضل قرار اتخذناه لابنتنا. إنها تزدهر أكاديميًا وكإنسانة.", n1: "منى أحمد", r1: "ولية أمر · الصف 5",
           q2: "المعلّمون يعرفون ابني بالاسم وبالقلب. صار ينتظر المدرسة كل صباح.", n2: "حسام السيد", r2: "ولي أمر · الصف 2",
           q3: "ثنائية اللغة ومنضبطة ودافئة حقًا. رفعت ماسترز مستوى المدارس في السنطة.", n3: "سلمى رمضان", r3: "ولية أمر · الصف 8"
@@ -1005,7 +1001,7 @@ class Component extends DCLogic {
           }
         },
         about: {
-          eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "على مدى عقدين، كانت مدرسة ماسترز للغات بيتًا ثانيًا لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
+          eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "مدرسة ماسترز للغات بيتٌ ثانٍ لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
           mh: "رسالتنا", md: "إعداد نشءٍ واثقٍ ثنائي اللغة صاحب مبادئ، جاهزٍ للقيادة في عالمٍ متّصل.",
           vh: "رؤيتنا", vd: "أن نكون مدرسة اللغات الأكثر ثقةً في الغربية — الخيار الأول للأسر التي تطمح للأفضل.",
           vah: "قيمنا", vad: "الاحترام والفضول والانضباط والتعاطف تُوجّه كل فصلٍ وكل ممرٍّ وكل حوار.",
@@ -1013,11 +1009,11 @@ class Component extends DCLogic {
           leadh: "تعرّف على قيادتنا", leadsub: "معلّمون ذوو خبرة مكرّسون لنجاح طفلك.",
           p1n: "د. أمينة فاروق", p1r: "المديرة", p2n: "أ. كريم نبيل", p2r: "وكيل المدرسة — الشؤون الأكاديمية", p3n: "أ. رانيا عادل", p3r: "رئيسة المرحلة الابتدائية", p4n: "أ. طارق سامي", p4r: "رئيس شؤون الطلاب",
           accredh: "الاعتمادات والشراكات", accred: ["وزارة التربية والتعليم — مصر", "تقييم كامبريدج للإنجليزية", "شريك المجلس الثقافي البريطاني", "منهج ثنائي اللغة معتمد"],
-          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "الاحتفال بعشرين عامًا وأكثر من 1,600 طالب في كل المراحل." }]
+          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "التوسّع في برامج STEM والروبوتات والأنشطة الطلابية بكل المراحل." }]
         },
         life: {
           eyebrow: "الحياة الطلابية", title: "تعلّمٌ يمتدّ خارج الفصل.", sub: "الرياضة والفن والموسيقى والخدمة تحوّل المعرفة إلى شخصية. هنا يكتشف طلابنا حقيقة أنفسهم.",
-          items: [{ t: "الرياضة", d: "كرة قدم وسلة وألعاب قوى وسباحة مع دوريات بين المدارس." }, { t: "الموسيقى", d: "كورال وآلات وحفلٌ سنوي يملأ القاعة." }, { t: "الفن والتصميم", d: "استوديوهات للرسم والتلوين والإبداع الرقمي." }, { t: "الروبوتات وSTEM", d: "برمجة وفرق روبوتات وتحدّيات علمية عملية." }, { t: "الرحلات والمغامرة", d: "رحلات تعليمية تأخذ التعلّم إلى العالم الحقيقي." }, { t: "المسابقات", d: "فرق مناظرة وإملاء ورياضيات وأولمبياد علوم." }, { t: "القيادة", d: "مجلس طلابي وبرامج ريادة تبني المسؤولية." }, { t: "خدمة المجتمع", d: "العطاء لأهل السنطة عبر مبادرات على مدار العام." }],
+          items: [{ t: "الرياضة", d: "كرة قدم وسلة وألعاب قوى مع دوريات بين المدارس." }, { t: "الموسيقى", d: "كورال وآلات وحفلٌ سنوي يملأ القاعة." }, { t: "الفن والتصميم", d: "استوديوهات للرسم والتلوين والإبداع الرقمي." }, { t: "الروبوتات وSTEM", d: "برمجة وفرق روبوتات وتحدّيات علمية عملية." }, { t: "الرحلات والمغامرة", d: "رحلات تعليمية تأخذ التعلّم إلى العالم الحقيقي." }, { t: "المسابقات", d: "فرق مناظرة وإملاء ورياضيات وأولمبياد علوم." }, { t: "القيادة", d: "مجلس طلابي وبرامج ريادة تبني المسؤولية." }, { t: "خدمة المجتمع", d: "العطاء لأهل السنطة عبر مبادرات على مدار العام." }],
           ctah: "لكلّ شغفٍ مكان.", ctasub: "تعال شاهد الحياة الطلابية على الطبيعة — احجز زيارة اليوم.", ctabtn: "احجز زيارة للحرم"
         },
         careers: {

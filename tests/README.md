@@ -103,7 +103,7 @@ the dashboard from a separate subdomain would remove that class of risk.
 
 ## Receiving real applications
 
-The form now collects every field (76 named controls, ~58 populated on a typical
+The form now collects every field (83 named controls, ~60 populated on a typical
 submission) and POSTs them as `multipart/form-data`, including the uploaded
 birth certificate / national ID / school certificate.
 

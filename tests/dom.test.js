@@ -52,6 +52,9 @@
   function fillRequired(form) {
     form.querySelectorAll('[required]').forEach(el => {
       if (el.tagName === 'SELECT') { if (el.selectedIndex < 0) el.selectedIndex = 0; return; }
+      // A patterned field (the 14-digit national IDs) rejects SAMPLE.text, so
+      // derive a value the control's own pattern accepts.
+      if (el.pattern === '[0-9]{14}') { el.value = '29001011234567'; return; }
       el.value = SAMPLE[el.type] || SAMPLE.text;
     });
     const bad = [...form.querySelectorAll(':invalid')];

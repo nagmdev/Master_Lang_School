@@ -29,7 +29,7 @@ async function createApplication(req, res) {
   const { fields, files } = await parseRequest(req);
 
   // Minimum viable application: without these the record is not actionable.
-  const required = ['fname', 'lname', 'grade', 'faName', 'faMobile'];
+  const required = ['fname', 'lname', 'grade', 'faName', 'faMobile', 'stNid', 'faNid', 'moNid'];
   const missing = required.filter(k => !String(fields[k] || '').trim());
   if (missing.length) {
     return json(res, 400, { error: 'missing required fields', fields: missing });

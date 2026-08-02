@@ -53,7 +53,10 @@ function form(fields, files = []) {
   for (const f of files) fd.append(f.field, new Blob([f.data], { type: f.type || 'application/pdf' }), f.name);
   return fd;
 }
-const VALID = { fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762' };
+const VALID = {
+  fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
+  stNid: '29001011234567', faNid: '28505012345678', moNid: '28710129876543',
+};
 
 (async function run() {
   await new Promise(r => setTimeout(r, 250)); // let the listener bind

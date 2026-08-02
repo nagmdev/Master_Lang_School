@@ -23,7 +23,10 @@ async function test(name, fn) {
 function assert(c, m) { if (!c) throw new Error(m || 'assertion failed'); }
 function eq(a, b, m) { if (a !== b) throw new Error((m || 'expected') + `: got ${JSON.stringify(a)}, want ${JSON.stringify(b)}`); }
 
-const VALID = { fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762' };
+const VALID = {
+  fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
+  stNid: '29001011234567', faNid: '28505012345678', moNid: '28710129876543',
+};
 const PDF = Buffer.from([0x25, 0x50, 0x44, 0x46, 0x00, 0xff, 0xfe, 0x0d, 0x0a, 0x2d, 0x2d, 0x00, 0x7f]);
 
 async function runSuite(label, store, cleanup) {

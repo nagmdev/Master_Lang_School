@@ -247,29 +247,31 @@ group('5. Application form — fidelity to admission.docx');
 const REQUIRED_FIELDS = {
   'Personal photo': 'photo', 'Academic year': 'year',
   'First name': 'fname', 'Middle name': 'mname', 'Last name': 'lname',
-  'Student full name': 'sname', 'Arabic name': 'arname',
+  'Student full name': 'sname', "Student's national ID": 'stNid',
   'Grade applying to': 'grade', 'Gender': 'gender', 'Date of birth': 'dob', 'Age': 'age',
-  'Citizenship': 'citizenship', 'Country of residence': 'country',
-  'Address': 'address', 'Arabic address': 'araddress', 'Email': 'email',
-  'Second language': 'lang2', 'Religion': 'religion',
+  'Citizenship': 'citizenship', 'Governorate of residence': 'country',
+  'Address': 'address', 'Email': 'email',
+  'Second language': 'lang2', 'Religion': 'religion', 'Religion — other': 'religionOther',
   'Previous school name': 'psName', 'Previous education system': 'psSystem',
   'Previous grades': 'psGrades', 'Years attended': 'psYears', 'School location': 'psLocation',
   "Father's name": 'faName', "Father's occupation": 'faOcc', "Father's occupation category": 'faOccCat',
   "Father's email": 'faEmail', "Father's address": 'faAddress', "Father's citizenship": 'faCitizenship',
-  "Father's mobile": 'faMobile', 'National ID': 'faNid',
+  "Father's mobile": 'faMobile', "Father's national ID": 'faNid',
   "Mother's name": 'moName', "Mother's occupation": 'moOcc', "Mother's occupation category": 'moOccCat',
   "Mother's email": 'moEmail', "Mother's address": 'moAddress', "Mother's citizenship": 'moCitizenship',
-  "Mother's mobile": 'moMobile',
+  "Mother's mobile": 'moMobile', "Mother's national ID": 'moNid',
   'Marital status': 'marital', 'Number of siblings': 'siblingsNo', 'Birth order': 'birthOrder',
-  'Mother tongue': 'tongue', 'Guardian': 'guardian',
+  'Mother tongue': 'tongue', 'Mother tongue — other': 'tongueOther',
+  'Guardian': 'guardian', 'Guardian — other': 'guardianOther',
   'Sibling name': 'sibName', 'Sibling school': 'sibSchool', 'Sibling age': 'sibAge',
   'Sibling grade': 'sibGrade', 'Sibling applying': 'sibApply',
   'Emergency name': 'eName', 'Emergency phone': 'ePhone', 'Emergency relation': 'eRelation',
-  'Emergency address': 'eAddress',
+  'Emergency relation — other': 'eRelationOther', 'Emergency address': 'eAddress',
   'Health concerns': 'cHealth', 'Psychological concerns': 'cPsych', 'Academic concerns': 'cAcademic',
-  'School bus': 'bus', 'Bus route': 'busRoute',
+  'School bus': 'bus', 'Bus route': 'busRoute', 'Bus route — other': 'busRouteOther',
   "Guardian's National ID upload": 'd1', 'Birth certificate upload': 'd2',
   'Last stage certificate upload': 'd3', 'Other attachments upload': 'd4',
+  'Other attachments description': 'd4Desc',
 };
 
 for (const [label, key] of Object.entries(REQUIRED_FIELDS)) {
@@ -314,9 +316,17 @@ test('grade list runs Pre-K → KG1 → KG2 → Grade 1..12 (15 options)', () =>
   assert(g[14] === 'Grade 12', 'last grade wrong: ' + g[14]);
 });
 
-test('country of residence includes Egypt, KSA and UAE', () => {
-  const c = arrayOf(EN, 'countryOpts').join(' ');
-  for (const n of ['Egypt', 'KSA', 'UAE']) assertHas(c, n, 'country missing');
+test('residence is restricted to the 27 Egyptian governorates', () => {
+  const c = arrayOf(EN, 'countryOpts');
+  assert(c.length === 27, 'expected 27 governorates, got ' + c.length + ': ' + c);
+  for (const n of ['Gharbia', 'Cairo', 'Giza', 'Alexandria', 'Aswan', 'South Sinai']) {
+    assertHas(c.join(' '), n, 'governorate missing');
+  }
+  // Residence outside Egypt is no longer selectable, and there is no free-text escape.
+  for (const n of ['Saudi', 'KSA', 'UAE', 'Emirates', 'Other']) {
+    assertMissing(c.join(' '), n, 'non-Egyptian option still offered');
+  }
+  assert(arrayOf(AR, 'countryOpts').length === 27, 'Arabic governorate list is not 27 long');
 });
 
 test("father's occupation category = public / private / self-employed", () => {
@@ -348,6 +358,70 @@ test('every option array has the same length in Arabic as in English', () => {
     const e = arrayOf(EN, key).length, a = arrayOf(AR, key).length;
     assert(e === a, key + ': en=' + e + ' ar=' + a);
   }
+});
+
+/* ------------------- requested changes: form + copy rules ------------------ */
+group('6b. Requested changes — "Other" free text, national IDs, removed content');
+
+// Picking "Other" must never be a dead end: each control that offers it is
+// paired with a text input the parent can type into.
+test('every "Other" choice has a companion free-text field', () => {
+  const pairs = [
+    ['religion', 'religionOther'], ['tongue', 'tongueOther'],
+    ['guardian', 'guardianOther'], ['eRelation', 'eRelationOther'],
+    ['eRelation_2', 'eRelationOther_2'], ['busRoute', 'busRouteOther'],
+    ['d4', 'd4Desc'],
+  ];
+  for (const [control, specify] of pairs) {
+    assertHas(FORM, 'name="' + control + '"', 'the control itself is gone');
+    assertHas(FORM, 'name="' + specify + '"', 'no free-text companion for ' + control);
+  }
+});
+
+test('the free-text companions are labelled text inputs, not selects', () => {
+  for (const n of ['religionOther', 'tongueOther', 'guardianOther', 'eRelationOther',
+    'eRelationOther_2', 'busRouteOther', 'd4Desc']) {
+    const m = new RegExp('<input name="' + n + '" id="(ms-[A-Za-z0-9-]+)"').exec(FORM);
+    assert(m, n + ' is not rendered as an <input> with an id');
+    assertHas(FORM, 'for="' + m[1] + '"', n + ' has no <label for>');
+  }
+});
+
+test('the three national IDs are required and validated as 14 digits', () => {
+  for (const n of ['stNid', 'faNid', 'moNid']) {
+    const m = new RegExp('<input name="' + n + '"[^>]*>').exec(FORM);
+    assert(m, n + ' is not in the form');
+    assert(/required="required"/.test(m[0]), n + ' is not required');
+    assert(/pattern="\[0-9\]\{14\}"/.test(m[0]), n + ' has no 14-digit pattern');
+    assert(/inputmode="numeric"/.test(m[0]), n + ' has no numeric inputmode');
+  }
+});
+
+test('the national-ID pattern accepts a real ID and rejects anything else', () => {
+  const m = /<input name="stNid"[^>]*pattern="([^"]+)"/.exec(FORM);
+  assert(m, 'no national-ID pattern found');
+  const re = new RegExp('^(?:' + m[1] + ')$');
+  for (const bad of ['', '123', 'abcdefghijklmn', '2901012345678', '012345678901234']) {
+    assert(!re.test(bad), 'pattern wrongly accepts: ' + JSON.stringify(bad));
+  }
+  assert(re.test('29001011234567'), 'pattern wrongly rejects a valid 14-digit ID');
+});
+
+// The site is already bilingual, so a separate "in Arabic" copy of the name and
+// address was duplicate data entry.
+test('the duplicate Arabic name/address fields are gone', () => {
+  for (const n of ['arname', 'araddress']) assertMissing(src, n, 'field was not removed');
+});
+
+// Unverifiable marketing claims the school asked to drop.
+test('the "20 years" and student-count claims are gone', () => {
+  for (const n of ['1,600', 'Two decades', 'عقدين', 'Years shaping futures', 'Students enrolled']) {
+    assertMissing(src, n, 'unverified claim still on the page');
+  }
+});
+
+test('swimming is no longer advertised among the activities', () => {
+  for (const n of ['swimming', 'سباحة']) assertMissing(src, n, 'swimming still listed');
 });
 
 test('phone fields declare a validation pattern and numeric inputmode', () => {

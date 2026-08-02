@@ -154,10 +154,8 @@
           <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.stats.eyebrow }}</div>
           <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:46px;color:#fff;margin:12px 0 0">{{ t.stats.heading }}</h2>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px">
-          <div style="text-align:center;padding:14px"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s1n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s1l }}</div></div>
-          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s2n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s2l }}</div></div>
-          <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s3n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s3l }}</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:26px;max-width:620px;margin:0 auto">
+          <div style="text-align:center;padding:14px"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s3n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s3l }}</div></div>
           <div style="text-align:center;padding:14px;border-inline-start:1px solid rgba(255,255,255,.1)"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:62px;color:#C89A2B;line-height:1">{{ t.stats.s4n }}</div><div style="color:rgba(255,255,255,.85);font-size:15px;margin-top:8px;font-weight:500">{{ t.stats.s4l }}</div></div>
         </div>
       </div>
@@ -411,18 +409,18 @@
             <div><label for="ms-mname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.mname }}</label><input name="mname" id="ms-mname" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-lname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lname }} *</label><input name="lname" id="ms-lname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }}</label><input name="sname" id="ms-sname" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }}</label><input name="arname" id="ms-arname" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-stNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.stNid }} *</label><input name="stNid" id="ms-stNid" required="required" inputmode="numeric" pattern="[0-9]{14}" maxlength="14" title="Enter the 14-digit national ID number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select></div>
             <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" onChange="{{ computeAge }}" style="width:100%;padding:12px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" readonly placeholder="—" title="Calculated from date of birth" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#F1EFE8;color:#5B6472"></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Male" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Female" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
             <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }}</label><input name="citizenship" id="ms-citizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="4"><option>{{ c }}</option></sc-for></select></div>
+            <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="27"><option>{{ c }}</option></sc-for></select></div>
             <div style="grid-column:1/-1"><label for="ms-address" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.address }}</label><input name="address" id="ms-address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-araddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.araddress }}</label><input name="araddress" id="ms-araddress" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-email" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.email }}</label><input name="email" id="ms-email" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="French" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="German" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Muslim" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Christian" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
+            <div><label for="ms-religionOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religionOther }}</label><input name="religionOther" id="ms-religionOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
@@ -441,7 +439,7 @@
             <div><label for="ms-faOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOcc }}</label><input name="faOcc" id="ms-faOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOccCat }}</label><select name="faOccCat" id="ms-faOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatFatherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
             <div><label for="ms-faMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faMobile }} *</label><input name="faMobile" id="ms-faMobile" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-faNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faNid }}</label><input name="faNid" id="ms-faNid" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faNid }} *</label><input name="faNid" id="ms-faNid" required="required" inputmode="numeric" pattern="[0-9]{14}" maxlength="14" title="Enter the 14-digit national ID number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faCitizenship }}</label><input name="faCitizenship" id="ms-faCitizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faEmail }}</label><input name="faEmail" id="ms-faEmail" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faAddress }}</label><input name="faAddress" id="ms-faAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
@@ -452,6 +450,7 @@
             <div><label for="ms-moOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOcc }}</label><input name="moOcc" id="ms-moOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-moOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOccCat }}</label><select name="moOccCat" id="ms-moOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatMotherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
             <div><label for="ms-moMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moMobile }}</label><input name="moMobile" id="ms-moMobile" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moNid }} *</label><input name="moNid" id="ms-moNid" required="required" inputmode="numeric" pattern="[0-9]{14}" maxlength="14" title="Enter the 14-digit national ID number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-moCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moCitizenship }}</label><input name="moCitizenship" id="ms-moCitizenship" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-moEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moEmail }}</label><input name="moEmail" id="ms-moEmail" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-moAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moAddress }}</label><input name="moAddress" id="ms-moAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
@@ -462,7 +461,9 @@
             <div><label for="ms-siblingsNo" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.siblingsNo }}</label><input name="siblingsNo" id="ms-siblingsNo" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-birthOrder" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.birthOrder }}</label><input name="birthOrder" id="ms-birthOrder" type="number" min="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }}</label><select name="guardian" id="ms-guardian" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-guardianOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardianOther }}</label><input name="guardianOther" id="ms-guardianOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="Arabic" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="English" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
+            <div><label for="ms-tongueOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongueOther }}</label><input name="tongueOther" id="ms-tongueOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">{{ t.adm.f.sibH }}</div>
@@ -491,6 +492,7 @@
             <div><label for="ms-eName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName" id="ms-eName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-ePhone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone" id="ms-ePhone" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eRelation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation" id="ms-eRelation" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eRelationOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelationOther }}</label><input name="eRelationOther" id="ms-eRelationOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress" id="ms-eAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person2 }}</div>
@@ -498,6 +500,7 @@
             <div><label for="ms-eName-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName_2" id="ms-eName-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-ePhone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone_2" id="ms-ePhone-2" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eRelation-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation_2" id="ms-eRelation-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eRelationOther-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelationOther }}</label><input name="eRelationOther_2" id="ms-eRelationOther-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eAddress-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress_2" id="ms-eAddress-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
@@ -512,6 +515,7 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
             <div><label for="ms-busRoute" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRoute }}</label><select name="busRoute" id="ms-busRoute" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.busRouteOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-busRouteOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRouteOther }}</label><input name="busRouteOther" id="ms-busRouteOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.docs }}</div>
@@ -523,6 +527,7 @@
             <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
             <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
             <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label>
+            <div style="grid-column:1/-1"><label for="ms-d4Desc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.d4Desc }}</label><input name="d4Desc" id="ms-d4Desc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
           <sc-if value="{{ hasSendError }}" hint-placeholder-val="{{ false }}">
@@ -1215,7 +1220,7 @@ class Component extends DCLogic {
           title: "Where bright minds are shaped for a global future.",
           sub: "A premier bilingual language school in El Santa — nurturing curious, confident and compassionate learners from Kindergarten to Secondary.",
           cta1: "Apply for Admission", cta2: "Book a Campus Tour",
-          trust: "Trusted by 1,600+ families across Gharbia"
+          trust: "Bilingual education, accredited by the Ministry of Education"
         },
         marquee: ["British & American Curriculum", "Cambridge Assessment", "Ministry Accredited", "Bilingual · EN / AR", "Est. 2004"],
         why: {
@@ -1227,8 +1232,7 @@ class Component extends DCLogic {
           i4t: "Safe, Modern Campus", i4d: "Secured grounds, smart classrooms and bright, purpose-built learning spaces."
         },
         stats: {
-          eyebrow: "By the numbers", heading: "Two decades of measurable excellence",
-          s1n: "20", s1l: "Years shaping futures", s2n: "1,600+", s2l: "Students enrolled",
+          eyebrow: "By the numbers", heading: "Excellence you can measure",
           s3n: "120+", s3l: "Expert educators", s4n: "96%", s4l: "Parent satisfaction"
         },
         prog: {
@@ -1241,7 +1245,7 @@ class Component extends DCLogic {
           explore: "Explore academics"
         },
         test: {
-          eyebrow: "Testimonials", heading: "What our families say",
+          eyebrow: "Testimonials", heading: "Why parents choose us",
           q1: "Choosing Masters was the best decision we made for our daughter. She is thriving — academically and as a person.", n1: "Mona A.", r1: "Parent · Grade 5",
           q2: "The teachers know my son by name and by heart. He actually looks forward to school every morning.", n2: "Hossam E.", r2: "Parent · Grade 2",
           q3: "Bilingual, disciplined and genuinely warm. Masters has raised the bar for schools in El Santa.", n3: "Salma R.", r3: "Parent · Grade 8"
@@ -1298,7 +1302,7 @@ class Component extends DCLogic {
           formh: "Online Application Form", formsub: "Academic Year 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
-          countryOpts: ["Egypt", "Saudi Arabia (KSA)", "United Arab Emirates (UAE)", "Other"],
+          countryOpts: ["Gharbia", "Alexandria", "Aswan", "Assiut", "Beheira", "Beni Suef", "Cairo", "Dakahlia", "Damietta", "Fayoum", "Giza", "Ismailia", "Kafr El Sheikh", "Luxor", "Matrouh", "Menofia", "Minya", "New Valley", "North Sinai", "Port Said", "Qalyubia", "Qena", "Red Sea", "Sharkia", "Sohag", "South Sinai", "Suez"],
           occCatFatherOpts: ["Public sector", "Private sector", "Self-employed"],
           occCatMotherOpts: ["Public sector", "Private sector", "Housewife"],
           guardianOpts: ["Father", "Mother", "Grandfather", "Maternal uncle", "Paternal uncle", "Other"],
@@ -1309,33 +1313,33 @@ class Component extends DCLogic {
             student: "Student information",
             photo: "Personal photo", year: "Academic year",
             fname: "First name", mname: "Middle name", lname: "Last name",
-            sname: "Student full name", arname: "Full name in Arabic",
+            sname: "Student full name", stNid: "Student's national ID",
             grade: "Grade applying for", gender: "Gender", gm: "Male", gf: "Female",
-            dob: "Date of birth", age: "Age", citizenship: "Citizenship", country: "Country of residence",
-            address: "Address", araddress: "Address in Arabic", email: "Email address",
+            dob: "Date of birth", age: "Age", citizenship: "Citizenship", country: "Governorate of residence",
+            address: "Address", email: "Email address",
             lang2: "Second language", l2a: "French", l2b: "German",
-            religion: "Religion", relA: "Muslim", relB: "Christian", relC: "Other",
+            religion: "Religion", relA: "Muslim", relB: "Christian", relC: "Other", religionOther: "If other, specify religion",
             prevH: "Previous school / nursery",
             psName: "School name", psSystem: "Education system", psGrades: "Grades", psYears: "Years attended", psLocation: "School location",
             parent: "Parent / Guardian information",
             fatherH: "Father's data", motherH: "Mother's data", familyH: "Family data",
-            faName: "Father's name", faOcc: "Occupation", faOccCat: "Occupation category", faEmail: "Father's email", faAddress: "Father's address", faCitizenship: "Father's citizenship", faMobile: "Father's mobile", faNid: "National ID",
-            moName: "Mother's name", moOcc: "Occupation", moOccCat: "Occupation category", moEmail: "Mother's email", moAddress: "Mother's address", moCitizenship: "Mother's citizenship", moMobile: "Mother's mobile",
+            faName: "Father's name", faOcc: "Occupation", faOccCat: "Occupation category", faEmail: "Father's email", faAddress: "Father's address", faCitizenship: "Father's citizenship", faMobile: "Father's mobile", faNid: "Father's national ID",
+            moName: "Mother's name", moOcc: "Occupation", moOccCat: "Occupation category", moEmail: "Mother's email", moAddress: "Mother's address", moCitizenship: "Mother's citizenship", moMobile: "Mother's mobile", moNid: "Mother's national ID",
             marital: "Parents' marital status", mMarried: "Married", mSeparated: "Separated", mDivorced: "Divorced", mWidowed: "Widowed",
             siblingsNo: "Number of siblings", birthOrder: "Student's birth order",
-            tongue: "Mother tongue", tA: "Arabic", tB: "English", tC: "Other",
-            guardian: "Responsible guardian",
+            tongue: "Mother tongue", tA: "Arabic", tB: "English", tC: "Other", tongueOther: "If other, specify mother tongue",
+            guardian: "Responsible guardian", guardianOther: "If other, specify guardian",
             sibH: "Sibling data (if any)", sibHint: "Add a row for each sibling.", sibOne: "Sibling", addSibling: "Add sibling", remove: "Remove",
             sibName: "Name", sibSchool: "Current school", sibAge: "Age", sibGrade: "Grade", sibApply: "Applying to Masters?", yes: "Yes", no: "No",
             emergencyH: "Emergency contacts", emergencyNote: "Two persons other than the parents.",
-            eName: "Contact name", ePhone: "Contact number", eRelation: "Relationship", eAddress: "Address", person1: "Contact 1", person2: "Contact 2",
+            eName: "Contact name", ePhone: "Contact number", eRelation: "Relationship", eRelationOther: "If other, specify relationship", eAddress: "Address", person1: "Contact 1", person2: "Contact 2",
             concernsH: "Important notes",
             cHealth: "Health concerns", cPsych: "Psychological concerns", cAcademic: "Academic concerns",
             otherH: "Other information",
-            bus: "School bus service", busRoute: "Bus route",
+            bus: "School bus service", busRoute: "Bus route", busRouteOther: "If other, specify route",
             docs: "Required attachments",
             d1: "Guardian's National ID", d2: "Student's birth certificate", d3: "Certificate of last educational stage", d4: "Other attachments",
-            d4hint: "Multiple files allowed", upload: "Upload file", submit: "Submit application",
+            d4hint: "Multiple files allowed", d4Desc: "Describe the other attachments", upload: "Upload file", submit: "Submit application",
             sending: "Sending…", errorH: "We could not send your application",
             errorHint: "Please check your connection and try again — your answers are still in the form.",
             uploadingLabel: "Uploading your application…",
@@ -1356,7 +1360,7 @@ class Component extends DCLogic {
           }
         },
         about: {
-          eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "For two decades, Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
+          eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
           mh: "Our Mission", md: "To prepare confident, bilingual and principled young people ready to lead in a connected world.",
           vh: "Our Vision", vd: "To be the most trusted language school in Gharbia — the first choice for families who expect more.",
           vah: "Our Values", vad: "Respect, curiosity, discipline and compassion guide every classroom, corridor and conversation.",
@@ -1364,11 +1368,11 @@ class Component extends DCLogic {
           leadh: "Meet our leadership", leadsub: "Experienced educators dedicated to your child’s success.",
           p1n: "Dr. Amina Farouk", p1r: "Principal", p2n: "Mr. Karim Nabil", p2r: "Vice Principal — Academics", p3n: "Ms. Rania Adel", p3r: "Head of Primary", p4n: "Mr. Tarek Sami", p4r: "Head of Student Affairs",
           accredh: "Accreditations & partnerships", accred: ["Ministry of Education — Egypt", "Cambridge Assessment English", "British Council Partner", "Bilingual Curriculum Certified"],
-          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Celebrated 20 years and 1,600+ students across all stages." }]
+          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Expanded STEM, robotics and student-life programs across all stages." }]
         },
         life: {
           eyebrow: "Student Life", title: "Learning that lives beyond the classroom.", sub: "Sport, art, music and service turn knowledge into character. Here is where our students discover who they are.",
-          items: [{ t: "Sports", d: "Football, basketball, athletics and swimming with inter-school leagues." }, { t: "Music", d: "Choir, instruments and an annual concert that fills the hall." }, { t: "Art & Design", d: "Studios for drawing, painting and digital creativity." }, { t: "Robotics & STEM", d: "Coding, robotics teams and hands-on science challenges." }, { t: "Trips & Adventure", d: "Educational trips that take learning into the real world." }, { t: "Competitions", d: "Debate, spelling, math and science olympiad teams." }, { t: "Leadership", d: "Student council and prefect programs that build responsibility." }, { t: "Community Service", d: "Giving back to El Santa through year-round initiatives." }],
+          items: [{ t: "Sports", d: "Football, basketball and athletics with inter-school leagues." }, { t: "Music", d: "Choir, instruments and an annual concert that fills the hall." }, { t: "Art & Design", d: "Studios for drawing, painting and digital creativity." }, { t: "Robotics & STEM", d: "Coding, robotics teams and hands-on science challenges." }, { t: "Trips & Adventure", d: "Educational trips that take learning into the real world." }, { t: "Competitions", d: "Debate, spelling, math and science olympiad teams." }, { t: "Leadership", d: "Student council and prefect programs that build responsibility." }, { t: "Community Service", d: "Giving back to El Santa through year-round initiatives." }],
           ctah: "There’s a place for every passion.", ctasub: "Come see student life in action — book a campus tour today.", ctabtn: "Book a Campus Tour"
         },
         careers: {
@@ -1411,7 +1415,7 @@ class Component extends DCLogic {
           title: "حيث تُصقَل العقول النيّرة لمستقبلٍ عالمي.",
           sub: "مدرسة لغات ثنائية رائدة في السنطة — نُنشئ متعلّمين فضوليين واثقين ومتعاطفين من رياض الأطفال حتى الثانوية.",
           cta1: "قدّم للالتحاق", cta2: "احجز زيارة للحرم",
-          trust: "محل ثقة أكثر من 1,600 أسرة في الغربية"
+          trust: "تعليم ثنائي اللغة معتمد من وزارة التربية والتعليم"
         },
         marquee: ["منهج بريطاني وأمريكي", "تقييم كامبريدج", "معتمدة من الوزارة", "ثنائية اللغة · عربي / إنجليزي", "تأسست 2004"],
         why: {
@@ -1423,8 +1427,7 @@ class Component extends DCLogic {
           i4t: "حرم آمن وحديث", i4d: "مبانٍ مؤمّنة وفصول ذكية ومساحات تعلّم مضيئة ومصمّمة بعناية."
         },
         stats: {
-          eyebrow: "بالأرقام", heading: "عقدان من التميّز الملموس",
-          s1n: "20", s1l: "عامًا نصنع المستقبل", s2n: "1,600+", s2l: "طالب وطالبة",
+          eyebrow: "بالأرقام", heading: "تميّزٌ يمكن قياسه",
           s3n: "120+", s3l: "معلّم متخصّص", s4n: "96%", s4l: "رضا أولياء الأمور"
         },
         prog: {
@@ -1437,7 +1440,7 @@ class Component extends DCLogic {
           explore: "استكشف البرامج"
         },
         test: {
-          eyebrow: "آراء الأسر", heading: "ماذا تقول أسرنا",
+          eyebrow: "آراء الأسر", heading: "لماذا يختارنا أولياء الأمور",
           q1: "كان اختيار ماسترز أفضل قرار اتخذناه لابنتنا. إنها تزدهر أكاديميًا وكإنسانة.", n1: "منى أحمد", r1: "ولية أمر · الصف 5",
           q2: "المعلّمون يعرفون ابني بالاسم وبالقلب. صار ينتظر المدرسة كل صباح.", n2: "حسام السيد", r2: "ولي أمر · الصف 2",
           q3: "ثنائية اللغة ومنضبطة ودافئة حقًا. رفعت ماسترز مستوى المدارس في السنطة.", n3: "سلمى رمضان", r3: "ولية أمر · الصف 8"
@@ -1494,7 +1497,7 @@ class Component extends DCLogic {
           formh: "نموذج التقديم الإلكتروني", formsub: "العام الدراسي 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "الصف 1", "الصف 2", "الصف 3", "الصف 4", "الصف 5", "الصف 6", "الصف 7", "الصف 8", "الصف 9", "الصف 10", "الصف 11", "الصف 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
-          countryOpts: ["مصر", "السعودية", "الإمارات", "أخرى"],
+          countryOpts: ["الغربية", "الإسكندرية", "أسوان", "أسيوط", "البحيرة", "بني سويف", "القاهرة", "الدقهلية", "دمياط", "الفيوم", "الجيزة", "الإسماعيلية", "كفر الشيخ", "الأقصر", "مطروح", "المنوفية", "المنيا", "الوادي الجديد", "شمال سيناء", "بورسعيد", "القليوبية", "قنا", "البحر الأحمر", "الشرقية", "سوهاج", "جنوب سيناء", "السويس"],
           occCatFatherOpts: ["قطاع عام", "قطاع خاص", "عمل حر"],
           occCatMotherOpts: ["قطاع عام", "قطاع خاص", "ربة منزل"],
           guardianOpts: ["الأب", "الأم", "الجد", "الخال", "العم", "أخرى"],
@@ -1505,33 +1508,33 @@ class Component extends DCLogic {
             student: "بيانات الطالب",
             photo: "الصورة الشخصية", year: "العام الدراسي",
             fname: "الاسم الأول", mname: "الاسم الأوسط", lname: "الاسم الأخير",
-            sname: "اسم الطالب بالكامل", arname: "الاسم باللغة العربية",
+            sname: "اسم الطالب بالكامل", stNid: "الرقم القومي للطالب",
             grade: "الصف المتقدَّم إليه", gender: "النوع", gm: "ذكر", gf: "أنثى",
-            dob: "تاريخ الميلاد", age: "العمر", citizenship: "الجنسية", country: "بلد الإقامة",
-            address: "العنوان", araddress: "العنوان باللغة العربية", email: "البريد الإلكتروني",
+            dob: "تاريخ الميلاد", age: "العمر", citizenship: "الجنسية", country: "محافظة الإقامة",
+            address: "العنوان", email: "البريد الإلكتروني",
             lang2: "اللغة الثانية", l2a: "فرنسي", l2b: "ألماني",
-            religion: "الديانة", relA: "مسلم", relB: "مسيحي", relC: "أخرى",
+            religion: "الديانة", relA: "مسلم", relB: "مسيحي", relC: "أخرى", religionOther: "إن اخترت «أخرى»، حدّد الديانة",
             prevH: "المدرسة/الحضانة السابقة",
             psName: "اسم المدرسة", psSystem: "نظام التعليم", psGrades: "الصفوف", psYears: "سنوات الحضور", psLocation: "موقع المدرسة",
             parent: "بيانات ولي الأمر",
             fatherH: "بيانات الأب", motherH: "بيانات الأم", familyH: "بيانات العائلة",
-            faName: "اسم الأب", faOcc: "الوظيفة", faOccCat: "قطاع الوظيفة", faEmail: "البريد الإلكتروني للأب", faAddress: "عنوان الأب", faCitizenship: "جنسية الأب", faMobile: "رقم محمول الأب", faNid: "الرقم القومي",
-            moName: "اسم الأم", moOcc: "وظيفة الأم", moOccCat: "قطاع وظيفة الأم", moEmail: "البريد الإلكتروني للأم", moAddress: "عنوان الأم", moCitizenship: "جنسية الأم", moMobile: "رقم محمول الأم",
+            faName: "اسم الأب", faOcc: "الوظيفة", faOccCat: "قطاع الوظيفة", faEmail: "البريد الإلكتروني للأب", faAddress: "عنوان الأب", faCitizenship: "جنسية الأب", faMobile: "رقم محمول الأب", faNid: "الرقم القومي للأب",
+            moName: "اسم الأم", moOcc: "وظيفة الأم", moOccCat: "قطاع وظيفة الأم", moEmail: "البريد الإلكتروني للأم", moAddress: "عنوان الأم", moCitizenship: "جنسية الأم", moMobile: "رقم محمول الأم", moNid: "الرقم القومي للأم",
             marital: "الحالة الاجتماعية للوالدين", mMarried: "متزوج", mSeparated: "منفصل", mDivorced: "مطلق", mWidowed: "أرمل",
             siblingsNo: "عدد الإخوة", birthOrder: "ترتيب الطالب بين إخوته",
-            tongue: "اللغة الأم", tA: "عربي", tB: "إنجليزي", tC: "أخرى",
-            guardian: "ولي الأمر المسؤول / الوصي",
+            tongue: "اللغة الأم", tA: "عربي", tB: "إنجليزي", tC: "أخرى", tongueOther: "إن اخترت «أخرى»، حدّد اللغة الأم",
+            guardian: "ولي الأمر المسؤول / الوصي", guardianOther: "إن اخترت «أخرى»، حدّد صلة ولي الأمر",
             sibH: "بيانات الإخوة (إن وُجدوا)", sibHint: "أضف صفًا لكل أخ أو أخت.", sibOne: "الأخ/الأخت", addSibling: "إضافة أخ/أخت", remove: "حذف",
             sibName: "الاسم", sibSchool: "المدرسة الحالية", sibAge: "العمر", sibGrade: "الصف", sibApply: "التقديم إلى ماسترز؟", yes: "نعم", no: "لا",
             emergencyH: "جهات الاتصال في حالات الطوارئ", emergencyNote: "شخصان بخلاف الوالدين.",
-            eName: "اسم جهة الاتصال", ePhone: "رقم التواصل", eRelation: "صلة القرابة", eAddress: "العنوان", person1: "جهة الاتصال 1", person2: "جهة الاتصال 2",
+            eName: "اسم جهة الاتصال", ePhone: "رقم التواصل", eRelation: "صلة القرابة", eRelationOther: "إن اخترت «أخرى»، حدّد صلة القرابة", eAddress: "العنوان", person1: "جهة الاتصال 1", person2: "جهة الاتصال 2",
             concernsH: "ملاحظات هامة",
             cHealth: "ملاحظات صحية", cPsych: "ملاحظات نفسية", cAcademic: "ملاحظات أكاديمية",
             otherH: "بيانات أخرى",
-            bus: "حافلة المدرسة", busRoute: "خط سير الحافلة",
+            bus: "حافلة المدرسة", busRoute: "خط سير الحافلة", busRouteOther: "إن اخترت «أخرى»، حدّد خط السير",
             docs: "المرفقات الإلزامية",
             d1: "بطاقة الرقم القومي لولي الأمر", d2: "شهادة ميلاد الطالب", d3: "شهادة آخر مرحلة دراسية", d4: "مرفقات إضافية",
-            d4hint: "يمكن رفع أكثر من ملف", upload: "رفع ملف", submit: "إرسال الطلب",
+            d4hint: "يمكن رفع أكثر من ملف", d4Desc: "وصف المرفقات الإضافية", upload: "رفع ملف", submit: "إرسال الطلب",
             sending: "جارٍ الإرسال…", errorH: "تعذّر إرسال طلبك",
             errorHint: "يرجى التحقق من الاتصال والمحاولة مرة أخرى — إجاباتك ما زالت موجودة في النموذج.",
             uploadingLabel: "جارٍ رفع طلبك…",
@@ -1552,7 +1555,7 @@ class Component extends DCLogic {
           }
         },
         about: {
-          eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "على مدى عقدين، كانت مدرسة ماسترز للغات بيتًا ثانيًا لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
+          eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "مدرسة ماسترز للغات بيتٌ ثانٍ لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
           mh: "رسالتنا", md: "إعداد نشءٍ واثقٍ ثنائي اللغة صاحب مبادئ، جاهزٍ للقيادة في عالمٍ متّصل.",
           vh: "رؤيتنا", vd: "أن نكون مدرسة اللغات الأكثر ثقةً في الغربية — الخيار الأول للأسر التي تطمح للأفضل.",
           vah: "قيمنا", vad: "الاحترام والفضول والانضباط والتعاطف تُوجّه كل فصلٍ وكل ممرٍّ وكل حوار.",
@@ -1560,11 +1563,11 @@ class Component extends DCLogic {
           leadh: "تعرّف على قيادتنا", leadsub: "معلّمون ذوو خبرة مكرّسون لنجاح طفلك.",
           p1n: "د. أمينة فاروق", p1r: "المديرة", p2n: "أ. كريم نبيل", p2r: "وكيل المدرسة — الشؤون الأكاديمية", p3n: "أ. رانيا عادل", p3r: "رئيسة المرحلة الابتدائية", p4n: "أ. طارق سامي", p4r: "رئيس شؤون الطلاب",
           accredh: "الاعتمادات والشراكات", accred: ["وزارة التربية والتعليم — مصر", "تقييم كامبريدج للإنجليزية", "شريك المجلس الثقافي البريطاني", "منهج ثنائي اللغة معتمد"],
-          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "الاحتفال بعشرين عامًا وأكثر من 1,600 طالب في كل المراحل." }]
+          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "التوسّع في برامج STEM والروبوتات والأنشطة الطلابية بكل المراحل." }]
         },
         life: {
           eyebrow: "الحياة الطلابية", title: "تعلّمٌ يمتدّ خارج الفصل.", sub: "الرياضة والفن والموسيقى والخدمة تحوّل المعرفة إلى شخصية. هنا يكتشف طلابنا حقيقة أنفسهم.",
-          items: [{ t: "الرياضة", d: "كرة قدم وسلة وألعاب قوى وسباحة مع دوريات بين المدارس." }, { t: "الموسيقى", d: "كورال وآلات وحفلٌ سنوي يملأ القاعة." }, { t: "الفن والتصميم", d: "استوديوهات للرسم والتلوين والإبداع الرقمي." }, { t: "الروبوتات وSTEM", d: "برمجة وفرق روبوتات وتحدّيات علمية عملية." }, { t: "الرحلات والمغامرة", d: "رحلات تعليمية تأخذ التعلّم إلى العالم الحقيقي." }, { t: "المسابقات", d: "فرق مناظرة وإملاء ورياضيات وأولمبياد علوم." }, { t: "القيادة", d: "مجلس طلابي وبرامج ريادة تبني المسؤولية." }, { t: "خدمة المجتمع", d: "العطاء لأهل السنطة عبر مبادرات على مدار العام." }],
+          items: [{ t: "الرياضة", d: "كرة قدم وسلة وألعاب قوى مع دوريات بين المدارس." }, { t: "الموسيقى", d: "كورال وآلات وحفلٌ سنوي يملأ القاعة." }, { t: "الفن والتصميم", d: "استوديوهات للرسم والتلوين والإبداع الرقمي." }, { t: "الروبوتات وSTEM", d: "برمجة وفرق روبوتات وتحدّيات علمية عملية." }, { t: "الرحلات والمغامرة", d: "رحلات تعليمية تأخذ التعلّم إلى العالم الحقيقي." }, { t: "المسابقات", d: "فرق مناظرة وإملاء ورياضيات وأولمبياد علوم." }, { t: "القيادة", d: "مجلس طلابي وبرامج ريادة تبني المسؤولية." }, { t: "خدمة المجتمع", d: "العطاء لأهل السنطة عبر مبادرات على مدار العام." }],
           ctah: "لكلّ شغفٍ مكان.", ctasub: "تعال شاهد الحياة الطلابية على الطبيعة — احجز زيارة اليوم.", ctabtn: "احجز زيارة للحرم"
         },
         careers: {
