@@ -921,7 +921,9 @@ class Component extends DCLogic {
   endpoint() {
     return (typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.applicationsEndpoint) || "";
   }
-  localId() { return "MST-2026-" + Math.floor(1000 + Math.random() * 9000); }
+  // Demo/offline fallback only — live submissions use the server's sequential
+  // reference (from 1800). Matches the "<year>-<number>" academic-code format.
+  localId() { const y = (typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.academicYear) || "2026"; return y + "-" + Math.floor(1800 + Math.random() * 800); }
 
   submit(e) {
     if (e && e.preventDefault) e.preventDefault();

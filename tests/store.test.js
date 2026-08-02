@@ -32,7 +32,7 @@ async function runSuite(label, store, cleanup) {
   let id = '';
   await test('creates an application and returns a well-formed id', async () => {
     const row = await store.createApplication({ fields: VALID, files: [] });
-    assert(/^MST-\d{4}-\d{4}$/.test(row.id), 'bad id: ' + row.id);
+    assert(/^\d{4}-\d+$/.test(row.id), 'bad id: ' + row.id);
     eq(row.status, 'new', 'initial status');
     eq(row.notes, '', 'initial notes');
     assert(!isNaN(Date.parse(row.submittedAt)), 'submittedAt is not a date: ' + row.submittedAt);
@@ -130,6 +130,28 @@ async function runSuite(label, store, cleanup) {
     const b = await store.createApplication({ fields: VALID, files: [] });
     const name = (await store.getApplication(a.id)).files[0].storedAs;
     eq(await store.readFile(b.id, name), null, 'cross-application document access is possible');
+  });
+
+  await test('applicant references are sequential and start at 1800', async () => {
+    const a = await store.createApplication({ fields: VALID, files: [] });
+    const b = await store.createApplication({ fields: VALID, files: [] });
+    const na = Number(a.id.split('-')[1]);
+    const nb = Number(b.id.split('-')[1]);
+    assert(/^\d{4}-\d+$/.test(a.id), 'reference is not <year>-<number>: ' + a.id);
+    assert(na >= 1800, 'reference below 1800: ' + a.id);
+    assert(nb === na + 1, `references not sequential: ${a.id} then ${b.id}`);
+  });
+
+  await test('admin workflow fields save, merge and are whitelisted', async () => {
+    const row = await store.createApplication({ fields: VALID, files: [] });
+    assert(row.admin && typeof row.admin === 'object', 'new application has no admin object');
+    await store.updateApplication(row.id, { admin: { paymentResponsible: 'Ms. Sara', interviewDate: '2026-09-01' } });
+    await store.updateApplication(row.id, { admin: { followupStatus: 'Email + SMS', evil: 'x' } });
+    const back = await store.getApplication(row.id);
+    eq(back.admin.paymentResponsible, 'Ms. Sara', 'payment responsible not saved');
+    eq(back.admin.interviewDate, '2026-09-01', 'interview date lost on the second merge');
+    eq(back.admin.followupStatus, 'Email + SMS', 'follow-up not saved');
+    assert(back.admin.evil === undefined, 'a non-whitelisted admin key was stored');
   });
 
   await test('deletes an application and reports what was removed', async () => {

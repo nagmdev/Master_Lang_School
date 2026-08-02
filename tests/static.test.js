@@ -406,9 +406,12 @@ group('7. Submission & state handling');
 
 test('the form is wired to the submit handler', () => assertHas(FORM, 'onSubmit="{{ submit }}"'));
 
-test('submit generates an application ID in the MST-2026-#### format', () => {
-  assert(/appId:\s*id|"MST-2026-"/.test(SCRIPT), 'application ID generation not found');
-  assertHas(SCRIPT, 'MST-2026-');
+test('the client fallback id uses the <year>-<number> academic-code format', () => {
+  // live submissions use the server reference; this is only the demo fallback
+  const m = /localId\(\)\s*\{([\s\S]*?)\}/.exec(SCRIPT);
+  assert(m, 'localId() not found');
+  assert(!/MST-/.test(m[1]), 'demo id still uses the old MST- prefix');
+  assert(/academicYear/.test(m[1]), 'demo id ignores the configurable academic year');
 });
 
 test('a confirmation panel exists and is gated on submitted state', () => {

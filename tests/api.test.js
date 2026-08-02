@@ -65,7 +65,7 @@ const VALID = { fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Has
   await test('a complete application is accepted and gets an id', async () => {
     const r = await req('POST', '/api/applications', { body: form(VALID) });
     eq(r.status, 201, 'status');
-    assert(/^MST-\d{4}-\d{4}$/.test(r.json.applicationId), 'bad id: ' + r.json.applicationId);
+    assert(/^\d{4}-\d+$/.test(r.json.applicationId), 'bad id: ' + r.json.applicationId);
     createdId = r.json.applicationId;
   });
 
@@ -302,6 +302,19 @@ const VALID = { fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Has
     const forced = await req('GET', `/api/file?id=${evil.json.applicationId}&name=${enm}&mode=inline`, { auth: true });
     assert(/^attachment/i.test(forced.headers.get('content-disposition') || ''),
       'an HTML upload was served inline — that is an XSS vector');
+  });
+
+  await test('admin workflow fields (payment / interview / follow-up) persist via PATCH', async () => {
+    const made = await req('POST', '/api/applications', { body: form(VALID) });
+    const up = await req('POST', '/api/application?id=' + made.json.applicationId, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ admin: { paymentResponsible: 'Finance Office', interviewDate: '2026-09-10' } }),
+    });
+    eq(up.status, 200, 'patch status');
+    eq(up.json.admin.paymentResponsible, 'Finance Office', 'payment responsible not returned');
+    eq(up.json.admin.interviewDate, '2026-09-10', 'interview date not returned');
+    // the public submission response must NOT leak admin workflow data
+    assert(!/paymentResponsible|Finance Office/.test(made.text), 'admin data leaked to the public caller');
   });
 
   await test('the admission status set matches the requested options', async () => {

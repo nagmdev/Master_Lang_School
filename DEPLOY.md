@@ -45,6 +45,7 @@ created automatically on the first request.
 |---|---|
 | `MS_ADMIN_PASSWORD` | the shared admissions password (min 12 chars) — **not recorded in this repo** |
 | `MS_SESSION_SECRET` | a 64-character random string (generate below) |
+| `MS_ACADEMIC_YEAR` | *(optional)* the academic-year prefix on applicant references, e.g. `2026`. Defaults to `2026`. Change it each intake; references then read `<year>-<number>` from 1800. |
 
 Generate the session secret:
 

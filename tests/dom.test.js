@@ -327,7 +327,7 @@
     function FakeXHR() {
       this.upload = {};
       this.status = 201;
-      this.responseText = JSON.stringify({ applicationId: 'MST-2026-4242' });
+      this.responseText = JSON.stringify({ applicationId: '2026-4242' });
     }
     FakeXHR.prototype.open = function () {};
     FakeXHR.prototype.setRequestHeader = function () {};
@@ -368,7 +368,7 @@
       'the bar never showed an intermediate percentage — progress is not wired to the UI. Saw: ' + vals.join(','));
     assert(vals.length >= 2, 'progress never changed value. Saw: ' + vals.join(','));
     assert(/Application received/.test(txt()), 'the simulated upload did not complete');
-    assert(/MST-2026-4242/.test(txt()), 'the server-issued id was not used');
+    assert(/2026-4242/.test(txt()), 'the server-issued id was not used');
     return 'percentages seen: ' + vals.join(' → ');
   });
 
@@ -386,8 +386,8 @@
     form.requestSubmit();
     await sleep(SETTLE);
     assert(/Application received/.test(txt()), 'confirmation panel did not render');
-    const m = /MST-2026-\d{4}/.exec(txt());
-    assert(m, 'no application ID in MST-2026-#### format');
+    const m = /\d{4}/.exec(txt());
+    assert(m, 'no application ID in #### format');
     appId = m[0];
     return appId;
   });

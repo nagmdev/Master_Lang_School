@@ -338,6 +338,7 @@ async function openDrawer(id) {
   const r = await api('/api/application?id=' + encodeURIComponent(id));
   const f = r.fields || {};
   const studentName = [f.fname, f.mname, f.lname].filter(Boolean).join(' ') || f.sname || '';
+  const adm = r.admin || {};
   $('#d-id').textContent = r.id;
 
   const used = new Set();
@@ -380,7 +381,25 @@ async function openDrawer(id) {
     </div>
     <div class="sec">Internal notes</div>
     <textarea class="field" id="d-notes" rows="3" placeholder="Visible to staff only">${esc(r.notes || '')}</textarea>
-    <p style="color:var(--faint);font-size:12px;margin:6px 0 0">Changes save automatically.</p>
+
+    <div class="sec">Admissions workflow</div>
+    <div class="kv" style="grid-template-columns:1fr 1fr;gap:12px 14px">
+      <label style="font-weight:600;font-size:13px">Payment responsible
+        <input class="field" id="a-paymentResponsible" placeholder="Staff member / role"
+          value="${esc(adm.paymentResponsible || '')}" style="margin-top:5px"></label>
+      <label style="font-weight:600;font-size:13px">Follow-up
+        <select class="field" id="a-followupStatus" style="margin-top:5px">${
+          ['', 'Not started', 'Email sent', 'SMS sent', 'Email + SMS', 'Interview held', 'Completed'].map(o =>
+            `<option${o === (adm.followupStatus || '') ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select></label>
+      <label style="font-weight:600;font-size:13px">Interview date
+        <input class="field" id="a-interviewDate" type="date"
+          value="${esc(adm.interviewDate || '')}" style="margin-top:5px"></label>
+      <label style="font-weight:600;font-size:13px">Registration date
+        <input class="field" id="a-registrationDate" type="date"
+          value="${esc(adm.registrationDate || '')}" style="margin-top:5px"></label>
+    </div>
+    <p style="color:var(--faint);font-size:12px;margin:8px 0 0">Changes save automatically.</p>
+
     <div class="row" style="margin-top:22px;justify-content:flex-end">
       <button class="danger" id="d-delete">Delete</button>
     </div>
@@ -414,7 +433,8 @@ async function openDrawer(id) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      Object.assign(r, payload);
+      if (payload.admin) r.admin = Object.assign({}, r.admin, payload.admin);
+      else Object.assign(r, payload);
       $('#d-saved').classList.remove('hidden');
       setTimeout(() => { const s = $('#d-saved'); if (s) s.classList.add('hidden'); }, 1600);
       await load(); // keep the row, chips and counts in step
@@ -435,6 +455,21 @@ async function openDrawer(id) {
     lastNotes = v;
     patch({ notes: v }, e.currentTarget);
   });
+
+  // Admissions-workflow fields: selects/dates save on change, the text field on
+  // blur (to avoid a write per keystroke). Each is nested under admin.<key>.
+  const savedAdmin = Object.assign({}, adm);
+  function saveAdmin(key, el) {
+    if (el.value === (savedAdmin[key] || '')) return;
+    savedAdmin[key] = el.value;
+    patch({ admin: { [key]: el.value } }, el);
+  }
+  ['a-followupStatus', 'a-interviewDate', 'a-registrationDate'].forEach(fid => {
+    const el = $('#' + fid);
+    if (el) el.addEventListener('change', () => saveAdmin(fid.slice(2), el));
+  });
+  const pr = $('#a-paymentResponsible');
+  if (pr) pr.addEventListener('blur', () => saveAdmin('paymentResponsible', pr));
 
   // Deletion is irreversible, so it takes two deliberate clicks: the first only
   // reveals what will be destroyed.

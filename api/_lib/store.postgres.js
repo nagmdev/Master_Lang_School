@@ -58,8 +58,11 @@ function migrate() {
           status        TEXT NOT NULL DEFAULT 'new',
           notes         TEXT NOT NULL DEFAULT '',
           fields        JSONB NOT NULL DEFAULT '{}'::jsonb,
+          admin         JSONB NOT NULL DEFAULT '{}'::jsonb,
           search        TEXT NOT NULL DEFAULT ''
         );
+        ALTER TABLE applications ADD COLUMN IF NOT EXISTS admin JSONB NOT NULL DEFAULT '{}'::jsonb;
+        CREATE SEQUENCE IF NOT EXISTS applicant_ref_seq START 1800 MINVALUE 1800;
         CREATE TABLE IF NOT EXISTS application_files (
           id            BIGSERIAL PRIMARY KEY,
           application_id TEXT NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
@@ -80,8 +83,17 @@ function migrate() {
   return readyPromise;
 }
 
-function newApplicationId() {
-  return 'MST-' + new Date().getFullYear() + '-' + crypto.randomInt(1000, 10000);
+// Applicant references double as the academic code: "<year>-<seq>", numbered
+// sequentially from 1800 via a Postgres SEQUENCE (concurrency-safe, gap-free
+// enough for a reference). The year is configurable per intake.
+const ACADEMIC_YEAR = () => String(process.env.MS_ACADEMIC_YEAR || '2026');
+const ADMIN_KEYS = ['paymentResponsible', 'interviewDate', 'registrationDate', 'followupStatus'];
+function sanitizeAdmin(obj) {
+  const out = {};
+  for (const k of ADMIN_KEYS) {
+    if (obj && obj[k] !== undefined && obj[k] !== null) out[k] = String(obj[k]).slice(0, 200);
+  }
+  return out;
 }
 function safeName(name) {
   return String(name || 'file').replace(/[^A-Za-z0-9._-]/g, '_').replace(/^\.+/, '_').slice(0, 80);
@@ -97,6 +109,7 @@ function rowToApplication(r, files) {
     updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : undefined,
     status: r.status,
     notes: r.notes || '',
+    admin: r.admin || {},
     fields: r.fields || {},
     files: files || [],
   };
@@ -109,13 +122,8 @@ async function createApplication(input) {
   const client = await getPool().connect();
   try {
     await client.query('BEGIN');
-    let id = newApplicationId();
-    // Retry on the (unlikely) id collision rather than failing the parent's submission.
-    for (let i = 0; i < 5; i++) {
-      const hit = await client.query('SELECT 1 FROM applications WHERE id = $1', [id]);
-      if (!hit.rowCount) break;
-      id = newApplicationId();
-    }
+    const seq = (await client.query("SELECT nextval('applicant_ref_seq') AS n")).rows[0].n;
+    const id = ACADEMIC_YEAR() + '-' + seq;
     await client.query(
       'INSERT INTO applications (id, status, notes, fields, search) VALUES ($1, $2, $3, $4::jsonb, $5)',
       [id, 'new', '', JSON.stringify(fields), searchBlob(id, fields)]
@@ -159,7 +167,7 @@ async function listApplications(opts) {
     pool.query(`SELECT count(*)::int AS n FROM applications ${clause}`, params),
     pool.query('SELECT status, count(*)::int AS n FROM applications GROUP BY status'),
     pool.query(
-      `SELECT id, submitted_at, updated_at, status, notes, fields
+      `SELECT id, submitted_at, updated_at, status, notes, admin, fields
          FROM applications ${clause}
         ORDER BY submitted_at DESC
         LIMIT ${Math.min(Number(limit) || 200, 500)} OFFSET ${Math.max(Number(offset) || 0, 0)}`,
@@ -215,6 +223,11 @@ async function updateApplication(id, patch) {
   const params = [];
   if (patch.status !== undefined) { params.push(patch.status); sets.push(`status = $${params.length}`); }
   if (patch.notes !== undefined) { params.push(String(patch.notes).slice(0, 4000)); sets.push(`notes = $${params.length}`); }
+  if (patch.admin !== undefined) {
+    // merge (jsonb ||) so a partial update keeps the other admin fields
+    params.push(JSON.stringify(sanitizeAdmin(patch.admin)));
+    sets.push(`admin = admin || $${params.length}::jsonb`);
+  }
   params.push(id);
   const r = await getPool().query(
     `UPDATE applications SET ${sets.join(', ')} WHERE id = $${params.length} RETURNING id`, params

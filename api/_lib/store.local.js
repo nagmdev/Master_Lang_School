@@ -54,10 +54,29 @@ async function writeAll(rows) {
   await fsp.rename(tmp, INDEX_FILE); // atomic-ish: never leaves a half-written index
 }
 
-/** Application ids are shown to parents, so they must be unguessable-ish but short. */
-function newApplicationId() {
-  const n = crypto.randomInt(1000, 10000);
-  return 'MST-' + new Date().getFullYear() + '-' + n;
+// Applicant references double as the academic code: "<year>-<seq>", numbered
+// sequentially from 1800 (e.g. 2026-1800, 2026-1801). The year is configurable
+// so it can be rolled forward each intake without a code change.
+const ACADEMIC_YEAR = () => String(process.env.MS_ACADEMIC_YEAR || '2026');
+const REF_START = 1800;
+function nextReference(rows) {
+  let max = REF_START - 1;
+  for (const r of rows) {
+    const m = /^(?:\d{4})-(\d+)$/.exec(r.id || '');
+    if (m) max = Math.max(max, Number(m[1]));
+  }
+  return ACADEMIC_YEAR() + '-' + (max + 1);
+}
+
+// Admin-only workflow fields (never set by the public form): who checks the
+// payment, the interview date, the registration date, and follow-up state.
+const ADMIN_KEYS = ['paymentResponsible', 'interviewDate', 'registrationDate', 'followupStatus'];
+function sanitizeAdmin(obj) {
+  const out = {};
+  for (const k of ADMIN_KEYS) {
+    if (obj && obj[k] !== undefined && obj[k] !== null) out[k] = String(obj[k]).slice(0, 200);
+  }
+  return out;
 }
 
 function safeName(name) {
@@ -77,8 +96,8 @@ async function createApplication(input) {
   const files = input.files || [];
   return withWriteLock(async () => {
     const rows = await readAll();
-    let id = newApplicationId();
-    while (rows.some(r => r.id === id)) id = newApplicationId();
+    let id = nextReference(rows);
+    while (rows.some(r => r.id === id)) id = ACADEMIC_YEAR() + '-' + (Number(id.split('-')[1]) + 1);
 
     const dir = path.join(UPLOAD_DIR, id);
     await fsp.mkdir(dir, { recursive: true });
@@ -102,6 +121,7 @@ async function createApplication(input) {
       submittedAt: new Date().toISOString(),
       status: 'new',
       notes: '',
+      admin: {},
       fields,
       files: stored,
     };
@@ -147,6 +167,9 @@ async function updateApplication(id, patch) {
       rows[i].status = patch.status;
     }
     if (patch.notes !== undefined) rows[i].notes = String(patch.notes).slice(0, 4000);
+    if (patch.admin !== undefined) {
+      rows[i].admin = Object.assign({}, rows[i].admin, sanitizeAdmin(patch.admin));
+    }
     rows[i].updatedAt = new Date().toISOString();
     await writeAll(rows);
     return rows[i];
