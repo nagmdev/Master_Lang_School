@@ -402,14 +402,6 @@
         <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-4" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="font-weight:800;color:#0B2346;font-size:16.5px">{{ t.about.p4n }}</div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p4r }}</div></div>
       </div>
     </section>
-    <section style="background:#F1EFE8">
-      <div style="max-width:1120px;margin:0 auto;padding:88px 32px">
-        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;text-align:center;margin:0 0 48px">{{ t.about.histh }}</h2>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:26px">
-          <sc-for list="{{ t.about.hist }}" as="h" hint-placeholder-count="4"><div style="border-top:2px solid rgba(200,154,43,.4);padding-top:22px;position:relative"><div style="position:absolute;top:-8px;inset-inline-start:0;width:14px;height:14px;border-radius:50%;background:#C89A2B"></div><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:40px;color:#0B2346;line-height:1">{{ h.y }}</div><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:12px 0 0">{{ h.t }}</p></div></sc-for>
-        </div>
-      </div>
-    </section>
     <section style="max-width:1120px;margin:0 auto;padding:80px 32px 96px">
       <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 36px">{{ t.about.accredh }}</h2>
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
@@ -872,7 +864,6 @@ class Component extends DCLogic {
           leadh: "Meet our leadership", leadsub: "Experienced educators dedicated to your child’s success.",
           p1n: "Dr. Amina Farouk", p1r: "Principal", p2n: "Mr. Karim Nabil", p2r: "Vice Principal — Academics", p3n: "Ms. Rania Adel", p3r: "Head of Primary", p4n: "Mr. Tarek Sami", p4r: "Head of Student Affairs",
           accredh: "Accreditations & partnerships", accred: ["Ministry of Education — Egypt", "Cambridge Assessment English", "British Council Partner", "Bilingual Curriculum Certified"],
-          histh: "Our journey", hist: [{ y: "2004", t: "Founded in El Santa with a single KG building and a bold vision." }, { y: "2010", t: "Expanded to a full Primary and Preparatory campus." }, { y: "2016", t: "Launched the Secondary stage and STEM & robotics labs." }, { y: "2024", t: "Expanded STEM, robotics and student-life programs across all stages." }]
         },
         life: {
           eyebrow: "Student Life", title: "Learning that lives beyond the classroom.", sub: "Sport, art, music and service turn knowledge into character. Here is where our students discover who they are.",
@@ -1009,7 +1000,6 @@ class Component extends DCLogic {
           leadh: "تعرّف على قيادتنا", leadsub: "معلّمون ذوو خبرة مكرّسون لنجاح طفلك.",
           p1n: "د. أمينة فاروق", p1r: "المديرة", p2n: "أ. كريم نبيل", p2r: "وكيل المدرسة — الشؤون الأكاديمية", p3n: "أ. رانيا عادل", p3r: "رئيسة المرحلة الابتدائية", p4n: "أ. طارق سامي", p4r: "رئيس شؤون الطلاب",
           accredh: "الاعتمادات والشراكات", accred: ["وزارة التربية والتعليم — مصر", "تقييم كامبريدج للإنجليزية", "شريك المجلس الثقافي البريطاني", "منهج ثنائي اللغة معتمد"],
-          histh: "مسيرتنا", hist: [{ y: "2004", t: "التأسيس في السنطة بمبنى رياض أطفال واحد ورؤية طموحة." }, { y: "2010", t: "التوسّع إلى حرمٍ كامل للابتدائي والإعدادي." }, { y: "2016", t: "إطلاق المرحلة الثانوية ومعامل STEM والروبوتات." }, { y: "2024", t: "التوسّع في برامج STEM والروبوتات والأنشطة الطلابية بكل المراحل." }]
         },
         life: {
           eyebrow: "الحياة الطلابية", title: "تعلّمٌ يمتدّ خارج الفصل.", sub: "الرياضة والفن والموسيقى والخدمة تحوّل المعرفة إلى شخصية. هنا يكتشف طلابنا حقيقة أنفسهم.",
