@@ -397,10 +397,15 @@
       </sc-if>
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
       <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:32px;align-items:start">
-        <form onSubmit="{{ submit }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <form onSubmit="{{ submit }}" id="ms-apply-form" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0">{{ t.adm.formh }}</h2><span style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.04em">{{ t.adm.formsub }}</span></div>
-          <p style="color:#8A93A1;font-size:13px;margin:0 0 28px">{{ t.adm.f.required }}</p>
+          <p style="color:#8A93A1;font-size:13px;margin:0 0 20px">{{ t.adm.f.required }}</p>
+          <div style="margin:0 0 26px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span style="font-size:12.5px;font-weight:800;color:#0B2346;letter-spacing:.04em">{{ stepLabel }}</span><span style="font-size:12.5px;font-weight:800;color:#C89A2B;font-variant-numeric:tabular-nums">{{ stepPctLabel }}</span></div>
+            <div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ stepPercent }}" aria-label="{{ stepLabel }}" style="height:8px;background:#EFEDE6;border-radius:999px;overflow:hidden"><div style="{{ stepBarStyle }}"></div></div>
+          </div>
 
+          <div id="ms-step-1" data-step="1" style="{{ step1 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.student }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
             <label style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }}</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label>
@@ -423,6 +428,8 @@
             <div><label for="ms-religionOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religionOther }}</label><input name="religionOther" id="ms-religionOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
+          <div id="ms-step-2" data-step="2" style="{{ step2 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
             <div><label for="ms-psName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psName }}</label><input name="psName" id="ms-psName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
@@ -432,6 +439,8 @@
             <div style="grid-column:1/-1"><label for="ms-psLocation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psLocation }}</label><input name="psLocation" id="ms-psLocation" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
+          <div id="ms-step-3" data-step="3" style="{{ step3 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.parent }}</div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.fatherH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
@@ -466,6 +475,8 @@
             <div><label for="ms-tongueOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongueOther }}</label><input name="tongueOther" id="ms-tongueOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
+          <div id="ms-step-4" data-step="4" style="{{ step4 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">{{ t.adm.f.sibH }}</div>
           <p style="color:#8A93A1;font-size:12.5px;margin:0 0 14px">{{ t.adm.f.sibHint }}</p>
           <div id="ms-sib-rows">
@@ -504,6 +515,8 @@
             <div><label for="ms-eAddress-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress_2" id="ms-eAddress-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
+          <div id="ms-step-5" data-step="5" style="{{ step5 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.concernsH }}</div>
           <div style="display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:28px">
             <div><label for="ms-cHealth" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.cHealth }}</label><textarea name="cHealth" id="ms-cHealth" rows="2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
@@ -518,6 +531,8 @@
             <div><label for="ms-busRouteOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRouteOther }}</label><input name="busRouteOther" id="ms-busRouteOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
+          <div id="ms-step-6" data-step="6" style="{{ step6 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.docs }}</div>
           <sc-if value="{{ hasFileError }}" hint-placeholder-val="{{ false }}">
             <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 14px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div>
@@ -530,6 +545,7 @@
             <div style="grid-column:1/-1"><label for="ms-d4Desc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.d4Desc }}</label><input name="d4Desc" id="ms-d4Desc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
+          </div>
           <sc-if value="{{ hasSendError }}" hint-placeholder-val="{{ false }}">
             <div role="alert" style="display:flex;gap:11px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:14px 16px;margin:0 0 18px;color:#8E2C20;font-size:13.5px;line-height:1.55"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span><strong style="display:block;margin-bottom:2px">{{ t.adm.f.errorH }}</strong>{{ t.adm.f.errorHint }}</span></div>
           </sc-if>
@@ -542,7 +558,10 @@
               <div style="font-size:12px;color:#8A93A1;margin-top:7px">{{ t.adm.f.uploadingHint }}</div>
             </div>
           </sc-if>
-          <button type="submit" disabled="{{ sending }}" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ submitLabel }}</button>
+          <div style="display:flex;gap:12px;align-items:center">
+            <button type="button" onClick="{{ prevStep }}" style="{{ backBtnStyle }}">{{ t.adm.f.back }}</button>
+            <button type="button" onClick="{{ submit }}" disabled="{{ sending }}" style="{{ primaryBtnStyle }}" style-hover="background:#b98a1f">{{ primaryLabel }}</button>
+          </div>
         </form>
 
         <aside style="display:flex;flex-direction:column;gap:20px;position:sticky;top:100px">
@@ -891,10 +910,10 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", submitted: false, appId: "", faq: [false, false, false, false], careerSubmitted: false, careerId: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
+  state = { lang: "en", page: "home", step: 1, submitted: false, appId: "", faq: [false, false, false, false], careerSubmitted: false, careerId: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, submitted: false, careerSubmitted: false, contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, step: 1, submitted: false, careerSubmitted: false, contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -932,9 +951,47 @@ class Component extends DCLogic {
   // reference (from 1800). Matches the "<year>-<number>" academic-code format.
   localId() { const y = (typeof window !== "undefined" && window.MS_CONFIG && window.MS_CONFIG.academicYear) || "2026"; return y + "-" + Math.floor(1800 + Math.random() * 800); }
 
+  // The application is long, so it is walked one section at a time. Each step
+  // stays in the DOM and is only hidden with CSS — unmounting it would destroy
+  // its inputs, and FormData would submit an application missing everything the
+  // parent typed on the earlier screens.
+  totalSteps() { return 6; }
+  stepControls(n) {
+    const wrap = document.getElementById("ms-step-" + n);
+    return wrap ? Array.prototype.slice.call(wrap.querySelectorAll("input,select,textarea")) : [];
+  }
+  // The primary button is not a submit button, so the browser never validates
+  // the form on its own; each step is checked here instead.
+  firstInvalid(n) {
+    const els = this.stepControls(n);
+    for (let i = 0; i < els.length; i++) if (!els[i].checkValidity()) return els[i];
+    return null;
+  }
+  showStep(n) {
+    this.setState({ step: n });
+    const f = document.getElementById("ms-apply-form");
+    if (!f) return;
+    try { window.scrollTo({ top: f.offsetTop - 80, behavior: "smooth" }); }
+    catch (e) { window.scrollTo(0, f.offsetTop); }
+  }
+  prevStep() { if (this.state.step > 1) this.showStep(this.state.step - 1); }
+
   submit(e) {
     if (e && e.preventDefault) e.preventDefault();
-    const form = e && e.target && e.target.tagName === "FORM" ? e.target : null;
+    const form = document.getElementById("ms-apply-form");
+    const here = this.firstInvalid(this.state.step);
+    if (here) { here.reportValidity(); return; }
+    if (this.state.step < this.totalSteps()) { this.showStep(this.state.step + 1); return; }
+    // A field left invalid on an earlier step would be invisible from here, so
+    // go back to it rather than failing silently.
+    for (let n = 1; n < this.totalSteps(); n++) {
+      const el = this.firstInvalid(n);
+      if (el) {
+        this.showStep(n);
+        setTimeout(() => { try { el.reportValidity(); } catch (err) {} }, 0);
+        return;
+      }
+    }
     this.sendApplication(form);
   }
 
@@ -1122,6 +1179,8 @@ class Component extends DCLogic {
       ? "font-size:11.5px;color:#1B6B39;font-weight:700;margin-top:3px;word-break:break-word"
       : "font-size:11.5px;color:#8A93A1;margin-top:3px";
   }
+  // Hidden, not unmounted — see submit() above.
+  stepStyle(n) { return this.state.step === n ? "" : "display:none"; }
 
   scrollToEl(id) { const el = document.getElementById(id); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (e) { window.scrollTo(0, el.offsetTop); } } }
   submitCareer(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ careerSubmitted: true, careerId: "MST-HR-" + Math.floor(1000 + Math.random() * 9000) }); this.scrollTop(); }
@@ -1161,7 +1220,20 @@ class Component extends DCLogic {
       notDemoMode: !this.state.demoMode,
       hasSendError: !!this.state.sendError,
       sendError: this.state.sendError,
-      submitLabel: this.state.sending ? t.adm.f.sending : t.adm.f.submit,
+      step1: this.stepStyle(1), step2: this.stepStyle(2), step3: this.stepStyle(3),
+      step4: this.stepStyle(4), step5: this.stepStyle(5), step6: this.stepStyle(6),
+      stepLabel: t.adm.f.stepOf.replace("{n}", this.state.step).replace("{total}", this.totalSteps()),
+      stepPercent: Math.round((this.state.step / this.totalSteps()) * 100),
+      stepPctLabel: Math.round((this.state.step / this.totalSteps()) * 100) + "%",
+      stepBarStyle: "height:100%;background:#C89A2B;border-radius:999px;transition:width .3s ease;width:"
+        + Math.round((this.state.step / this.totalSteps()) * 100) + "%",
+      primaryLabel: this.state.sending ? t.adm.f.sending
+        : (this.state.step >= this.totalSteps() ? t.adm.f.submit : t.adm.f.next),
+      primaryBtnStyle: "flex:1;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px",
+      backBtnStyle: this.state.step > 1
+        ? "background:#fff;border:1.5px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:15px;font-weight:800;padding:16px 24px;border-radius:13px"
+        : "display:none",
+      prevStep: () => this.prevStep(),
       uploadPercent: this.state.uploadPercent,
       pctLabel: this.state.uploadPercent + "%",
       barStyle: "height:100%;background:#C89A2B;border-radius:999px;transition:width .25s ease;width:"
@@ -1332,6 +1404,7 @@ class Component extends DCLogic {
             docs: "Required attachments",
             d1: "Guardian's National ID", d2: "Student's birth certificate", d3: "Certificate of last educational stage", d4: "Other attachments",
             d4hint: "Multiple files allowed", d4Desc: "Describe the other attachments", upload: "Upload file", submit: "Submit application",
+            next: "Next", back: "Back", stepOf: "Step {n} of {total}",
             sending: "Sending…", errorH: "We could not send your application",
             errorHint: "Please check your connection and try again — your answers are still in the form.",
             uploadingLabel: "Uploading your application…",
@@ -1526,6 +1599,7 @@ class Component extends DCLogic {
             docs: "المرفقات الإلزامية",
             d1: "بطاقة الرقم القومي لولي الأمر", d2: "شهادة ميلاد الطالب", d3: "شهادة آخر مرحلة دراسية", d4: "مرفقات إضافية",
             d4hint: "يمكن رفع أكثر من ملف", d4Desc: "وصف المرفقات الإضافية", upload: "رفع ملف", submit: "إرسال الطلب",
+            next: "التالي", back: "السابق", stepOf: "الخطوة {n} من {total}",
             sending: "جارٍ الإرسال…", errorH: "تعذّر إرسال طلبك",
             errorHint: "يرجى التحقق من الاتصال والمحاولة مرة أخرى — إجاباتك ما زالت موجودة في النموذج.",
             uploadingLabel: "جارٍ رفع طلبك…",

@@ -622,9 +622,37 @@ test('the confirmation no longer claims an email was sent', () => {
 });
 
 test('the submit button reflects the sending state and is disabled while in flight', () => {
-  assertHas(ADMISSIONS, '{{ submitLabel }}', 'button label is not state-driven');
+  assertHas(ADMISSIONS, '{{ primaryLabel }}', 'button label is not state-driven');
   assertHas(ADMISSIONS, 'disabled="{{ sending }}"', 'button stays clickable during submission');
   assert(enKeys.has('sending') && arKeys.has('sending'), 'no bilingual "Sending…" label');
+});
+
+test('the application is split into steps, and no step is ever unmounted', () => {
+  for (let n = 1; n <= 6; n++) {
+    assertHas(FORM, 'id="ms-step-' + n + '"', 'step ' + n + ' wrapper is missing');
+    assertHas(FORM, 'style="{{ step' + n + ' }}"', 'step ' + n + ' is not CSS-toggled');
+  }
+  // A step hidden with <sc-if> would be removed from the DOM, and FormData
+  // would then submit an application missing every earlier step's answers.
+  const wrappers = FORM.match(/<div id="ms-step-\d"[^>]*>/g) || [];
+  assert(wrappers.length === 6, 'expected 6 step wrappers, found ' + wrappers.length);
+  for (const w of wrappers) assert(!/sc-if/.test(w), 'a step is conditionally rendered: ' + w);
+  assert(enKeys.has('next') && arKeys.has('next'), 'no bilingual "Next" label');
+  assert(enKeys.has('back') && arKeys.has('back'), 'no bilingual "Back" label');
+  assert(enKeys.has('stepOf') && arKeys.has('stepOf'), 'no bilingual step counter');
+});
+
+test('every named control still lives inside the one form that gets submitted', () => {
+  const named = (FORM.match(/\sname="/g) || []).length;
+  assert(named >= 80, 'only ' + named + ' controls remain inside <form> — steps must not be moved out');
+});
+
+test('the step control is not a submit button', () => {
+  // A submit button makes the browser validate the whole form, including steps
+  // the parent has not reached, and then refuses to advance with no message.
+  assertMissing(FORM, 'type="submit"', 'the wizard button would trigger whole-form validation');
+  assertHas(FORM, 'onClick="{{ submit }}"', 'the primary button is not wired to submit()');
+  assertHas(FORM, 'onClick="{{ prevStep }}"', 'there is no Back button');
 });
 
 test('a submission error is announced to assistive tech', () => {

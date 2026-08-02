@@ -61,6 +61,18 @@
     if (bad.length) throw new Error('could not satisfy: ' +
       bad.map(b => `${b.type}#${b.id}: ${b.validationMessage}`).join(' | '));
   }
+  // The admissions form is a 6-step wizard, so it has to be walked to the last
+  // step before there is anything to submit. Call fillRequired() first.
+  async function walkToLastStep(form) {
+    if (!form || form.id !== 'ms-apply-form') return; // careers/contact are single-page
+    for (let i = 0; i < 10; i++) {
+      const primary = [...form.querySelectorAll('button')].pop();
+      if (!primary || /إرسال الطلب|Submit application/.test(primary.textContent)) return;
+      primary.click();
+      await sleep(SETTLE);
+    }
+    throw new Error('never reached the last step of the application form');
+  }
   const isArabic = () => /الرئيسية|القبول والتسجيل/.test(txt());
 
   // Start from a clean English state on the Admissions page
@@ -413,6 +425,7 @@
     try {
       const form = document.querySelector('form');
       fillRequired(form);
+      await walkToLastStep(form);
       form.requestSubmit();
       await sleep(700);
     } finally {
@@ -440,6 +453,7 @@
     assert(form, 'form not found');
     fillRequired(form);
     assert(form.checkValidity(), 'form still invalid after filling required fields');
+    await walkToLastStep(form);
     form.requestSubmit();
     await sleep(SETTLE);
     assert(/Application received/.test(txt()), 'confirmation panel did not render');
