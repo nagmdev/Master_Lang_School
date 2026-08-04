@@ -62,6 +62,7 @@
         <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
         <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
         <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
+        <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
         <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
         <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
         <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
@@ -526,6 +527,38 @@
   </div>
   </sc-if>
 
+  <!-- ================= REQUIREMENTS ================= -->
+  <sc-if value="{{ isRequirements }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <section style="background:#0B2346;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+      <div style="max-width:900px;margin:0 auto;padding:64px 32px;text-align:center;position:relative">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.requirements.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.requirements.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:680px">{{ t.requirements.sub }}</p>
+      </div>
+    </section>
+    <section style="max-width:1120px;margin:0 auto;padding:64px 32px 96px">
+      <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;margin-bottom:28px">
+          <div>
+            <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.requirements.noteLabel }}</div>
+            <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:34px;color:#0B2346;margin:10px 0 0">{{ t.requirements.heading }}</h2>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button onClick="{{ goAdmissions }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:14px 24px;border-radius:12px" style-hover="background:#123763">{{ t.requirements.apply }}</button>
+            <button onClick="{{ goContact }}" style="background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:15px;font-weight:700;padding:14px 24px;border-radius:12px" style-hover="background:#F1EFE8">{{ t.requirements.contact }}</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+          <sc-for list="{{ t.requirements.items }}" as="item" hint-placeholder-count="6"><div style="background:#F9F7F0;border:1px solid #ECEAE3;border-radius:16px;padding:18px 18px 20px"><div style="width:38px;height:38px;border-radius:11px;background:rgba(200,154,43,.14);display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></div><div style="color:#0B2346;font-size:15px;font-weight:700;line-height:1.55">{{ item }}</div></div></sc-for>
+        </div>
+        <div style="margin-top:24px;background:rgba(200,154,43,.12);border:1px solid rgba(200,154,43,.25);border-radius:16px;padding:18px 20px;color:#5B6472;line-height:1.65">{{ t.requirements.note }}</div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
   <!-- ================= ABOUT ================= -->
   <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
   <div>
@@ -633,21 +666,19 @@
       </sc-if>
       <sc-if value="{{ careerNot }}" hint-placeholder-val="{{ true }}">
         <form onSubmit="{{ submitCareer }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
-          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 4px">{{ t.careers.formh }}</h2>
-          <p style="color:#8A93A1;font-size:13px;margin:0 0 26px">{{ t.careers.f.required }}</p>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 4px">{{ careerFormTitle }}</h2>
+          <p style="color:#8A93A1;font-size:13px;margin:0 0 26px">{{ careerFormSub }}</p>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.personal }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
             <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-position" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.position }} *</label><select name="position" id="ms-position" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.careers.posOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+            <div style="grid-column:1/-1"><label for="ms-position" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.position }} *</label><select name="position" id="ms-position" required="required" onChange="{{ setCareerPosition }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.careers.posOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
           </div>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.exp }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
             <div><label for="ms-years" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.years }}</label><input name="years" id="ms-years" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-edu" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.edu }}</label><input name="edu" id="ms-edu" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-linkedin" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.linkedin }}</label><input name="linkedin" id="ms-linkedin" type="url" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-cover" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.cover }}</label><textarea name="cover" id="ms-cover" rows="3" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
           </div>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.docs }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:30px">
@@ -790,7 +821,7 @@
           </sc-if>
         </div>
         <div style="display:flex;flex-direction:column;gap:20px">
-          <div style="flex:1;min-height:300px;position:relative;border-radius:20px;overflow:hidden;border:1px solid #ECEAE3"><image-slot id="ms-map" shape="rect" fit="cover" placeholder="Map of El Santa campus"></image-slot></div>
+          <div style="flex:1;min-height:300px;position:relative;border-radius:20px;overflow:hidden;border:1px solid #ECEAE3;background:#F1EFE8"><iframe title="Masters Language School location" src="https://www.google.com/maps?q=Masters%20Language%20School%20El%20Santa%20Gharbia&z=14&output=embed" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
           <div style="background:#0B2346;border-radius:20px;padding:26px 28px;color:#fff"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin-bottom:8px">{{ t.contact.hoursh }}</div><div style="color:rgba(255,255,255,.85);font-size:15px">{{ t.contact.hours }}</div></div>
         </div>
       </div>
@@ -830,7 +861,7 @@
         <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
           <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://www.google.com/maps/search/?api=1&amp;query=Masters+Language+School+El+Santa+Gharbia" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
           <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201037993762" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
-          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:info@masters-school.edu.eg" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:admission@masters-edu.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
         </div>
       </div>
     </div>
@@ -847,10 +878,10 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
+  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1189,6 +1220,43 @@ class Component extends DCLogic {
 
   scrollToEl(id) { const el = document.getElementById(id); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (e) { window.scrollTo(0, el.offsetTop); } } }
   submitCareer(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ careerSubmitted: true, careerId: "MST-HR-" + Math.floor(1000 + Math.random() * 9000) }); this.scrollTop(); }
+  setCareerPosition(e) { const el = e && e.target; if (el) this.setState({ careerPosition: el.value || "" }); }
+  careerFormTitle() {
+    const t = this.content()[this.state.lang].careers;
+    const pos = this.state.careerPosition;
+    const map = {
+      Teacher: { en: "Teaching application", ar: "طلب التعيين في التدريس" },
+      "HR Specialist": { en: "HR application", ar: "طلب وظيفة الموارد البشرية" },
+      "IT Support": { en: "IT support application", ar: "طلب وظيفة الدعم التقني" },
+      "Marketing Officer": { en: "Marketing application", ar: "طلب وظيفة التسويق" },
+      Receptionist: { en: "Reception application", ar: "طلب وظيفة الاستقبال" },
+      Accountant: { en: "Finance application", ar: "طلب وظيفة المالية" },
+      Nurse: { en: "Health application", ar: "طلب وظيفة الصحة" },
+      Administration: { en: "Administration application", ar: "طلب وظيفة الإدارة" },
+      Security: { en: "Security application", ar: "طلب وظيفة الأمن" },
+      "Bus Driver": { en: "Transport application", ar: "طلب وظيفة النقل" },
+      "Bus Supervisor": { en: "Transport supervision application", ar: "طلب وظيفة الإشراف على النقل" }
+    };
+    return (map[pos] && map[pos][this.state.lang]) || t.formh;
+  }
+  careerFormSub() {
+    const t = this.content()[this.state.lang].careers;
+    const pos = this.state.careerPosition;
+    const map = {
+      Teacher: { en: "Share your classroom experience and the grade bands you can support.", ar: "شارك خبرتك العملية والفئات العمرية التي يمكنك تدريسها." },
+      "HR Specialist": { en: "Tell us about your recruitment and people-management experience.", ar: "أخبرنا عن خبرتك في التوظيف وإدارة الموارد البشرية." },
+      "IT Support": { en: "Describe your technical support experience and tool familiarity.", ar: "صف خبرتك في الدعم التقني ومعرفتك بالأدوات التقنية." },
+      "Marketing Officer": { en: "Share your campaigns, outreach and communication experience.", ar: "شارك خبرتك في الحملات والتواصل والتسويق." },
+      Receptionist: { en: "Let us know about your front-desk and communication strengths.", ar: "أخبرنا عن خبرتك في الاستقبال والاتصال مع الجمهور." },
+      Accountant: { en: "Share the finance and reporting work you have handled.", ar: "شارك خبرتك في العمل المالي والتقارير." },
+      Nurse: { en: "Describe your school-health and care experience.", ar: "صف خبرتك في الرعاية الصحية المدرسية." },
+      Administration: { en: "Tell us about your planning, coordination and office experience.", ar: "أخبرنا عن خبرتك في التخطيط والتنسيق والإدارة المكتبية." },
+      Security: { en: "Share your safeguarding and site-support experience.", ar: "شارك خبرتك في الأمن والحفاظ على سلامة الموقع." },
+      "Bus Driver": { en: "Tell us about your driving record and transport reliability.", ar: "أخبرنا عن سجل قيادتك وموثوقية العمل في النقل." },
+      "Bus Supervisor": { en: "Describe your transport supervision and team coordination experience.", ar: "صف خبرتك في الإشراف على النقل وتنسيق الفريق." }
+    };
+    return (map[pos] && map[pos][this.state.lang]) || t.formsub;
+  }
   submitContact(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ contactSubmitted: true }); this.scrollTop(); }
   setGallery(tab) { this.setState({ galleryTab: tab }); }
 
@@ -1207,6 +1275,7 @@ class Component extends DCLogic {
       isAcademics: this.state.page === "academics",
       isAdmissions: this.state.page === "admissions",
       isAbout: this.state.page === "about",
+      isRequirements: this.state.page === "requirements",
       isLife: this.state.page === "life",
       isCareers: this.state.page === "careers",
       isGallery: this.state.page === "gallery",
@@ -1271,6 +1340,7 @@ class Component extends DCLogic {
       labelD4: this.slotLabel("d4", t.adm.f.d4hint), styleD4: this.slotStyle("d4"),
       goHome: () => this.go("home"),
       goAcademics: () => this.go("academics"),
+      goRequirements: () => this.go("requirements"),
       goAdmissions: () => this.go("admissions"),
       goContact: () => this.go("contact"),
       goAbout: () => this.go("about"),
@@ -1279,7 +1349,10 @@ class Component extends DCLogic {
       goGallery: () => this.go("gallery"),
       goNews: () => this.go("news"),
       scrollCareer: () => this.scrollToEl("ms-career-form"),
+      careerFormTitle: this.careerFormTitle(),
+      careerFormSub: this.careerFormSub(),
       submitCareer: (e) => this.submitCareer(e),
+      setCareerPosition: (e) => this.setCareerPosition(e),
       submitContact: (e) => this.submitContact(e),
       setGalPhotos: () => this.setGallery("photos"),
       setGalVideos: () => this.setGallery("videos"),
@@ -1294,7 +1367,7 @@ class Component extends DCLogic {
       en: {
         meta: { title: "Masters Language School — Bilingual Education in El Santa, Gharbia", desc: "Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process." },
         brand: { name: "Masters", tag: "Language School" },
-        nav: { home: "Home", about: "About", academics: "Academics", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
+        nav: { home: "Home", about: "About", academics: "Academics", requirements: "Requirements", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
         top: { portal: "Parents' Portal" },
         hero: {
           eyebrow: "Masters Language School · Est. 2026",
@@ -1329,7 +1402,7 @@ class Component extends DCLogic {
           about: "A premier bilingual language school in El Santa, Gharbia — shaping curious, confident and compassionate learners since 2026.",
           explore: "Explore", admissions: "Admissions", contactc: "Contact",
           rights: "© 2026 Masters Language School. All rights reserved.",
-          addr: "El Santa, Gharbia Governorate, Egypt", phone: "010 3799 3762", email: "info@masters-school.edu.eg",
+          addr: "El Santa, Gharbia Governorate, Egypt", phone: "+20 103 799 3762", email: "admission@masters-edu.com",
           links: ["About Us", "Academics", "Student Life", "News & Events", "Gallery"],
           alinks: ["Apply Online", "Book a Tour", "Tuition & Fees", "Requirements", "FAQ"]
         },
@@ -1428,6 +1501,13 @@ class Component extends DCLogic {
             demoNote: "Demo mode — this application was NOT saved or sent anywhere. Configure an applications endpoint before going live."
           }
         },
+        requirements: {
+          eyebrow: "Requirements", title: "What you need to apply", sub: "A simple checklist of documents and steps so families can prepare with confidence before they begin the admissions process.",
+          noteLabel: "Before you apply", heading: "Admission requirements at a glance",
+          apply: "Start application", contact: "Contact admissions",
+          items: ["Completed online application form", "Student’s birth certificate or passport", "Parent national ID or passport copies", "Recent school reports or nursery report", "Letter of Good Conduct", "Assessment fee of 600 EGP"],
+          note: "Please keep your documents ready before you begin so the process stays smooth and your assessment can be scheduled promptly."
+        },
         about: {
           eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
           mh: "Our Mission", md: "To prepare confident, bilingual and principled young people ready to lead in a connected world.",
@@ -1467,7 +1547,7 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "Contact", title: "We’d love to hear from you.", sub: "Questions about admissions, careers or a campus visit? Reach out — we reply fast.",
-          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "010 3799 3762", waT: "WhatsApp", waD: "010 3799 3762", mailT: "Email", mailD: "info@masters-school.edu.eg",
+          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+20 103 799 3762", waT: "WhatsApp", waD: "+20 103 799 3762", mailT: "Email", mailD: "admission@masters-edu.com",
           hoursh: "Office hours", hours: "Sunday – Thursday · 8:00 AM – 3:00 PM",
           formh: "Send us a message", f: { name: "Your name", email: "Email address", phone: "Phone number", subject: "Subject", message: "Message", submit: "Send message", required: "Fields marked * are required." },
           maplabel: "Find us on the map", conf: { h: "Message sent!", sub: "Thank you for reaching out. Our team will reply within one working day.", back: "Back to home" }
@@ -1476,7 +1556,7 @@ class Component extends DCLogic {
       ar: {
         meta: { title: "مدرسة ماسترز للغات — تعليم ثنائي اللغة في السنطة، الغربية", desc: "مدرسة ماسترز للغات مدرسة رائدة ثنائية اللغة (عربي/إنجليزي) في السنطة بمحافظة الغربية — من رياض الأطفال حتى الثانوية. قدّم إلكترونيًا، واحجز زيارة للحرم المدرسي، وتعرّف على خطوات القبول." },
         brand: { name: "ماسترز", tag: "مدرسة اللغات" },
-        nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
+        nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", requirements: "المتطلبات", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
         top: { portal: "بوابة أولياء الأمور" },
         hero: {
           eyebrow: "مدرسة ماسترز للغات · تأسست 2026",
@@ -1511,7 +1591,7 @@ class Component extends DCLogic {
           about: "مدرسة لغات ثنائية رائدة في السنطة، الغربية — نصنع متعلّمين فضوليين واثقين ومتعاطفين منذ 2026.",
           explore: "استكشف", admissions: "القبول", contactc: "تواصل معنا",
           rights: "© 2026 مدرسة ماسترز للغات. جميع الحقوق محفوظة.",
-          addr: "السنطة، محافظة الغربية، مصر", phone: "010 3799 3762", email: "info@masters-school.edu.eg",
+          addr: "السنطة، محافظة الغربية، مصر", phone: "+20 103 799 3762", email: "admission@masters-edu.com",
           links: ["عن المدرسة", "البرامج الأكاديمية", "الحياة الطلابية", "الأخبار والفعاليات", "معرض الصور"],
           alinks: ["التقديم أونلاين", "احجز زيارة", "المصروفات", "المتطلبات", "الأسئلة الشائعة"]
         },
@@ -1610,6 +1690,13 @@ class Component extends DCLogic {
             demoNote: "وضع تجريبي — لم يتم حفظ هذا الطلب أو إرساله إلى أي جهة. يجب ضبط نقطة استقبال الطلبات قبل التشغيل الفعلي."
           }
         },
+        requirements: {
+          eyebrow: "المتطلبات", title: "ما الذي تحتاجه للتقديم", sub: "قائمة واضحة بالوثائق والخطوات حتى تتمكن الأسر من التحضير بثقة قبل البدء في إجراءات القبول.",
+          noteLabel: "قبل التقديم", heading: "متطلبات القبول في لمحة سريعة",
+          apply: "ابدأ التقديم", contact: "تواصل مع القبول",
+          items: ["نموذج التقديم الإلكتروني المكتمل", "شهادة ميلاد الطالب أو جواز السفر", "نسخ من البطاقة الشخصية أو جواز السفر للوالدين", "تقارير مدرسية حديثة أو تقرير حضانة", "خطاب حسن سير وسلوك", "رسوم التقييم 600 جنيه مصري"],
+          note: "يرجى تجهيز المستندات قبل البدء حتى تظل العملية سلسة ويمكن تحديد موعد التقييم بسرعة."
+        },
         about: {
           eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "مدرسة ماسترز للغات بيتٌ ثانٍ لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
           mh: "رسالتنا", md: "إعداد نشءٍ واثقٍ ثنائي اللغة صاحب مبادئ، جاهزٍ للقيادة في عالمٍ متّصل.",
@@ -1649,7 +1736,7 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "تواصل معنا", title: "يسعدنا أن نسمع منك.", sub: "أسئلة عن القبول أو الوظائف أو زيارة الحرم؟ تواصل معنا — نردّ بسرعة.",
-          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "010 3799 3762", waT: "واتساب", waD: "010 3799 3762", mailT: "البريد", mailD: "info@masters-school.edu.eg",
+          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+20 103 799 3762", waT: "واتساب", waD: "+20 103 799 3762", mailT: "البريد", mailD: "admission@masters-edu.com",
           hoursh: "مواعيد العمل", hours: "الأحد – الخميس · 8:00 ص – 3:00 م",
           formh: "أرسل لنا رسالة", f: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", subject: "الموضوع", message: "الرسالة", submit: "إرسال الرسالة", required: "الحقول المعلّمة بـ * مطلوبة." },
           maplabel: "موقعنا على الخريطة", conf: { h: "تم إرسال رسالتك!", sub: "شكرًا لتواصلك. سيردّ فريقنا خلال يوم عمل واحد.", back: "العودة للرئيسية" }
