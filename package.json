@@ -2,7 +2,7 @@
   "name": "masters-school-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Masters Language School \u2014 bilingual website with an admissions backend and admin dashboard",
+  "description": "Masters Language School — bilingual website with an admissions backend and admin dashboard",
   "scripts": {
     "dev": "node --env-file-if-exists=.env server.js",
     "serve": "node server.js",
