@@ -52,9 +52,9 @@
   function fillRequired(form) {
     form.querySelectorAll('[required]').forEach(el => {
       if (el.tagName === 'SELECT') { if (el.selectedIndex < 0) el.selectedIndex = 0; return; }
-      // A patterned field (the 14-digit national IDs) rejects SAMPLE.text, so
-      // derive a value the control's own pattern accepts.
-      if (el.pattern === '[0-9]{14}') { el.value = '29001011234567'; return; }
+      // A patterned field (the national ID / passport boxes) rejects SAMPLE.text,
+      // so give it a value its own pattern accepts.
+      if (el.pattern) { el.value = '29001011234567'; return; }
       el.value = SAMPLE[el.type] || SAMPLE.text;
     });
     const bad = [...form.querySelectorAll(':invalid')];
@@ -130,12 +130,11 @@
     return enControlCount + ' controls';
   });
 
-  await check('student name fields appear in document order', () => {
+  await check('the student is named once per language, English first', () => {
     const labels = [...document.querySelectorAll('label')].map(l => l.innerText.trim().split('\n')[0]);
-    const order = labels.filter(l => /First name|Middle name|Last name|Student full name|Full name in Arabic/.test(l));
-    assert(order.length === 5, 'expected 5 name fields, got ' + order.length + ': ' + order);
-    assert(/First/.test(order[0]) && /Middle/.test(order[1]) && /Last/.test(order[2])
-      && /Student full name/.test(order[3]) && /Arabic/.test(order[4]), 'wrong order: ' + order);
+    const order = labels.filter(l => /Full name in (English|Arabic)/.test(l));
+    assert(order.length === 2, 'expected 2 name fields, got ' + order.length + ': ' + order);
+    assert(/English/.test(order[0]) && /Arabic/.test(order[1]), 'wrong order: ' + order);
     return order.join(' → ');
   });
 
@@ -262,11 +261,11 @@
     const named = form.querySelectorAll('[name]').length;
     const total = form.querySelectorAll('input, select, textarea').length;
     assert(named === total, `${total - named} of ${total} controls have no name attribute`);
-    const el = form.querySelector('[name="fname"]');
+    const el = form.querySelector('[name="sname"]');
     assert(el, 'first-name control not found by name');
     el.value = 'Yara';
     const fd = new FormData(form);
-    assert(fd.get('fname') === 'Yara', 'field values are not captured by FormData');
+    assert(fd.get('sname') === 'Yara', 'field values are not captured by FormData');
     assert([...fd.entries()].length > 40, 'only ' + [...fd.entries()].length + ' fields serialised');
     el.value = '';
     return [...fd.entries()].length + ' fields serialised';

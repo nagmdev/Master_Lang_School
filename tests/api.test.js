@@ -54,7 +54,7 @@ function form(fields, files = []) {
   return fd;
 }
 const VALID = {
-  fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
+  sname: 'Yara Hassan', arname: 'يارا حسن', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
   stNid: '29001011234567', faNid: '28505012345678', moNid: '28710129876543',
 };
 
@@ -73,9 +73,9 @@ const VALID = {
   });
 
   await test('an incomplete application is rejected with the missing field names', async () => {
-    const r = await req('POST', '/api/applications', { body: form({ fname: 'OnlyFirst' }) });
+    const r = await req('POST', '/api/applications', { body: form({ sname: 'Only A Name' }) });
     eq(r.status, 400, 'status');
-    assert(r.json.fields.includes('lname') && r.json.fields.includes('faMobile'),
+    assert(r.json.fields.includes('arname') && r.json.fields.includes('faMobile'),
       'missing list wrong: ' + JSON.stringify(r.json.fields));
   });
 
@@ -242,7 +242,7 @@ const VALID = {
   });
 
   await test('a deleted application disappears from the list and counts', async () => {
-    const made = await req('POST', '/api/applications', { body: form({ ...VALID, fname: 'Vanishing' }) });
+    const made = await req('POST', '/api/applications', { body: form({ ...VALID, sname: 'Vanishing' }) });
     const before = await req('GET', '/api/applications', { auth: true });
     await req('DELETE', '/api/application?id=' + made.json.applicationId, { auth: true });
     const after = await req('GET', '/api/applications', { auth: true });

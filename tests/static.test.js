@@ -246,12 +246,12 @@ group('5. Application form — fidelity to admission.docx');
 // Every field the form document specifies -> the dictionary key implementing it
 const REQUIRED_FIELDS = {
   'Personal photo': 'photo', 'Academic year': 'year',
-  'First name': 'fname', 'Middle name': 'mname', 'Last name': 'lname',
-  'Student full name': 'sname', "Student's national ID": 'stNid',
+  'Full name in English': 'sname', 'Full name in Arabic': 'arname',
+  "Student's national ID or passport": 'stNid',
   'Grade applying to': 'grade', 'Gender': 'gender', 'Date of birth': 'dob', 'Age': 'age',
-  'Citizenship': 'citizenship', 'Governorate of residence': 'country',
-  'Address': 'address', 'Email': 'email',
-  'Second language': 'lang2', 'Religion': 'religion', 'Religion — other': 'religionOther',
+  'Citizenship': 'citizenship', 'Area of residence': 'country', 'Area — other': 'countryOther',
+  'Address': 'address',
+  'Second language': 'lang2', 'Religion': 'religion',
   'Previous school name': 'psName', 'Previous education system': 'psSystem',
   'Previous grades': 'psGrades', 'Years attended': 'psYears', 'School location': 'psLocation',
   "Father's name": 'faName', "Father's occupation": 'faOcc', "Father's occupation category": 'faOccCat',
@@ -316,17 +316,26 @@ test('grade list runs Pre-K → KG1 → KG2 → Grade 1..12 (15 options)', () =>
   assert(g[14] === 'Grade 12', 'last grade wrong: ' + g[14]);
 });
 
-test('residence is restricted to the 27 Egyptian governorates', () => {
+test('residence is an area of Gharbia, not a country or a governorate', () => {
   const c = arrayOf(EN, 'countryOpts');
-  assert(c.length === 27, 'expected 27 governorates, got ' + c.length + ': ' + c);
-  for (const n of ['Gharbia', 'Cairo', 'Giza', 'Alexandria', 'Aswan', 'South Sinai']) {
-    assertHas(c.join(' '), n, 'governorate missing');
+  assert(c.length === arrayOf(AR, 'countryOpts').length, 'en/ar area lists differ in length');
+  for (const n of ['El Santa', 'Tanta', 'Kafr El Zayat', 'El Mahalla El Kubra']) {
+    assertHas(c.join(' '), n, 'area missing');
   }
-  // Residence outside Egypt is no longer selectable, and there is no free-text escape.
-  for (const n of ['Saudi', 'KSA', 'UAE', 'Emirates', 'Other']) {
-    assertMissing(c.join(' '), n, 'non-Egyptian option still offered');
+  for (const n of ['Saudi', 'KSA', 'UAE', 'Egypt', 'Cairo']) {
+    assertMissing(c.join(' '), n, 'this is an area list, not a country or governorate list');
   }
-  assert(arrayOf(AR, 'countryOpts').length === 27, 'Arabic governorate list is not 27 long');
+  // anywhere else is reachable through "Other" + the free-text box
+  assertHas(c[c.length - 1], 'Other', 'no escape for an area that is not listed');
+});
+
+test('every bus route is an area a family can select as their residence', () => {
+  // the route is auto-filled from the area, so a route with no matching area
+  // could never be chosen automatically
+  const areas = arrayOf(EN, 'countryOpts');
+  for (const r of arrayOf(EN, 'busRouteOpts')) {
+    assert(areas.includes(r), `bus route "${r}" is not an area families can pick`);
+  }
 });
 
 test("father's occupation category = public / private / self-employed", () => {
@@ -367,7 +376,7 @@ group('6b. Requested changes — "Other" free text, national IDs, removed conten
 // paired with a text input the parent can type into.
 test('every "Other" choice has a companion free-text field', () => {
   const pairs = [
-    ['religion', 'religionOther'], ['tongue', 'tongueOther'],
+    ['country', 'countryOther'], ['tongue', 'tongueOther'],
     ['guardian', 'guardianOther'], ['eRelation', 'eRelationOther'],
     ['eRelation_2', 'eRelationOther_2'], ['busRoute', 'busRouteOther'],
     ['d4', 'd4Desc'],
@@ -379,7 +388,7 @@ test('every "Other" choice has a companion free-text field', () => {
 });
 
 test('the free-text companions are labelled text inputs, not selects', () => {
-  for (const n of ['religionOther', 'tongueOther', 'guardianOther', 'eRelationOther',
+  for (const n of ['countryOther', 'tongueOther', 'guardianOther', 'eRelationOther',
     'eRelationOther_2', 'busRouteOther', 'd4Desc']) {
     const m = new RegExp('<input name="' + n + '" id="(ms-[A-Za-z0-9-]+)"').exec(FORM);
     assert(m, n + ' is not rendered as an <input> with an id');
@@ -387,30 +396,60 @@ test('the free-text companions are labelled text inputs, not selects', () => {
   }
 });
 
-test('the three national IDs are required and validated as 14 digits', () => {
+// A box that is always on screen is noise; it should appear when "Other" is
+// picked and not before.
+test('each "Other" box is revealed by its own control, not always visible', () => {
+  for (const [control, style] of [
+    ['country', 'otherArea'], ['tongue', 'otherTongue'], ['guardian', 'otherGuardian'],
+    ['eRelation', 'otherRelation'], ['eRelation_2', 'otherRelation2'], ['busRoute', 'otherBusRoute'],
+  ]) {
+    assertHas(FORM, '{{ ' + style + ' }}', 'no conditional style for ' + control);
+  }
+  const wired = (FORM.match(/onChange="\{\{ onOtherPick \}\}"/g) || []).length;
+  assert(wired >= 6, 'only ' + wired + ' controls report their choice; the boxes cannot react');
+});
+
+test('the three IDs are required and accept a national ID or a passport', () => {
   for (const n of ['stNid', 'faNid', 'moNid']) {
     const m = new RegExp('<input name="' + n + '"[^>]*>').exec(FORM);
     assert(m, n + ' is not in the form');
     assert(/required="required"/.test(m[0]), n + ' is not required');
-    assert(/pattern="\[0-9\]\{14\}"/.test(m[0]), n + ' has no 14-digit pattern');
-    assert(/inputmode="numeric"/.test(m[0]), n + ' has no numeric inputmode');
+    assert(/pattern="/.test(m[0]), n + ' has no validation pattern');
   }
 });
 
-test('the national-ID pattern accepts a real ID and rejects anything else', () => {
+test('the ID pattern takes a national ID or a passport, and rejects junk', () => {
   const m = /<input name="stNid"[^>]*pattern="([^"]+)"/.exec(FORM);
-  assert(m, 'no national-ID pattern found');
+  assert(m, 'no ID pattern found');
   const re = new RegExp('^(?:' + m[1] + ')$');
-  for (const bad of ['', '123', 'abcdefghijklmn', '2901012345678', '012345678901234']) {
+  for (const good of ['29001011234567', 'A12345678', 'a1b2c3']) {
+    assert(re.test(good), 'pattern wrongly rejects: ' + JSON.stringify(good));
+  }
+  for (const bad of ['', '123', '2901012345678901234', '!!!!!!', '12345']) {
     assert(!re.test(bad), 'pattern wrongly accepts: ' + JSON.stringify(bad));
   }
-  assert(re.test('29001011234567'), 'pattern wrongly rejects a valid 14-digit ID');
 });
 
-// The site is already bilingual, so a separate "in Arabic" copy of the name and
-// address was duplicate data entry.
-test('the duplicate Arabic name/address fields are gone', () => {
-  for (const n of ['arname', 'araddress']) assertMissing(src, n, 'field was not removed');
+// The ID already carries the birth date and sex; asking for them twice invites
+// contradictions.
+test('the student ID fills in what it encodes', () => {
+  assertHas(FORM, 'onChange="{{ fillFromId }}"', 'the student ID does not feed anything');
+  assertHas(src, 'fillFromId(e)', 'no handler behind it');
+  assertHas(src, 'setAgeFrom', 'age is not derived');
+});
+
+// One full name per language: the split first/middle/last fields and the
+// student email are gone, and so is the duplicate Arabic address.
+test('names are one field per language, with no leftover split-name fields', () => {
+  for (const n of ['fname', 'mname', 'lname', 'araddress']) {
+    assertMissing(src, n, 'field was not removed');
+  }
+  assertHas(FORM, 'name="sname"', 'the English full name is missing');
+  assertHas(FORM, 'name="arname"', 'the Arabic full name is missing');
+  for (const n of ['sname', 'arname']) {
+    const m = new RegExp('<input name="' + n + '"[^>]*>').exec(FORM);
+    assert(/required="required"/.test(m[0]), n + ' should be required');
+  }
 });
 
 // Unverifiable marketing claims the school asked to drop.
@@ -628,14 +667,14 @@ test('the submit button reflects the sending state and is disabled while in flig
 });
 
 test('the application is split into steps, and no step is ever unmounted', () => {
-  for (let n = 1; n <= 6; n++) {
+  for (let n = 1; n <= 7; n++) {
     assertHas(FORM, 'id="ms-step-' + n + '"', 'step ' + n + ' wrapper is missing');
     assertHas(FORM, 'style="{{ step' + n + ' }}"', 'step ' + n + ' is not CSS-toggled');
   }
   // A step hidden with <sc-if> would be removed from the DOM, and FormData
   // would then submit an application missing every earlier step's answers.
   const wrappers = FORM.match(/<div id="ms-step-\d"[^>]*>/g) || [];
-  assert(wrappers.length === 6, 'expected 6 step wrappers, found ' + wrappers.length);
+  assert(wrappers.length === 7, 'expected 7 step wrappers, found ' + wrappers.length);
   for (const w of wrappers) assert(!/sc-if/.test(w), 'a step is conditionally rendered: ' + w);
   assert(enKeys.has('next') && arKeys.has('next'), 'no bilingual "Next" label');
   assert(enKeys.has('back') && arKeys.has('back'), 'no bilingual "Back" label');

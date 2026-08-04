@@ -175,19 +175,20 @@ let STATUSES = [];
 let activeStatus = '';
 
 const LABELS = {
-  fname: 'First name', mname: 'Middle name', lname: 'Last name', sname: 'Full name',
-  stNid: 'Student national ID', year: 'Academic year', grade: 'Grade', dob: 'Date of birth',
-  age: 'Age', gender: 'Gender', citizenship: 'Citizenship', country: 'Governorate',
-  address: 'Address', email: 'Email',
-  lang2: 'Second language', religion: 'Religion', religionOther: 'Religion (other)',
+  sname: 'Full name (English)', arname: 'Full name (Arabic)',
+  stNid: 'Student national ID / passport', year: 'Academic year', grade: 'Grade', dob: 'Date of birth',
+  age: 'Age', gender: 'Gender', citizenship: 'Citizenship',
+  country: 'Area', countryOther: 'Area (other)',
+  address: 'Address',
+  lang2: 'Second language', religion: 'Religion',
   psName: 'Previous school', psSystem: 'Education system', psGrades: 'Grades',
   psYears: 'Years attended', psLocation: 'School location',
   faName: 'Father', faOcc: 'Occupation', faOccCat: 'Sector', faEmail: 'Father email',
   faAddress: 'Father address', faCitizenship: 'Father citizenship',
-  faMobile: 'Father mobile', faNid: 'Father national ID',
+  faMobile: 'Father mobile', faNid: 'Father national ID / passport',
   moName: 'Mother', moOcc: 'Occupation', moOccCat: 'Sector', moEmail: 'Mother email',
   moAddress: 'Mother address', moCitizenship: 'Mother citizenship', moMobile: 'Mother mobile',
-  moNid: 'Mother national ID',
+  moNid: 'Mother national ID / passport',
   marital: 'Marital status', siblingsNo: 'Siblings', birthOrder: 'Birth order',
   tongue: 'Mother tongue', tongueOther: 'Mother tongue (other)',
   guardian: 'Guardian', guardianOther: 'Guardian (other)',
@@ -203,7 +204,7 @@ const LABELS = {
   d4Desc: 'Other attachments — description',
 };
 const GROUPS = [
-  ['Student', ['fname', 'mname', 'lname', 'sname', 'stNid', 'year', 'grade', 'dob', 'age', 'gender', 'citizenship', 'country', 'address', 'email', 'lang2', 'religion', 'religionOther']],
+  ['Student', ['sname', 'arname', 'stNid', 'year', 'grade', 'dob', 'age', 'gender', 'citizenship', 'country', 'countryOther', 'address', 'lang2', 'religion']],
   ['Previous school', ['psName', 'psSystem', 'psGrades', 'psYears', 'psLocation']],
   ['Father', ['faName', 'faOcc', 'faOccCat', 'faMobile', 'faNid', 'faEmail', 'faAddress', 'faCitizenship']],
   ['Mother', ['moName', 'moOcc', 'moOccCat', 'moMobile', 'moNid', 'moEmail', 'moAddress', 'moCitizenship']],
@@ -306,7 +307,7 @@ async function load() {
   const rows = data.rows || [];
   $('#rows').innerHTML = rows.map(r => {
     const f = r.fields || {};
-    const student = [f.fname, f.mname, f.lname].filter(Boolean).join(' ') || f.sname || '—';
+    const student = f.sname || f.arname || '—';
     return `<tr data-id="${esc(r.id)}">
       <td class="id">${esc(r.id)}</td>
       <td>${esc(student)}</td>
@@ -342,7 +343,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(
 async function openDrawer(id) {
   const r = await api('/api/application?id=' + encodeURIComponent(id));
   const f = r.fields || {};
-  const studentName = [f.fname, f.mname, f.lname].filter(Boolean).join(' ') || f.sname || '';
+  const studentName = f.sname || f.arname || '';
   const adm = r.admin || {};
   $('#d-id').textContent = r.id;
 

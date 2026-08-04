@@ -24,7 +24,7 @@ function assert(c, m) { if (!c) throw new Error(m || 'assertion failed'); }
 function eq(a, b, m) { if (a !== b) throw new Error((m || 'expected') + `: got ${JSON.stringify(a)}, want ${JSON.stringify(b)}`); }
 
 const VALID = {
-  fname: 'Yara', lname: 'Hassan', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
+  sname: 'Yara Hassan', arname: 'يارا حسن', grade: 'KG1', faName: 'Ahmed Hassan', faMobile: '01037993762',
   stNid: '29001011234567', faNid: '28505012345678', moNid: '28710129876543',
 };
 const PDF = Buffer.from([0x25, 0x50, 0x44, 0x46, 0x00, 0xff, 0xfe, 0x0d, 0x0a, 0x2d, 0x2d, 0x00, 0x7f]);
@@ -159,7 +159,7 @@ async function runSuite(label, store, cleanup) {
 
   await test('deletes an application and reports what was removed', async () => {
     const row = await store.createApplication({
-      fields: { ...VALID, fname: 'ToDelete' },
+      fields: { ...VALID, sname: 'ToDelete' },
       files: [{ field: 'd2', filename: 'gone.pdf', contentType: 'application/pdf', buffer: PDF }],
     });
     const before = (await store.listApplications({})).total;
@@ -187,18 +187,18 @@ async function runSuite(label, store, cleanup) {
   });
 
   await test('deleting one application leaves the others untouched', async () => {
-    const keep = await store.createApplication({ fields: { ...VALID, fname: 'Keeper' }, files: [] });
-    const drop = await store.createApplication({ fields: { ...VALID, fname: 'Dropper' }, files: [] });
+    const keep = await store.createApplication({ fields: { ...VALID, sname: 'Keeper' }, files: [] });
+    const drop = await store.createApplication({ fields: { ...VALID, sname: 'Dropper' }, files: [] });
     await store.deleteApplication(drop.id);
     const survivor = await store.getApplication(keep.id);
-    assert(survivor && survivor.fields.fname === 'Keeper', 'deleting one row removed another');
+    assert(survivor && survivor.fields.sname === 'Keeper', 'deleting one row removed another');
   });
 
   await test('concurrent submissions all persist with unique ids', async () => {
     const before = (await store.listApplications({})).total;
     const made = await Promise.all(
       Array.from({ length: 8 }, (_, i) =>
-        store.createApplication({ fields: { ...VALID, fname: 'Concurrent' + i }, files: [] }))
+        store.createApplication({ fields: { ...VALID, sname: 'Concurrent' + i }, files: [] }))
     );
     const ids = new Set(made.map(r => r.id));
     eq(ids.size, 8, 'ids collided under concurrency');
