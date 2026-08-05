@@ -46,6 +46,91 @@ async function createApplication(req, res) {
   return json(res, 201, { applicationId: row.id, submittedAt: row.submittedAt });
 }
 
+/* ---------------------------- careers (public) ---------------------------- */
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// POST /api/careers — a candidate applies for a job from careers.html,
+// <job>.html, apply-<job>.html, or the embedded Careers section of index.html.
+// All of those pages post the same field names (name, phone, email_2,
+// position, years, edu) plus optional cv/cert/portfolio file parts.
+async function createCareerApplication(req, res) {
+  const { fields, files } = await parseRequest(req);
+
+  const name = String(fields.name || '').trim();
+  const phone = String(fields.phone || '').trim();
+  const email_ = String(fields.email_2 || fields.email || '').trim();
+  const position = String(fields.position || '').trim();
+
+  const missing = [];
+  if (!name) missing.push('name');
+  if (!phone) missing.push('phone');
+  if (!position) missing.push('position');
+  if (!email_) missing.push('email');
+  else if (!EMAIL_RE.test(email_)) missing.push('email');
+  if (missing.length) {
+    return json(res, 400, { error: 'missing or invalid required fields', fields: missing });
+  }
+
+  const row = await store.createCareerApplication({
+    fields: {
+      name, phone, email_2: email_, position,
+      years: String(fields.years || '').trim(),
+      edu: String(fields.edu || '').trim(),
+    },
+    files,
+  });
+
+  // Fire-and-forget, same rationale as notifyNewApplication above.
+  email.notifyNewCareerApplication(row, row.fields);
+
+  return json(res, 201, { careerId: row.id, submittedAt: row.submittedAt });
+}
+
+/* ---------------------------- contact (public) ----------------------------- */
+
+// Contact messages are not stored — the email IS the delivery — so a light
+// in-memory rate limit is the only thing standing between this endpoint and
+// a spam script. That is an acceptable trade-off for a low-traffic school
+// contact form and mirrors the limit the previous SendGrid-based endpoint used.
+const contactAttempts = new Map();
+const CONTACT_WINDOW_MS = 10 * 60 * 1000;
+const CONTACT_MAX = 5;
+function contactRateLimited(key) {
+  const now = Date.now();
+  const recent = (contactAttempts.get(key) || []).filter(t => now - t < CONTACT_WINDOW_MS);
+  const blocked = recent.length >= CONTACT_MAX;
+  if (!blocked) contactAttempts.set(key, recent.concat(now));
+  if (contactAttempts.size > 5000) contactAttempts.clear(); // crude bound
+  return blocked;
+}
+
+// POST /api/contact — the Contact page's message form (index.html).
+async function submitContact(req, res) {
+  const key = clientKey(req);
+  if (contactRateLimited(key)) {
+    return json(res, 429, { error: 'too many messages; try again later' });
+  }
+
+  const { fields } = await parseRequest(req);
+  const name = String(fields.name || '').trim().slice(0, 120);
+  const email_ = String(fields.email || '').trim().slice(0, 254);
+  const phone = String(fields.phone || '').trim().slice(0, 30);
+  const message = String(fields.message || '').trim().slice(0, 5000);
+
+  if (!name) return json(res, 400, { error: 'name is required' });
+  if (!email_ || !EMAIL_RE.test(email_)) return json(res, 400, { error: 'a valid email is required' });
+  if (!message || message.length < 10) return json(res, 400, { error: 'message is too short' });
+
+  const sent = await email.notifyContactMessage({ name, email: email_, phone, message });
+  if (!sent) {
+    // Nothing was stored, so a failed send means the message is genuinely
+    // lost — tell the visitor rather than showing a false "sent" screen.
+    return json(res, 502, { error: 'could not deliver message — please try WhatsApp or phone instead' });
+  }
+  return json(res, 200, { ok: true });
+}
+
 /* -------------------------------- admin ---------------------------------- */
 
 async function login(req, res) {
@@ -151,6 +236,70 @@ async function downloadFile(req, res, url) {
   });
 }
 
+/* ---------------------------- careers (admin) ------------------------------ */
+
+async function listCareerApplications(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const out = await store.listCareerApplications({
+    q: url.searchParams.get('q') || '',
+    status: url.searchParams.get('status') || '',
+    limit: Math.min(Number(url.searchParams.get('limit')) || 200, 500),
+    offset: Number(url.searchParams.get('offset')) || 0,
+  });
+  return json(res, 200, Object.assign(out, { statuses: store.CAREER_STATUSES }));
+}
+
+async function getCareerApplication(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const row = await store.getCareerApplication(url.searchParams.get('id'));
+  if (!row) return json(res, 404, { error: 'not found' });
+  return json(res, 200, row);
+}
+
+async function updateCareerApplication(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const { fields } = await parseRequest(req);
+  try {
+    const row = await store.updateCareerApplication(url.searchParams.get('id') || fields.id, fields);
+    if (!row) return json(res, 404, { error: 'not found' });
+    return json(res, 200, row);
+  } catch (e) {
+    return json(res, 400, { error: String(e.message || e) });
+  }
+}
+
+async function deleteCareerApplication(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const id = url.searchParams.get('id');
+  if (!id) return json(res, 400, { error: 'missing id' });
+  const removed = await store.deleteCareerApplication(id);
+  if (!removed) return json(res, 404, { error: 'not found' });
+  console.log('[admin] deleted career application', id, 'submitted', removed.submittedAt);
+  return json(res, 200, { ok: true, id: id, deletedFiles: (removed.files || []).length });
+}
+
+// Human-readable names for career-application uploads, same rationale as
+// FIELD_NAMES above.
+const CAREER_FIELD_NAMES = { cv: 'CV', cert: 'Certificates', portfolio: 'Portfolio' };
+function careerDocumentName(meta) {
+  const base = CAREER_FIELD_NAMES[meta.field] || 'Document';
+  const ext = (/\.([A-Za-z0-9]+)$/.exec(meta.filename || '') || [, ''])[1];
+  return ext ? base + '.' + ext.toLowerCase() : base;
+}
+
+async function downloadCareerFile(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const found = await store.readCareerFile(url.searchParams.get('id'), url.searchParams.get('name'));
+  if (!found) return json(res, 404, { error: 'not found' });
+  const wantsInline = url.searchParams.get('mode') === 'inline' && inlineSafe(found.meta.contentType);
+  const disposition = wantsInline ? 'inline' : 'attachment';
+  return send(res, 200, found.buffer, {
+    'Content-Type': found.meta.contentType,
+    'Content-Disposition': disposition + '; filename="' + careerDocumentName(found.meta).replace(/"/g, '') + '"',
+    'X-Content-Type-Options': 'nosniff',
+  });
+}
+
 const ROUTES = [
   { method: 'POST', path: '/api/applications', handler: createApplication },
   { method: 'GET', path: '/api/applications', handler: listApplications },
@@ -162,6 +311,14 @@ const ROUTES = [
   { method: 'POST', path: '/api/logout', handler: logout },
   { method: 'GET', path: '/api/session', handler: session },
   { method: 'GET', path: '/api/file', handler: downloadFile },
+  { method: 'POST', path: '/api/careers', handler: createCareerApplication },
+  { method: 'GET', path: '/api/careers', handler: listCareerApplications },
+  { method: 'GET', path: '/api/career', handler: getCareerApplication },
+  { method: 'PATCH', path: '/api/career', handler: updateCareerApplication },
+  { method: 'POST', path: '/api/career', handler: updateCareerApplication },
+  { method: 'DELETE', path: '/api/career', handler: deleteCareerApplication },
+  { method: 'GET', path: '/api/careerfile', handler: downloadCareerFile },
+  { method: 'POST', path: '/api/contact', handler: submitContact },
 ];
 
 /**
