@@ -15,7 +15,8 @@
     "node": "22.x"
   },
   "dependencies": {
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "@sendgrid/mail": "^7.8.0"
 
   }
 }
