@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B2346'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23C89A2B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <meta name="robots" content="noindex, nofollow">
-<title>Admissions Admin — Masters Language School</title>
+<title>Staff Admin — Masters Language School</title>
 <style>
   :root{
     --navy:#0B2346; --gold:#C89A2B; --bg:#FBFAF7; --line:#ECEAE3;
@@ -45,6 +45,13 @@
   .warn{background:#FDF4E3;border:1px solid #E8C97A;color:#7A5B12;
         padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
 
+  /* tabs */
+  .tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:0}
+  .tab{background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;
+       font-size:14.5px;font-weight:700;color:var(--muted);padding:10px 4px;margin-bottom:-1px}
+  .tab.on{color:var(--navy);border-bottom-color:var(--gold)}
+  .tab .n{color:var(--faint);font-weight:600;margin-inline-start:6px}
+
   /* toolbar */
   .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
   .toolbar .field{flex:1;min-width:220px}
@@ -74,6 +81,8 @@
   .s-waiting_list{background:#FBEEDC;color:#8A5A12}
   .s-withdrawn{background:#EFEFEF;color:#5B6472}
   .s-assessment_booked{background:#E7F2FF;color:#12507F}
+  .s-shortlisted{background:#E8F0FE;color:#1A4B8F}
+  .s-hired{background:#E4F6EA;color:#1B6B39}
 
   /* drawer */
   .backdrop{position:fixed;inset:0;background:rgba(11,35,70,.45);z-index:40}
@@ -114,7 +123,7 @@
 <header>
   <div>
     <div class="sub">Masters Language School</div>
-    <h1>Admissions Administration</h1>
+    <h1>Admissions &amp; Careers Administration</h1>
   </div>
   <div id="hdr-actions" class="hidden">
     <button class="ghost" id="refresh">Refresh</button>
@@ -139,20 +148,45 @@
 
 <!-- dashboard -->
 <main id="app-view" class="hidden">
-  <div class="toolbar">
-    <input class="field" id="q" type="search" placeholder="Search by name, ID, mobile, grade…">
-    <button class="primary" id="search-btn">Search</button>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-tab="admissions">Admissions</button>
+    <button class="tab" data-tab="careers">Careers</button>
   </div>
-  <div class="chips" id="chips"></div>
-  <div id="list-error" class="error hidden" role="alert"></div>
-  <div class="tablewrap">
-    <table>
-      <thead><tr>
-        <th>Application</th><th>Student</th><th>Grade</th><th>Parent</th><th>Mobile</th><th>Received</th><th>Status</th>
-      </tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <div id="empty" class="empty hidden"></div>
+
+  <div id="tab-admissions">
+    <div class="toolbar">
+      <input class="field" id="q" type="search" placeholder="Search by name, ID, mobile, grade…">
+      <button class="primary" id="search-btn">Search</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div id="list-error" class="error hidden" role="alert"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Application</th><th>Student</th><th>Grade</th><th>Parent</th><th>Mobile</th><th>Received</th><th>Status</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div id="empty" class="empty hidden"></div>
+    </div>
+  </div>
+
+  <div id="tab-careers" class="hidden">
+    <div class="toolbar">
+      <input class="field" id="c-q" type="search" placeholder="Search by name, position, phone, email…">
+      <button class="primary" id="c-search-btn">Search</button>
+    </div>
+    <div class="chips" id="c-chips"></div>
+    <div id="c-list-error" class="error hidden" role="alert"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Reference</th><th>Candidate</th><th>Position</th><th>Phone</th><th>Received</th><th>Status</th>
+        </tr></thead>
+        <tbody id="c-rows"></tbody>
+      </table>
+      <div id="c-empty" class="empty hidden"></div>
+    </div>
   </div>
 </main>
 
@@ -173,6 +207,9 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
 
 let STATUSES = [];
 let activeStatus = '';
+let CAREER_STATUSES = [];
+let activeCareerStatus = '';
+let activeTab = 'admissions';
 
 const LABELS = {
   sname: 'Full name (English)', arname: 'Full name (Arabic)',
@@ -214,6 +251,8 @@ const GROUPS = [
   ['Transport', ['bus', 'busRoute', 'busRouteOther']],
 ];
 const pretty = s => String(s).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+const CAREER_FIELD_LABELS = { cv: 'CV / Résumé', cert: 'Certificates', portfolio: 'Portfolio' };
+const CAREER_LABELS = { name: 'Full name', phone: 'Phone', email_2: 'Email', position: 'Position', years: 'Years of experience', edu: 'Highest qualification' };
 
 async function api(path, opts) {
   const res = await fetch(path, Object.assign({ credentials: 'same-origin' }, opts || {}));
@@ -259,6 +298,19 @@ $('#logout').addEventListener('click', async () => {
   await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
   showLogin();
 });
+
+// Tabs: switching shows/hides the two sections and always pulls a fresh list,
+// so stale data from before sign-in (or from the other tab) is never shown.
+$('#tabs').addEventListener('click', e => {
+  const btn = e.target.closest('.tab');
+  if (!btn) return;
+  activeTab = btn.dataset.tab;
+  $('#tabs').querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t === btn));
+  $('#tab-admissions').classList.toggle('hidden', activeTab !== 'admissions');
+  $('#tab-careers').classList.toggle('hidden', activeTab !== 'careers');
+  refresh();
+});
+
 // Every caller goes through this: a bare `load()` returns a promise whose
 // rejection is swallowed, so a failed refresh looked like nothing happened.
 async function refresh(btn) {
@@ -266,25 +318,30 @@ async function refresh(btn) {
   if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
   hideError();
   try {
-    await load();
+    if (activeTab === 'careers') await loadCareers();
+    else await load();
   } catch (e) {
-    showError('Could not load applications: ' + e.message);
+    showError((activeTab === 'careers' ? 'Could not load career applications: ' : 'Could not load applications: ') + e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = label; }
   }
 }
 function showError(msg) {
-  const el = $('#list-error');
+  const el = $(activeTab === 'careers' ? '#c-list-error' : '#list-error');
   el.textContent = msg;
   el.classList.remove('hidden');
 }
-function hideError() { $('#list-error').classList.add('hidden'); }
+function hideError() { $('#list-error').classList.add('hidden'); $('#c-list-error').classList.add('hidden'); }
 
 $('#refresh').addEventListener('click', e => refresh(e.currentTarget));
 $('#search-btn').addEventListener('click', e => refresh(e.currentTarget));
 $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') refresh($('#search-btn')); });
 // clearing the box restores the full list without needing to press Search
 $('#q').addEventListener('search', () => refresh($('#search-btn')));
+
+$('#c-search-btn').addEventListener('click', e => refresh(e.currentTarget));
+$('#c-q').addEventListener('keydown', e => { if (e.key === 'Enter') refresh($('#c-search-btn')); });
+$('#c-q').addEventListener('search', () => refresh($('#c-search-btn')));
 
 function renderChips(counts) {
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
@@ -294,6 +351,16 @@ function renderChips(counts) {
   ).join('');
   $('#chips').querySelectorAll('.chip').forEach(c =>
     c.addEventListener('click', () => { activeStatus = c.dataset.status; refresh(); }));
+}
+
+function renderCareerChips(counts) {
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const items = [['', 'All', total]].concat(CAREER_STATUSES.map(s => [s, pretty(s), counts[s] || 0]));
+  $('#c-chips').innerHTML = items.map(([v, label, n]) =>
+    `<button class="chip ${v === activeCareerStatus ? 'on' : ''}" data-status="${esc(v)}">${esc(label)}<span class="n">${n}</span></button>`
+  ).join('');
+  $('#c-chips').querySelectorAll('.chip').forEach(c =>
+    c.addEventListener('click', () => { activeCareerStatus = c.dataset.status; refresh(); }));
 }
 
 async function load() {
@@ -329,7 +396,41 @@ async function load() {
     empty.classList.add('hidden');
   }
   $('#rows').querySelectorAll('tr').forEach(tr =>
-    tr.addEventListener('click', () => openDrawer(tr.dataset.id)));
+    tr.addEventListener('click', () => openDrawer(tr.dataset.id, 'admission')));
+}
+
+async function loadCareers() {
+  const params = new URLSearchParams();
+  if ($('#c-q').value.trim()) params.set('q', $('#c-q').value.trim());
+  if (activeCareerStatus) params.set('status', activeCareerStatus);
+  const data = await api('/api/careers?' + params.toString());
+  CAREER_STATUSES = data.statuses || [];
+  renderCareerChips(data.counts || {});
+
+  const rows = data.rows || [];
+  $('#c-rows').innerHTML = rows.map(r => {
+    const f = r.fields || {};
+    return `<tr data-id="${esc(r.id)}">
+      <td class="id">${esc(r.id)}</td>
+      <td>${esc(f.name || '—')}</td>
+      <td>${esc(f.position || '—')}</td>
+      <td>${esc(f.phone || '—')}</td>
+      <td>${esc(new Date(r.submittedAt).toLocaleDateString())}</td>
+      <td><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></td>
+    </tr>`;
+  }).join('');
+
+  const empty = $('#c-empty');
+  if (!rows.length) {
+    empty.classList.remove('hidden');
+    empty.textContent = ($('#c-q').value || activeCareerStatus)
+      ? 'No career applications match this search.'
+      : 'No career applications yet. When a candidate applies on the Careers pages, it appears here.';
+  } else {
+    empty.classList.add('hidden');
+  }
+  $('#c-rows').querySelectorAll('tr').forEach(tr =>
+    tr.addEventListener('click', () => openDrawer(tr.dataset.id, 'career')));
 }
 
 function closeDrawer() {
@@ -340,7 +441,8 @@ $('#close-drawer').addEventListener('click', closeDrawer);
 $('#backdrop').addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-async function openDrawer(id) {
+async function openDrawer(id, kind) {
+  if (kind === 'career') return openCareerDrawer(id);
   const r = await api('/api/application?id=' + encodeURIComponent(id));
   const f = r.fields || {};
   const studentName = f.sname || f.arname || '';
@@ -514,6 +616,121 @@ async function openDrawer(id) {
       await api('/api/application?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
       closeDrawer();
       await load();
+    } catch (e) {
+      alert('Could not delete: ' + e.message);
+      yes.disabled = false; yes.textContent = 'Yes, delete permanently';
+    }
+  });
+}
+
+async function openCareerDrawer(id) {
+  const r = await api('/api/career?id=' + encodeURIComponent(id));
+  const f = r.fields || {};
+  $('#d-id').textContent = r.id;
+
+  let html = '';
+  const order = ['name', 'phone', 'email_2', 'position', 'years', 'edu'];
+  const present = order.filter(k => String(f[k] || '').trim());
+  if (present.length) {
+    html += `<div class="sec">Candidate</div><dl class="kv">` +
+      present.map(k => `<dt>${esc(CAREER_LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') +
+      `</dl>`;
+  }
+
+  html += `<div class="sec">Documents</div>`;
+  const canView = x => x.contentType === 'application/pdf' || /^image\//.test(x.contentType || '');
+  html += (r.files && r.files.length)
+    ? `<div class="files">` + r.files.map(x => {
+        const base = `/api/careerfile?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}`;
+        const view = canView(x)
+          ? `<a href="${base}&mode=inline" target="_blank" rel="noopener">View</a>` : '';
+        return `<div class="file"><span>${esc(CAREER_FIELD_LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
+           <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
+           <span class="filelinks">${view}<a href="${base}">Download</a></span></div>`;
+      }).join('') + `</div>`
+    : `<p style="color:var(--faint);font-size:14px;margin:0">No documents were uploaded.</p>`;
+
+  // Same auto-save pattern as the admissions drawer: status on change, notes
+  // on blur, no Update button to press or forget.
+  html += `<div class="sec">Status</div>
+    <div class="row" style="margin-top:0;align-items:center">
+      <select class="field" id="d-status" style="flex:1;min-width:180px">${CAREER_STATUSES.map(s =>
+        `<option value="${esc(s)}"${s === r.status ? ' selected' : ''}>${esc(pretty(s))}</option>`).join('')}</select>
+      <span id="d-saved" class="saved hidden">Saved</span>
+    </div>
+    <div class="sec">Internal notes</div>
+    <textarea class="field" id="d-notes" rows="3" placeholder="Visible to HR only">${esc(r.notes || '')}</textarea>
+    <p style="color:var(--faint);font-size:12px;margin:8px 0 0">Changes save automatically.</p>
+
+    <div class="row" style="margin-top:22px;justify-content:flex-end">
+      <button class="danger" id="d-delete">Delete</button>
+    </div>
+    <div class="confirm hidden" id="d-confirm">
+      <h4>Delete this application permanently?</h4>
+      <p>
+        <strong>${esc(r.id)}</strong>${f.name ? ' — ' + esc(f.name) : ''} will be erased,
+        along with ${(r.files || []).length} uploaded document${(r.files || []).length === 1 ? '' : 's'}.
+        This cannot be undone.
+      </p>
+      <div class="row" style="margin-top:0">
+        <button class="danger-solid" id="d-delete-yes">Yes, delete permanently</button>
+        <button class="ghost" id="d-delete-no" style="border-color:#DCDAD2;color:var(--navy)">Cancel</button>
+      </div>
+    </div>
+    <p style="color:var(--faint);font-size:12.5px;margin-top:18px">
+      Received ${esc(new Date(r.submittedAt).toLocaleString())}${r.updatedAt ? ' · updated ' + esc(new Date(r.updatedAt).toLocaleString()) : ''}
+    </p>`;
+
+  $('#d-body').innerHTML = html;
+  $('#drawer').classList.remove('hidden');
+  $('#backdrop').classList.remove('hidden');
+
+  async function patch(payload, control) {
+    if (control) control.disabled = true;
+    try {
+      await api('/api/career?id=' + encodeURIComponent(r.id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      Object.assign(r, payload);
+      $('#d-saved').classList.remove('hidden');
+      setTimeout(() => { const s = $('#d-saved'); if (s) s.classList.add('hidden'); }, 1600);
+      await loadCareers(); // keep the row, chips and counts in step
+    } catch (e) {
+      alert('Could not save: ' + e.message);
+    } finally {
+      if (control) control.disabled = false;
+    }
+  }
+
+  $('#d-status').addEventListener('change', e =>
+    patch({ status: e.currentTarget.value }, e.currentTarget));
+
+  let lastNotes = r.notes || '';
+  $('#d-notes').addEventListener('blur', e => {
+    const v = e.currentTarget.value;
+    if (v === lastNotes) return;
+    lastNotes = v;
+    patch({ notes: v }, e.currentTarget);
+  });
+
+  $('#d-delete').addEventListener('click', () => {
+    $('#d-confirm').classList.remove('hidden');
+    $('#d-delete').disabled = true;
+    $('#d-delete-yes').focus();
+  });
+  $('#d-delete-no').addEventListener('click', () => {
+    $('#d-confirm').classList.add('hidden');
+    $('#d-delete').disabled = false;
+  });
+  $('#d-delete-yes').addEventListener('click', async () => {
+    const yes = $('#d-delete-yes');
+    yes.disabled = true; yes.textContent = 'Deleting…';
+    try {
+      await api('/api/career?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
+      closeDrawer();
+      await loadCareers();
     } catch (e) {
       alert('Could not delete: ' + e.message);
       yes.disabled = false; yes.textContent = 'Yes, delete permanently';

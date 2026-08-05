@@ -46,8 +46,9 @@ created automatically on the first request.
 | `MS_ADMIN_PASSWORD` | the shared admissions password (min 12 chars) — **not recorded in this repo** |
 | `MS_SESSION_SECRET` | a 64-character random string (generate below) |
 | `MS_ACADEMIC_YEAR` | *(optional)* the academic-year prefix on applicant references, e.g. `2026`. Defaults to `2026`. Change it each intake; references then read `<year>-<number>` from 1800. |
-| `RESEND_API_KEY` | API key from [resend.com](https://resend.com) — enables the "new application" email alert. Without it, submissions still save fine; the app just skips the email and logs a warning. |
-| `MS_NOTIFY_EMAIL` | *(optional)* who receives the alert. Defaults to `mastersschool59@gmail.com`. |
+| `RESEND_API_KEY` | API key from [resend.com](https://resend.com) — enables the "new admissions application" email alert, the "new job application" HR alert, and delivery of the Contact page's message form. Without it: admissions/career submissions still save fine (the app just skips the email and logs a warning); the Contact form has nothing to save, so a message typed with no key set is reported to the visitor as **not delivered** rather than shown a false "sent" screen. |
+| `MS_NOTIFY_EMAIL` | *(optional)* who receives the admissions alert and the Contact-form messages. Defaults to `admission@masters-edu.com`. |
+| `MS_HR_NOTIFY_EMAIL` | *(optional)* who receives the "new job application" HR alert (careers.html / apply-*.html / the embedded Careers section). Defaults to `MS_NOTIFY_EMAIL` if unset. |
 | `MS_FROM_EMAIL` | *(optional)* verified sender, e.g. `Masters School <no-reply@masters-edu.com>`. Requires verifying `masters-edu.com` in Resend first — until then, leave unset to use Resend's shared test sender. |
 | `MS_SITE_URL` | *(optional)* your live domain, e.g. `https://masters-edu.com` — used to build the "view in dashboard" link inside the alert email. |
 
@@ -81,6 +82,13 @@ Pushing in step 1 triggers the build. Vercel runs `npm install` (one dependency,
 2. Open `/admin.html`, sign in, confirm the test application is listed.
 3. Open it → download the document → **Delete** it.
 4. Confirm `https://<domain>/data/applications.json` returns **403/404**.
+5. **Careers → apply to any position** (from `careers.html` or the embedded
+   Careers section) with a CV attached. Expect a real `MST-HR-####` reference,
+   an HR alert email, and the application listed under the **Careers** tab in
+   `/admin.html`.
+6. **Contact page → send a test message.** Expect a `200` and an email at
+   `MS_NOTIFY_EMAIL`. With `RESEND_API_KEY` unset or wrong, expect the page to
+   show an error rather than the "message sent" screen.
 
 Verified locally against a real PostgreSQL instance in production mode
 (`VERCEL=1`, `NODE_ENV=production`):
@@ -140,4 +148,3 @@ DATABASE_URL=postgres://... npm run test:store    # includes the postgres driver
 
 `tests/store.test.js` runs identical assertions against the local and Postgres
 drivers, so the production driver is proven equivalent rather than assumed.
-

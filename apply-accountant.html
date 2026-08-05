@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B2346'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23C89A2B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<title>Application — Accountant | Masters Language School</title>
+<meta name="description" content="Application form for the Accountant position at Masters Language School in El Santa, Gharbia.">
+<script>
+  window.MS_CONFIG = { applicationsEndpoint: "/api/applications", careersEndpoint: "/api/careers", contactEndpoint: "/api/contact" };
+</script>
+<script src="./support.js"></script>
+<script src="./careers.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  a{color:#C89A2B;text-decoration:none}
+  a:hover{color:#0B2346}
+  ::selection{background:#C89A2B;color:#0B2346}
+  input,select,textarea,button{font-family:inherit}
+  @keyframes msFadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+  @media (max-width:980px){
+    [style*="grid-template-columns:"],
+    [style*="grid-template-columns: "],
+    [style*="grid-template-columns:1.6fr 1fr"],
+    [style*="grid-template-columns: 1.6fr 1fr"]{grid-template-columns:1fr!important}
+    nav > div, nav > div > div, nav div[style*="gap:1px"], nav div[style*="gap: 1px"]{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important}
+    nav > div a,
+    nav > div span{white-space:normal!important;min-width:0!important;line-height:1.3!important}
+    nav > div a{padding:8px 10px!important}
+    section[style*="padding:48px 32px"], section[style*="padding: 48px 32px"],
+    section[style*="padding:64px 32px"], section[style*="padding: 64px 32px"]{padding:32px 20px!important}
+  }
+  @media (max-width:720px){
+    [style*="grid-template-columns:"],
+    [style*="grid-template-columns: "],
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
+    form{padding:20px!important}
+    h1{font-size:40px!important}
+    h2{font-size:32px!important}
+    section[style*="padding:48px 32px"], section[style*="padding: 48px 32px"]{padding:28px 18px!important}
+    section[style*="padding:64px 32px"], section[style*="padding: 64px 32px"]{padding:28px 18px!important}
+  }
+</style>
+<style>
+  :root{
+    --navy:#0B2346;--gold:#C89A2B;--gold-2:#b98a1f;--muted:#5B6472;
+    --soft:#8A93A1;--line:#ECEAE3;--field:#FCFBF8;--bg:#FBFAF7
+  }
+  html{scroll-behavior:smooth}
+  body{line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  h1,h2,h3{letter-spacing:.005em;text-wrap:balance}
+  p{text-wrap:pretty}
+
+  [style*="padding: 48px 32px"][style*="text-align: center"]{animation:msFadeUp .8s ease both}
+  [style*="padding:48px 32px"][style*="text-align:center"]{animation:msFadeUp .8s ease both}
+
+  input,select,textarea{transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease}
+  input:hover:not(:disabled),select:hover:not(:disabled),textarea:hover:not(:disabled){border-color:#c9b25a!important}
+  input:focus,select:focus,textarea:focus{border-color:#C89A2B!important;box-shadow:0 0 0 4px rgba(200,154,43,.16);outline:none}
+  input:disabled,select:disabled,textarea:disabled{opacity:.55;cursor:not-allowed}
+
+  button,a{transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease}
+  button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #C89A2B;outline-offset:3px}
+  button:hover:not(:disabled){transform:translateY(-1px)}
+  button:active:not(:disabled){transform:translateY(0)}
+
+  [style*="border-radius:20px"][style*="background:#fff"],[style*="border-radius: 20px"][style*="background:#fff"],
+  [style*="border-radius:22px"][style*="background:#fff"],[style*="border-radius: 22px"][style*="background:#fff"],
+  [style*="border-radius:24px"][style*="background:#fff"],[style*="border-radius: 24px"][style*="background:#fff"]{
+    transition:transform .25s ease, box-shadow .25s ease
+  }
+  [style*="border-radius:20px"][style*="background:#fff"]:hover,[style*="border-radius: 20px"][style*="background:#fff"]:hover,
+  [style*="border-radius:20px"][style*="background: #fff"]:hover,[style*="border-radius: 20px"][style*="background: #fff"]:hover,
+  [style*="border-radius:22px"][style*="background:#fff"]:hover,[style*="border-radius: 22px"][style*="background:#fff"]:hover,
+  [style*="border-radius:22px"][style*="background: #fff"]:hover,[style*="border-radius: 22px"][style*="background: #fff"]:hover,
+  [style*="border-radius:24px"][style*="background:#fff"]:hover,[style*="border-radius: 24px"][style*="background:#fff"]:hover,
+  [style*="border-radius:24px"][style*="background: #fff"]:hover,[style*="border-radius: 24px"][style*="background: #fff"]:hover{
+    transform:translateY(-4px);box-shadow:0 26px 52px -30px rgba(11,35,70,.42)
+  }
+
+  /* Forward chevrons flip in RTL so they keep pointing "forward". */
+  [dir="rtl"] .ms-chev{transform:scaleX(-1)}
+
+  ::selection{background:#C89A2B;color:#0B2346}
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-thumb{background:#d8d2c2;border-radius:999px;border:3px solid #FBFAF7}
+  ::-webkit-scrollbar-thumb:hover{background:#bdb6a0}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  }
+  @media (max-width:720px){
+    input,select,textarea{font-size:16px!important} /* avoids iOS auto-zoom */
+  }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="min-height:100vh;background:#FBFAF7;color:#0B2346;font-family:'Plus Jakarta Sans','Tajawal',sans-serif;-webkit-font-smoothing:antialiased">
+
+  <nav style="position:sticky;top:0;z-index:50;background:rgba(251,250,247,.85);backdrop-filter:blur(16px);border-bottom:1px solid #ECEAE3">
+    <div style="max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+        <img src="uploads/mssters-logo.png" alt="Masters" style="height:46px;width:auto;display:block">
+        <span style="display:flex;flex-direction:column;line-height:1.05;text-align:start">
+          <span style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:700;font-size:21px;color:#0B2346;letter-spacing:.02em">{{ t.brand.name }}</span>
+          <span style="font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#C89A2B;font-weight:700">{{ t.brand.tag }}</span>
+        </span>
+      </a>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="{{ navPanelStyle }}">
+        <div style="display:flex;align-items:center;gap:1px">
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</a>
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</a>
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</a>
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.terms }}</a>
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</a>
+          <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
+          <a href="careers.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</a>
+          <a href="index.html" style="font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</a>
+        </div>
+        </div>
+        <a href="index.html" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</a>
+        <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
+        <button onClick="{{ toggleNav }}" aria-label="{{ navToggleLabel }}" title="{{ navToggleLabel }}" style="margin-inline-start:4px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0" style-hover="background:#F1EFE8">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B2346" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{ navArrowStyle }}"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- APPLICATION FORM -->
+  <section style="background:#0B2346;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-100px;inset-inline-end:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
+    <div style="max-width:760px;margin:0 auto;padding:48px 32px;text-align:center;position:relative">
+      <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.careers.formh }}</div>
+      <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;line-height:1.08;color:#fff;margin:14px 0 10px">{{ jobTitle }}</h1>
+      <p style="color:rgba(255,255,255,.85);font-size:16.5px;line-height:1.6;margin:0 auto;max-width:560px">{{ t.careers.applying }}</p>
+    </div>
+  </section>
+
+  <section style="padding:32px 32px 96px">
+    <div style="max-width:760px;margin:0 auto">
+      <a href="{{ backHref }}" style="display:inline-flex;align-items:center;gap:8px;background:none;color:#8A93A1;font-size:14px;font-weight:700;padding:8px 0;text-decoration:none;font-family:inherit" style-hover="color:#0B2346"><svg class="ms-chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>{{ t.careers.back }}</a>
+
+      <sc-if value="{{ careerSubmitted }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 40px 80px -50px rgba(11,35,70,.4)">
+          <div style="width:74px;height:74px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:36px;color:#0B2346;margin:0 0 12px">{{ t.careers.conf.h }}</h2>
+          <p style="color:#5B6472;font-size:16px;line-height:1.65;margin:0 0 24px">{{ t.careers.conf.sub }}</p>
+          <div style="background:#F7F5EF;border:1px dashed #C89A2B;border-radius:14px;padding:18px;margin-bottom:22px"><div style="color:#8A93A1;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">{{ t.careers.conf.idlabel }}</div><div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;color:#0B2346;letter-spacing:.04em;margin-top:4px">{{ careerId }}</div></div>
+          <p style="color:#8A93A1;font-size:13.5px;margin:0 0 22px">{{ t.careers.conf.note }}</p>
+          <a href="{{ backHref }}" style="display:inline-block;background:#0B2346;color:#fff;font-size:15px;font-weight:700;padding:14px 28px;border-radius:12px;text-decoration:none" style-hover="background:#123763">{{ t.careers.back }}</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ careerNot }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submitCareer }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+          <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 4px">{{ jobTitle }}</h2>
+          <p style="color:#8A93A1;font-size:13px;margin:0 0 26px">{{ t.careers.formsub }}</p>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.personal }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
+            <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <input type="hidden" name="position" value="{{ positionKey }}">
+          </div>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.exp }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
+            <div><label for="ms-years" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.years }}</label><input name="years" id="ms-years" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-edu" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.edu }}</label><input name="edu" id="ms-edu" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+          </div>
+          <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.docs }}</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:30px">
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cv" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cert" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="portfolio" style="display:none"></label>
+          </div>
+          <sc-if value="{{ hasCareerSendError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 16px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ careerSendError }}</div></sc-if>
+          <p style="color:#8A93A1;font-size:12.5px;margin:0 0 16px">{{ t.careers.f.required }}</p>
+          <button type="submit" disabled="{{ careerSending }}" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ careerSubmitLabel }}</button>
+          <a href="careers.html" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px;text-decoration:none;font-family:inherit" style-hover="border-color:#C89A2B;color:#a37e1f"><svg class="ms-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>{{ t.careers.jobback }}</a>
+        </form>
+      </sc-if>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="ms-footer" style="background:#0A1F3D;color:rgba(255,255,255,.75)">
+    <div style="max-width:1200px;margin:0 auto;padding:54px 32px 32px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px">
+      <div>
+        <img src="uploads/masters-logo-white.png" alt="Masters" style="height:64px;width:auto;display:block;margin-bottom:18px">
+        <p style="font-size:14.5px;line-height:1.7;margin:0 0 20px;max-width:300px">{{ t.foot.about }}</p>
+        <div style="display:flex;gap:11px">
+          <a href="https://wa.me/201099787423" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+          <a href="tel:+201099787423" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.explore }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;align-items:flex-start">
+          <a href="index.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.about }}</a>
+          <a href="index.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.academics }}</a>
+          <a href="index.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.life }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.admissions }}</div>
+        <div style="display:flex;flex-direction:column;gap:11px;align-items:flex-start">
+          <a href="index.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.admissions }}</a>
+          <a href="careers.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.careers }}</a>
+          <a href="index.html" style="color:rgba(255,255,255,.72);font-size:14.5px" style-hover="color:#C89A2B">{{ t.nav.contact }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.contactc }}</div>
+        <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
+          <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://www.google.com/maps/search/?api=1&amp;query=Masters+Language+School+El+Santa+Gharbia" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201099787423" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:masterschool59@gmail.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1)"><div style="max-width:1200px;margin:0 auto;padding:22px 32px;font-size:13px;color:rgba(255,255,255,.55)">{{ t.foot.rights }}</div></div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends window.MSShared.makeBase(DCLogic) {
+  static cfg = { mode: "apply", slug: "accountant", index: 8 };
+}
+</script>
+</body>
+</html>

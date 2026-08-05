@@ -72,8 +72,8 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
   <div>
     <section style="position:relative;height:90vh;min-height:660px;max-height:920px;overflow:hidden;background:#0B2346">
-      <div style="position:absolute;inset:0"><image-slot id="ms-hero" shape="rect" fit="cover" placeholder="Drop a hero image — campus, students, graduation"></image-slot></div>
-      <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(11,35,70,.62) 0%,rgba(11,35,70,.38) 38%,rgba(11,35,70,.88) 100%)"></div>
+      <div style="position:absolute;inset:0"><div class="ms-hero-slides" style="position:absolute;top:0;left:0;width:100%;height:100%"><img class="ms-hero-slide" src="uploads/school/hero-campus.png" alt="" loading="eager" fetchpriority="high"><img class="ms-hero-slide" src="uploads/school/hero-students.png" alt="" loading="eager"></div></div>
+      <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(24,66,116,.52) 0%,rgba(11,35,70,.32) 42%,rgba(10,32,62,.55) 100%)"></div>
       <div style="position:relative;height:100%;display:flex;align-items:center">
         <div style="max-width:1200px;margin:0 auto;padding:0 32px;width:100%">
           <div style="max-width:720px;animation:msFadeUp .9s ease both">
@@ -92,7 +92,31 @@
       </div>
     </section>
 
-    <div style="background:#fff;border-bottom:1px solid #ECEAE3">
+        <style>
+      /* Homepage hero: automatic crossfade slideshow of the school photos.
+         Two full-bleed images stack; each holds ~5s and fades in/out over the
+         other (12s loop), covering the whole hero without distortion. */
+      .ms-hero-slide{
+        position:absolute;top:0;left:0;width:100%;height:100%;
+        object-fit:cover;display:block;opacity:0;will-change:opacity;
+        animation-duration:12s;animation-iteration-count:infinite;
+        animation-timing-function:ease-in-out;animation-fill-mode:both
+      }
+      .ms-hero-slide:nth-child(1){animation-name:msHeroA}
+      .ms-hero-slide:nth-child(2){animation-name:msHeroB}
+      @keyframes msHeroA{
+        0%{opacity:0}8%{opacity:1}42%{opacity:1}50%{opacity:0}100%{opacity:0}
+      }
+      @keyframes msHeroB{
+        0%{opacity:0}42%{opacity:0}50%{opacity:1}92%{opacity:1}100%{opacity:0}
+      }
+      @media (prefers-reduced-motion: reduce){
+        .ms-hero-slide{animation:none}
+        .ms-hero-slide:nth-child(1){opacity:1}
+        .ms-hero-slide:nth-child(2){display:none}
+      }
+    </style>
+<div style="background:#fff;border-bottom:1px solid #ECEAE3">
       <div style="max-width:1200px;margin:0 auto;padding:20px 32px;display:flex;flex-wrap:wrap;gap:14px 34px;justify-content:center;align-items:center">
         <sc-for list="{{ t.marquee }}" as="m" hint-placeholder-count="5">
           <span style="display:inline-flex;align-items:center;gap:34px;color:#5B6472;font-size:14px;font-weight:600;letter-spacing:.02em"><span style="width:6px;height:6px;background:#C89A2B;border-radius:50%;display:inline-block"></span>{{ m }}</span>
@@ -158,19 +182,19 @@
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px">
         <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
-          <div style="height:180px;position:relative"><image-slot id="ms-prog-kg" shape="rect" fit="cover" placeholder="Kindergarten photo"></image-slot></div>
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-kg" shape="rect" fit="cover" src="uploads/kindergarten/kindergarten.png" placeholder="Kindergarten photo"></image-slot></div>
           <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.kgg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.kgt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.kgd }}</p></div>
         </div>
         <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
-          <div style="height:180px;position:relative"><image-slot id="ms-prog-pr" shape="rect" fit="cover" placeholder="Primary photo"></image-slot></div>
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-pr" shape="rect" fit="cover" src="uploads/primary/primary.png" placeholder="Primary photo"></image-slot></div>
           <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.prg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.prt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.prd }}</p></div>
         </div>
         <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
-          <div style="height:180px;position:relative"><image-slot id="ms-prog-pp" shape="rect" fit="cover" placeholder="Preparatory photo"></image-slot></div>
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-pp" shape="rect" fit="cover" src="uploads/preparatory/preparatory.png" placeholder="Preparatory photo"></image-slot></div>
           <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.ppg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.ppt }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.ppd }}</p></div>
         </div>
         <div style="background:#fff;border:1px solid #ECEAE3;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -46px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)">
-          <div style="height:180px;position:relative"><image-slot id="ms-prog-sc" shape="rect" fit="cover" placeholder="Secondary photo"></image-slot></div>
+          <div style="height:180px;position:relative"><image-slot id="ms-prog-sc" shape="rect" fit="cover" src="uploads/secondary/secondary.png" placeholder="Secondary photo"></image-slot></div>
           <div style="padding:24px 24px 28px"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:20px">{{ t.prog.scg }}</span><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:26px;margin:14px 0 8px;color:#0B2346">{{ t.prog.sct }}</h3><p style="color:#5B6472;font-size:15px;line-height:1.6;margin:0">{{ t.prog.scd }}</p></div>
         </div>
       </div>
@@ -234,20 +258,20 @@
 
     <section style="max-width:1120px;margin:0 auto;padding:90px 32px;display:flex;flex-direction:column;gap:72px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
-        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-kg" shape="rect" fit="cover" placeholder="Kindergarten classroom"></image-slot></div>
+        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-kg" shape="rect" fit="cover" src="uploads/kindergarten/kindergarten.png" placeholder="Kindergarten classroom"></image-slot></div>
         <div><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.kgtag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.kgt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.kgd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.kgb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
         <div style="order:2"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.prtag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.prt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.prd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.prb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
-        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pr" shape="rect" fit="cover" placeholder="Primary students"></image-slot></div>
+        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pr" shape="rect" fit="cover" src="uploads/primary/primary.png" placeholder="Primary students"></image-slot></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
-        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pp" shape="rect" fit="cover" placeholder="Preparatory lab"></image-slot></div>
+        <div style="border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-pp" shape="rect" fit="cover" src="uploads/preparatory/preparatory.png" placeholder="Preparatory lab"></image-slot></div>
         <div><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.pptag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.ppt }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.ppd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.ppb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
         <div style="order:2"><span style="display:inline-block;background:rgba(200,154,43,.14);color:#a37e1f;font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 13px;border-radius:20px">{{ t.ac.sctag }}</span><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;margin:16px 0 12px">{{ t.ac.sct }}</h2><p style="color:#5B6472;font-size:16.5px;line-height:1.65;margin:0 0 20px">{{ t.ac.scd }}</p><div style="display:flex;flex-direction:column;gap:11px"><sc-for list="{{ t.ac.scb }}" as="b" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:11px;color:#0B2346;font-weight:600;font-size:15px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div></sc-for></div></div>
-        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-sc" shape="rect" fit="cover" placeholder="Secondary graduation"></image-slot></div>
+        <div style="order:1;border-radius:24px;overflow:hidden;height:340px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-ac-sc" shape="rect" fit="cover" src="uploads/secondary/secondary.png" placeholder="Secondary graduation"></image-slot></div>
       </div>
     </section>
 
@@ -385,7 +409,7 @@
     </section>
     <section style="background:#F1EFE8">
       <div style="max-width:1120px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:1fr 1.2fr;gap:52px;align-items:center">
-        <div style="border-radius:24px;overflow:hidden;height:440px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-principal" shape="rect" fit="cover" placeholder="Principal portrait"></image-slot></div>
+        <div style="border-radius:24px;overflow:hidden;height:440px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-principal" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Principal portrait"></image-slot></div>
         <div>
           <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.about.prineyebrow }}</div>
           <p style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:500;font-size:30px;line-height:1.4;color:#0B2346;margin:18px 0 24px;text-wrap:pretty">“{{ t.about.prinq }}”</p>
@@ -520,25 +544,25 @@
       </div>
       <sc-if value="{{ galPhotos }}" hint-placeholder-val="{{ true }}">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));grid-auto-rows:200px;gap:14px">
-          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-1" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-2" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-3" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-4" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-5" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-6" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-7" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
-          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-8" shape="rect" fit="cover" placeholder="Photo"></image-slot></div>
+          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-1" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-2" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-3" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-4" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Photo"></image-slot></div>
+          <div style="grid-row:span 2;position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-5" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-6" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-7" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Photo"></image-slot></div>
+          <div style="position:relative;border-radius:16px;overflow:hidden"><image-slot id="ms-gal-8" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Photo"></image-slot></div>
         </div>
       </sc-if>
       <sc-if value="{{ galVideos }}" hint-placeholder-val="{{ false }}">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
-          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-1" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
-          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-2" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
-          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-3" shape="rect" fit="cover" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-1" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-2" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
+          <div style="position:relative;height:220px;border-radius:16px;overflow:hidden"><image-slot id="ms-vid-3" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Video thumbnail"></image-slot><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><div style="width:60px;height:60px;border-radius:50%;background:rgba(200,154,43,.92);display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0B2346"><path d="M8 5v14l11-7z"/></svg></div></div></div>
         </div>
       </sc-if>
       <sc-if value="{{ galTour }}" hint-placeholder-val="{{ false }}">
-        <div style="position:relative;height:440px;border-radius:22px;overflow:hidden"><image-slot id="ms-gal-tour" shape="rect" fit="cover" placeholder="Virtual tour cover"></image-slot><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,35,70,.25),rgba(11,35,70,.8));pointer-events:none"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#fff;margin:0">{{ t.gallery.tourh }}</h2><p style="color:rgba(255,255,255,.9);font-size:17px;margin:12px 0 24px;max-width:480px">{{ t.gallery.tourd }}</p><button style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:15px 30px;border-radius:13px" style-hover="background:#d9a835">{{ t.gallery.tourbtn }}</button></div></div>
+        <div style="position:relative;height:440px;border-radius:22px;overflow:hidden"><image-slot id="ms-gal-tour" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Virtual tour cover"></image-slot><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,35,70,.25),rgba(11,35,70,.8));pointer-events:none"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#fff;margin:0">{{ t.gallery.tourh }}</h2><p style="color:rgba(255,255,255,.9);font-size:17px;margin:12px 0 24px;max-width:480px">{{ t.gallery.tourd }}</p><button style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:15px 30px;border-radius:13px" style-hover="background:#d9a835">{{ t.gallery.tourbtn }}</button></div></div>
       </sc-if>
     </section>
   </div>
@@ -557,7 +581,7 @@
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:80px 32px 40px">
       <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center;background:#fff;border:1px solid #ECEAE3;border-radius:24px;overflow:hidden;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
-        <div style="position:relative;height:360px"><image-slot id="ms-news-feat" shape="rect" fit="cover" placeholder="Featured news photo"></image-slot></div>
+        <div style="position:relative;height:360px"><image-slot id="ms-news-feat" shape="rect" fit="cover" src="uploads/school/hero-campus.png" placeholder="Featured news photo"></image-slot></div>
         <div style="padding:12px 40px 12px 8px">
           <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px"><span style="background:#C89A2B;color:#0B2346;font-size:12px;font-weight:800;padding:5px 12px;border-radius:20px">{{ t.news.feattag }}</span><span style="color:#8A93A1;font-size:13.5px;font-weight:600">{{ t.news.featdate }}</span></div>
           <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:34px;line-height:1.15;color:#0B2346;margin:0 0 12px">{{ t.news.feattitle }}</h2>
@@ -568,7 +592,7 @@
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:20px 32px 40px">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
-        <sc-for list="{{ t.news.items }}" as="n" hint-placeholder-count="3"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -50px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)"><div style="height:180px;position:relative"><image-slot id="ms-news-{{ $index }}" shape="rect" fit="cover" placeholder="News photo"></image-slot></div><div style="padding:22px 24px 26px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:11px"><span style="background:rgba(11,35,70,.06);color:#0B2346;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:16px">{{ n.tag }}</span><span style="color:#8A93A1;font-size:12.5px;font-weight:600">{{ n.date }}</span></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;line-height:1.2;color:#0B2346;margin:0 0 8px">{{ n.t }}</h3><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:0">{{ n.e }}</p></div></div></sc-for>
+        <sc-for list="{{ t.news.items }}" as="n" hint-placeholder-count="3"><div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;overflow:hidden;box-shadow:0 30px 60px -50px rgba(11,35,70,.4);transition:transform .25s" style-hover="transform:translateY(-6px)"><div style="height:180px;position:relative"><image-slot id="ms-news-{{ $index }}" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="News photo"></image-slot></div><div style="padding:22px 24px 26px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:11px"><span style="background:rgba(11,35,70,.06);color:#0B2346;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:16px">{{ n.tag }}</span><span style="color:#8A93A1;font-size:12.5px;font-weight:600">{{ n.date }}</span></div><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;line-height:1.2;color:#0B2346;margin:0 0 8px">{{ n.t }}</h3><p style="color:#5B6472;font-size:14.5px;line-height:1.6;margin:0">{{ n.e }}</p></div></div></sc-for>
       </div>
     </section>
     <section style="background:#F1EFE8">
@@ -644,8 +668,8 @@
         <img src="uploads/masters-logo-white.png" alt="Masters" style="height:64px;width:auto;display:block;margin-bottom:18px">
         <p style="font-size:14.5px;line-height:1.7;margin:0 0 20px;max-width:300px">{{ t.foot.about }}</p>
         <div style="display:flex;gap:11px">
-          <a href="https://wa.me/201099787423" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
-          <a href="tel:+201099787423" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></a>
+          <a href="https://wa.me/201037993762" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+          <a href="tel:01037993762" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></a>
         </div>
       </div>
       <div>
@@ -681,7 +705,7 @@
 
   <!-- FLOATING CTA -->
   <div style="position:fixed;bottom:26px;inset-inline-end:26px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end">
-    <a href="https://wa.me/201099787423" target="_blank" style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7)" style-hover="transform:scale(1.06)" title="WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+    <a href="https://wa.me/201037993762" target="_blank" style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7)" style-hover="transform:scale(1.06)" title="WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
     <button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:15px;font-weight:800;padding:14px 22px;border-radius:30px;box-shadow:0 14px 32px -10px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-2px)">{{ t.nav.apply }}</button>
   </div>
 

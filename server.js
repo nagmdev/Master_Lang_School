@@ -13,7 +13,6 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
 const api = require('./api/_routes');
-const sendEmail = require('./api/send-email');
 
 const PORT = Number(process.env.PORT || 8123);
 const ROOT = __dirname;
@@ -62,7 +61,6 @@ async function serveStatic(req, res, url) {
 async function handler(req, res) {
   const url = new URL(req.url, 'http://' + (req.headers.host || 'localhost'));
   try {
-    if (url.pathname === '/api/send-email') { await sendEmail(req, res); return; }
     if (await api.handle(req, res, url)) return;
     await serveStatic(req, res, url);
   } catch (e) {
