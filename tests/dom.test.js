@@ -51,7 +51,16 @@
   };
   function fillRequired(form) {
     form.querySelectorAll('[required]').forEach(el => {
-      if (el.tagName === 'SELECT') { if (el.selectedIndex < 0) el.selectedIndex = 0; return; }
+      if (el.tagName === 'SELECT') {
+        // Required selects start with a value="" placeholder option, so the
+        // first REAL option (index 1) is the safe pick.
+        el.selectedIndex = el.options.length > 1 ? 1 : 0;
+        return;
+      }
+      if (el.type === 'radio') { el.checked = true; return; }
+      // The admissions phone pattern is an Egyptian mobile (01[0125] + 8 more
+      // digits); a generic sample string would fail its own pattern.
+      if (el.type === 'tel') { el.value = '01000000000'; return; }
       // A patterned field (the national ID / passport boxes) rejects SAMPLE.text,
       // so give it a value its own pattern accepts.
       if (el.pattern) { el.value = '29001011234567'; return; }
@@ -60,6 +69,42 @@
     const bad = [...form.querySelectorAll(':invalid')];
     if (bad.length) throw new Error('could not satisfy: ' +
       bad.map(b => `${b.type}#${b.id}: ${b.validationMessage}`).join(' | '));
+  }
+  // The final submit gate requires the student photo, ALL mandatory attachments
+  // and at least one completed emergency contact. File inputs are not natively
+  // required (their validation bubble would be invisible), so a parent must
+  // attach them for the form to submit — mirror that here.
+  function attachRequiredUploads(form) {
+    const pick = (name, fname, ftype, bytes) => {
+      const input = form.querySelector('input[type=file][name="' + name + '"]');
+      assert(input, 'no file input named ' + name);
+      const dt = new DataTransfer();
+      dt.items.add(new File([new Uint8Array(bytes)], fname, { type: ftype }));
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    // The admissions photo is validated client-side: it must decode as a real
+    // image, be portrait with a 2:3–3:4 ratio, and read as a plain white
+    // background (corners/edges sampled from a canvas copy). A fake byte-blob
+    // would be rejected, so feed it a real solid white 300×400 PNG.
+    const WHITE_3_4_PNG = 'iVBORw0KGgoAAAANSUhEUgAAASwAAAGQCAIAAACbF8osAAAEZUlEQVR4nO3TMQEAAAiAMPuX1hgcbgl4mAVSUwfAdyaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkhZkKImRBiJoSYCSFmQoiZEGImhJgJIWZCiJkQYiaEmAkh9gD4pnEsVorpwwAAAABJRU5ErkJggg==';
+    const b64ToBlob = (b64, type) => {
+      const bin = atob(b64);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      return new Blob([u8], { type: type });
+    };
+    const photoInput = form.querySelector('input[type=file][name="photo"]');
+    assert(photoInput, 'no photo file input');
+    const dtp = new DataTransfer();
+    dtp.items.add(new File([b64ToBlob(WHITE_3_4_PNG, 'image/png')], 'student.png', { type: 'image/png' }));
+    photoInput.files = dtp.files;
+    photoInput.dispatchEvent(new Event('change', { bubbles: true }));
+    pick('d1', 'guardian-id.pdf', 'application/pdf', 50000);
+    pick('d2', 'birth-certificate.pdf', 'application/pdf', 60000);
+    pick('d3', 'last-stage.pdf', 'application/pdf', 70000);
+    form.querySelector('[name="eName"]').value = 'Emergency Contact';
+    form.querySelector('[name="ePhone"]').value = '01000000000';
   }
   // The admissions form is a 6-step wizard, so it has to be walked to the last
   // step before there is anything to submit. Call fillRequired() first.
@@ -118,8 +163,8 @@
   });
 
   await check('admissions office contact is shown', () => {
-    assert(/admission@masters-edu\.com/.test(txt()), 'email missing');
-    assert(/799\s?3762/.test(txt()), 'phone missing');
+    assert(/masterschool59@gmail\.com/.test(txt()), 'email missing');
+    assert(/978\s?7423/.test(txt()), 'phone missing');
   });
 
   /* ---------------------------- form structure ---------------------------- */
@@ -338,7 +383,7 @@
 
   await check('Arabic phone renders left-to-right inside the RTL layout', () => {
     const ltr = [...document.querySelectorAll('[dir="ltr"]')]
-      .some(e => /799\s?3762|\+201099787423/.test(e.innerText));
+      .some(e => /978\s?7423|\+201099787423/.test(e.innerText));
     assert(ltr, 'phone is not wrapped in dir="ltr" — it will display mirrored');
   });
 
@@ -424,6 +469,7 @@
     try {
       const form = document.querySelector('form');
       fillRequired(form);
+      attachRequiredUploads(form);
       await walkToLastStep(form);
       form.requestSubmit();
       await sleep(700);
@@ -451,6 +497,7 @@
     const form = document.querySelector('form');
     assert(form, 'form not found');
     fillRequired(form);
+    attachRequiredUploads(form);
     assert(form.checkValidity(), 'form still invalid after filling required fields');
     await walkToLastStep(form);
     form.requestSubmit();
@@ -500,9 +547,21 @@
     assert(!/Application received/.test(txt()), 'admissions confirmation leaked onto Careers');
   });
 
-  await check('REGRESSION — careers confirmation clears when navigating away and back', async () => {
+  await check('REGRESSION — the careers form is dedicated: jobs hidden above it, with a back-to-positions button', async () => {
+    const card = document.querySelector('[data-job]');
+    assert(card, 'no job card on the Careers list');
+    card.click();
+    await sleep(SETTLE);
+    const applyBtn = [...document.querySelectorAll('button')].find(b => /Apply for this position/.test(b.textContent));
+    assert(applyBtn, 'Apply for this position button not found on the job page');
+    applyBtn.click();
+    await sleep(SETTLE);
+    assert(!document.querySelector('[data-job]'),
+      'open positions are still visible above the application form');
     const form = document.querySelector('form');
-    assert(form, 'careers form not found');
+    assert(form, 'careers form not found after pressing Apply');
+    assert([...document.querySelectorAll('button')].some(b => /Back to all positions/.test(b.textContent)),
+      'the form is missing a Back to all positions button');
     fillRequired(form);
     form.requestSubmit();
     await sleep(SETTLE);
@@ -511,8 +570,26 @@
     await goTo(/^Careers$/i);
     assert(!/Thank you for applying|MST-HR-/.test(txt()),
       'stale careers confirmation persists — go() does not reset careerSubmitted');
-    assert(document.querySelector('form'), 'careers form did not come back');
+    assert(document.querySelector('[data-job]'), 'open positions did not come back');
+    assert(!document.querySelector('form'), 'the form should stay hidden until Apply is pressed again');
     return 'reset correctly';
+  });
+
+  await check('REGRESSION — Back to all positions closes the form and restores the list', async () => {
+    const card = document.querySelector('[data-job]');
+    assert(card, 'no job card on the Careers list');
+    card.click();
+    await sleep(SETTLE);
+    const applyBtn = [...document.querySelectorAll('button')].find(b => /Apply for this position/.test(b.textContent));
+    applyBtn.click();
+    await sleep(SETTLE);
+    const backBtn = [...document.querySelectorAll('button')].find(b => /Back to all positions/.test(b.textContent));
+    assert(backBtn, 'Back to all positions button missing from the form');
+    backBtn.click();
+    await sleep(SETTLE);
+    assert(document.querySelector('[data-job]'), 'open positions did not come back after Back to all positions');
+    assert(!document.querySelector('form'), 'the form did not close after Back to all positions');
+    return 'toggles correctly';
   });
 
   await goTo(/^Home$/i);
@@ -525,4 +602,3 @@
     `font-weight:bold;color:${failed ? '#c0392b' : '#27ae60'}`);
   return { passed, failed, total: results.length, failures: results.filter(r => !r.pass) };
 })();
-

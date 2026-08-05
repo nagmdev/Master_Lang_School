@@ -231,9 +231,9 @@ test('School Visits & Tours section is present in both languages', () => {
 });
 
 test('Admissions Office contact details match the document', () => {
-  assertHas(EN, 'admission@masters-edu.com'); assertHas(AR, 'admission@masters-edu.com');
-  assert(/\+20\s?10\s?3?\s?799\s?3762|\+201099787423/.test(EN.replace(/\s+/g, ' ')), 'English phone missing');
-  assertHas(AR, '+201037993762');
+  assertHas(EN, 'masterschool59@gmail.com'); assertHas(AR, 'masterschool59@gmail.com');
+  assert(/\+20\s?109\s?978\s?7423|\+201099787423/.test(EN.replace(/\s+/g, ' ')), 'English phone missing');
+  assertHas(AR, '+201099787423');
 });
 
 test('applications are described as open year-round in both languages', () => {
@@ -472,17 +472,71 @@ test('phone fields declare a validation pattern and numeric inputmode', () => {
   }
 });
 
-test('the phone pattern rejects garbage and accepts real numbers', () => {
+test('the phone pattern is an Egyptian mobile: 01[0125] + 8 digits, numbers only', () => {
   // Browsers enforce `pattern`; this proves the pattern itself is correct,
   // independent of any browser.
   const m = /<input[^>]*type="tel"[^>]*pattern="([^"]+)"/.exec(FORM);
   assert(m, 'no phone pattern found');
   const re = new RegExp('^(?:' + m[1] + ')$');
-  for (const bad of ['abc', 'abc!!', '', '12', 'hello world', '123-abc']) {
+  for (const good of ['01012345678', '01112345678', '01212345678', '01512345678']) {
+    assert(re.test(good), 'pattern wrongly rejects a valid Egyptian mobile: ' + JSON.stringify(good));
+  }
+  for (const bad of ['abc', 'abc!!', '', '12', 'hello world', '123-abc',
+    '01912345678', '0101234567', '010123456789', '+20 100 123 4567', '0100 000 0000',
+    '(010) 1234567', '29001011234567']) {
     assert(!re.test(bad), 'pattern wrongly accepts invalid input: ' + JSON.stringify(bad));
   }
-  for (const good of ['01012345678', '+20 100 123 4567', '0100 000 0000', '(010) 1234567']) {
-    assert(re.test(good), 'pattern wrongly rejects a valid number: ' + JSON.stringify(good));
+});
+
+group('6c. Stricter requirements — parent IDs, phones, addresses & the photo');
+
+test("mother's mobile is obligatory", () => {
+  const m = /<input name="moMobile"[^>]*>/.exec(FORM);
+  assert(m && /required="required"/.test(m[0]), 'moMobile is not required');
+});
+
+test("mother's name is obligatory", () => {
+  const m = /<input name="moName"[^>]*>/.exec(FORM);
+  assert(m && /required="required"/.test(m[0]), 'moName is not required');
+});
+
+test("father's and mother's addresses are obligatory", () => {
+  for (const n of ['faAddress', 'moAddress']) {
+    const m = new RegExp('<input name="' + n + '"[^>]*>').exec(FORM);
+    assert(m && /required="required"/.test(m[0]), n + ' is not required');
+  }
+});
+
+test('the parent IDs are validated, not just shaped', () => {
+  for (const n of ['faNid', 'moNid']) {
+    const m = new RegExp('<input name="' + n + '"[^>]*>').exec(FORM);
+    assert(m && /onChange="\{\{ onParentNid \}\}"/.test(m[0]), n + ' has no validation handler');
+    assert(m && /onInput="\{\{ onParentNid \}\}"/.test(m[0]), n + ' has no live re-check');
+  }
+  assertHas(src, 'parseNid(v)', 'no shared National ID structural validation');
+});
+
+test('the parent ID errors are rendered beside the fields', () => {
+  for (const b of ['hasFaNidError', 'faNidError', 'hasMoNidError', 'moNidError']) {
+    assertHas(FORM, '{{ ' + b + ' }}', 'parent ID error binding missing: ' + b);
+  }
+});
+
+test('the student photo cannot be skipped on step 1', () => {
+  assertHas(src, 'this.state.step === 1 && !this.state.picked.photo', 'no step-1 photo gate');
+});
+
+test('the photo requirements (white background, ratio) are stated and enforced', () => {
+  assertHas(FORM, '{{ t.adm.f.photoHint }}', 'the requirements are not shown to the parent');
+  assertHas(src, 'photoSpecOk', 'no photo acceptance check');
+  assertHas(src, 'photoIsWhite', 'no white-background check');
+  assertHas(src, 'ratio < 0.6 || ratio > 0.8', 'no portrait-ratio constraint');
+});
+
+test('the photo spec errors are translated in both languages', () => {
+  for (const k of ['photoHint', 'photoInvalid', 'photoSpecs']) {
+    assert(new RegExp('\\b' + k + ':').test(EN), 'missing ' + k + ' in English');
+    assert(new RegExp('\\b' + k + ':').test(AR), 'missing ' + k + ' in Arabic');
   }
 });
 
@@ -892,7 +946,7 @@ test('shared modules are underscore-prefixed so Vercel does not expose them', ()
   assert(fs.existsSync(path.join(API_DIR, '_routes.js')), '_routes.js missing');
   assert(fs.existsSync(path.join(API_DIR, '_lib')), '_lib missing');
   const exposed = apiFiles.filter(f => !f.startsWith('_') &&
-    !['applications', 'application', 'login', 'logout', 'session', 'file', 'send-email'].includes(f.replace(/\.js$/, '')));
+    !['applications', 'application', 'login', 'logout', 'session', 'file', 'careers', 'career', 'careerfile', 'contact'].includes(f.replace(/\.js$/, '')));
   assert(exposed.length === 0, 'unexpected public endpoints: ' + exposed.join(', '));
 });
 
@@ -917,6 +971,13 @@ test('the postgres driver implements the full store interface', () => {
   const missing = required.filter(k => pg[k] === undefined);
   assert(missing.length === 0, 'postgres driver missing: ' + missing.join(', '));
   assert(JSON.stringify(pg.STATUSES) === JSON.stringify(local.STATUSES), 'drivers disagree on the status list');
+
+  const careerRequired = ['createCareerApplication', 'listCareerApplications', 'getCareerApplication',
+    'updateCareerApplication', 'deleteCareerApplication', 'readCareerFile', 'CAREER_STATUSES'];
+  const careerMissing = careerRequired.filter(k => pg[k] === undefined);
+  assert(careerMissing.length === 0, 'postgres driver missing career-application support: ' + careerMissing.join(', '));
+  assert(JSON.stringify(pg.CAREER_STATUSES) === JSON.stringify(local.CAREER_STATUSES),
+    'drivers disagree on the career-application status list');
 });
 
 test('BUG: no "start" script — it would make the host run server.js as a catch-all', () => {

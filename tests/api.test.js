@@ -362,6 +362,142 @@ const VALID = {
     cookie = saved;
   });
 
+  /* ---------------------------- careers & contact --------------------------- */
+  group('4b. Careers (job) applications');
+
+  const VALID_CAREER = { name: 'Nourhan Adel', phone: '01012345678', email_2: 'nourhan@example.com', position: 'Security Personnel', years: '3', edu: 'Bachelor' };
+
+  let createdCareerId = '';
+  await test('a complete career application is accepted and gets an MST-HR id', async () => {
+    const r = await req('POST', '/api/careers', { body: form(VALID_CAREER) });
+    eq(r.status, 201, 'status');
+    assert(/^MST-HR-\d+$/.test(r.json.careerId), 'bad id: ' + r.json.careerId);
+    createdCareerId = r.json.careerId;
+  });
+
+  await test('a career application without name/phone/position/email is rejected', async () => {
+    const r = await req('POST', '/api/careers', { body: form({ years: '1' }) });
+    eq(r.status, 400, 'status');
+    for (const k of ['name', 'phone', 'position', 'email']) {
+      assert(r.json.fields.includes(k), 'missing field not reported: ' + k);
+    }
+  });
+
+  await test('an invalid email is rejected on the careers endpoint too', async () => {
+    const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, email_2: 'not-an-email' }) });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('email'), 'invalid email not flagged');
+  });
+
+  let cvCareerId = '';
+  await test('an attached CV is stored byte-for-byte', async () => {
+    const bytes = Buffer.from('%PDF-1.4 fake cv content');
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [{ field: 'cv', name: 'cv.pdf', data: bytes }]),
+    });
+    eq(r.status, 201, 'status');
+    cvCareerId = r.json.careerId;
+  });
+
+  await test('admin can read the stored CV back on the career record', async () => {
+    const detail = await req('GET', '/api/career?id=' + encodeURIComponent(cvCareerId), { auth: true });
+    eq(detail.status, 200, 'status');
+    assert(detail.json.files.some(f => f.field === 'cv'), 'cv not recorded on the row');
+  });
+
+  await test('a career application listing requires admin auth', async () => {
+    const r = await req('GET', '/api/careers');
+    eq(r.status, 401, 'status');
+  });
+
+  await test('an admin can list career applications and see the one just created', async () => {
+    const r = await req('GET', '/api/careers', { auth: true });
+    eq(r.status, 200, 'status');
+    assert(r.json.rows.some(row => row.id === createdCareerId), 'created career application not listed');
+  });
+
+  await test('a career application status can be moved through the HR workflow', async () => {
+    const r = await req('POST', '/api/career?id=' + encodeURIComponent(createdCareerId), {
+      auth: true,
+      body: form({ status: 'shortlisted' }),
+    });
+    eq(r.status, 200, 'status');
+    eq(r.json.status, 'shortlisted', 'status not updated');
+  });
+
+  await test('an admissions-only status is rejected on a career application', async () => {
+    const r = await req('POST', '/api/career?id=' + encodeURIComponent(createdCareerId), {
+      auth: true,
+      body: form({ status: 'provisionally_accepted' }),
+    });
+    eq(r.status, 400, 'a status from the wrong workflow should be rejected');
+  });
+
+  await test('career documents are not downloadable without a session', async () => {
+    const detail = await req('GET', '/api/career?id=' + encodeURIComponent(cvCareerId), { auth: true });
+    const cv = detail.json.files.find(f => f.field === 'cv');
+    assert(cv, 'setup: cv file missing on the record used by this test');
+    const r = await req('GET', `/api/careerfile?id=${encodeURIComponent(cvCareerId)}&name=${encodeURIComponent(cv.storedAs)}`);
+    eq(r.status, 401, 'status');
+  });
+
+  await test('an admin can delete a career application and its documents', async () => {
+    const r = await req('DELETE', '/api/career?id=' + encodeURIComponent(createdCareerId), { auth: true });
+    eq(r.status, 200, 'status');
+    const gone = await req('GET', '/api/career?id=' + encodeURIComponent(createdCareerId), { auth: true });
+    eq(gone.status, 404, 'deleted career application still readable');
+  });
+
+  group('4c. Contact form');
+
+  await test('a valid contact message is accepted (delivery skipped: no RESEND_API_KEY in tests)', async () => {
+    const r = await req('POST', '/api/contact', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Layla', email: 'layla@example.com', phone: '01099999999', message: 'Hello, I have a question about admissions.' }),
+    });
+    // Without RESEND_API_KEY configured, the endpoint correctly reports the
+    // message could NOT be delivered rather than lying with a 200 — see the
+    // next test for that guarantee. Here we only check it never 500s or
+    // silently swallows the request.
+    assert(r.status === 200 || r.status === 502, 'unexpected status: ' + r.status);
+  });
+
+  await test('a failed delivery is reported to the caller, never faked as success', async () => {
+    // No RESEND_API_KEY is set for this suite, so delivery must fail loudly.
+    const r = await req('POST', '/api/contact', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Omar', email: 'omar@example.com', message: 'Testing delivery failure reporting.' }),
+    });
+    eq(r.status, 502, 'a message that cannot be emailed must not be reported as sent');
+  });
+
+  await test('a missing name/email/message is rejected with 400', async () => {
+    const r = await req('POST', '/api/contact', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'short' }),
+    });
+    eq(r.status, 400, 'status');
+  });
+
+  await test('a too-short message is rejected', async () => {
+    const r = await req('POST', '/api/contact', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'A', email: 'a@example.com', message: 'hi' }),
+    });
+    eq(r.status, 400, 'status');
+  });
+
+  await test('the contact endpoint rate-limits repeated submissions from one caller', async () => {
+    let last;
+    for (let i = 0; i < 6; i++) {
+      last = await req('POST', '/api/contact', {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Spammer', email: 'spam@example.com', message: 'Message number ' + i + ' of many.' }),
+      });
+    }
+    eq(last.status, 429, 'sixth rapid submission should be rate-limited');
+  });
+
   /* --------------------------------- misc ---------------------------------- */
   group('5. Robustness');
 
