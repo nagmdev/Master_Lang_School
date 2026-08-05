@@ -68,74 +68,6 @@
     section[style*="padding:104px 32px"], section[style*="padding: 104px 32px"]{padding:28px 18px!important}
   }
 </style>
-<style>
-  /* Global polish: consistent focus, motion, typography and card hover across
-     every page. Inline styles win specificity, so the few field overrides need
-     !important. Both the "1fr"/"1.6fr" spellings are matched because the runtime
-     re-serialises inline styles with a space after each colon. */
-  :root{
-    --navy:#0B2346;--gold:#C89A2B;--gold-2:#b98a1f;--muted:#5B6472;
-    --soft:#8A93A1;--line:#ECEAE3;--field:#FCFBF8;--bg:#FBFAF7
-  }
-  html{scroll-behavior:smooth}
-  body{line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  h1,h2,h3{letter-spacing:.005em;text-wrap:balance}
-  p{text-wrap:pretty}
-
-  /* Page heroes fade up on entry (home already animates its own hero block). */
-  [style*="padding: 64px 32px"][style*="text-align: center"]{animation:msFadeUp .8s ease both}
-  [style*="padding:64px 32px"][style*="text-align:center"]{animation:msFadeUp .8s ease both}
-
-  /* Form step headers get a small gold underline. */
-  [style*="letter-spacing: .14em"]::after,[style*="letter-spacing:.14em"]::after{
-    content:"";display:block;width:42px;height:3px;border-radius:999px;
-    background:linear-gradient(90deg,#C89A2B,rgba(200,154,43,.15));margin-top:8px
-  }
-
-  /* Fields: hovered and focused states lift the control and add a gold ring. */
-  input,select,textarea{transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease}
-  input:hover:not(:disabled),select:hover:not(:disabled),textarea:hover:not(:disabled){border-color:#c9b25a!important}
-  input:focus,select:focus,textarea:focus{border-color:#C89A2B!important;box-shadow:0 0 0 4px rgba(200,154,43,.16);outline:none}
-  input:disabled,select:disabled,textarea:disabled{opacity:.55;cursor:not-allowed}
-
-  /* Buttons + links: smooth micro-motion (style-hover is inline, so it wins
-     where present; this covers the rest). */
-  button,a{transition:transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease}
-  button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #C89A2B;outline-offset:3px}
-  button:hover:not(:disabled){transform:translateY(-1px)}
-  button:active:not(:disabled){transform:translateY(0)}
-
-  /* White cards get a shared gentle hover lift. Both serialised and
-     un-serialised spellings of the inline background/radius are matched. */
-  [style*="border-radius:20px"][style*="background:#fff"],[style*="border-radius: 20px"][style*="background:#fff"],
-  [style*="border-radius:20px"][style*="background: #fff"],[style*="border-radius: 20px"][style*="background: #fff"],
-  [style*="border-radius:22px"][style*="background:#fff"],[style*="border-radius: 22px"][style*="background:#fff"],
-  [style*="border-radius:22px"][style*="background: #fff"],[style*="border-radius: 22px"][style*="background: #fff"],
-  [style*="border-radius:24px"][style*="background:#fff"],[style*="border-radius: 24px"][style*="background:#fff"],
-  [style*="border-radius:24px"][style*="background: #fff"],[style*="border-radius: 24px"][style*="background: #fff"]{
-    transition:transform .25s ease, box-shadow .25s ease
-  }
-  [style*="border-radius:20px"][style*="background:#fff"]:hover,[style*="border-radius: 20px"][style*="background:#fff"]:hover,
-  [style*="border-radius:20px"][style*="background: #fff"]:hover,[style*="border-radius: 20px"][style*="background: #fff"]:hover,
-  [style*="border-radius:22px"][style*="background:#fff"]:hover,[style*="border-radius: 22px"][style*="background:#fff"]:hover,
-  [style*="border-radius:22px"][style*="background: #fff"]:hover,[style*="border-radius: 22px"][style*="background: #fff"]:hover,
-  [style*="border-radius:24px"][style*="background:#fff"]:hover,[style*="border-radius: 24px"][style*="background:#fff"]:hover,
-  [style*="border-radius:24px"][style*="background: #fff"]:hover,[style*="border-radius: 24px"][style*="background: #fff"]:hover{
-    transform:translateY(-4px);box-shadow:0 26px 52px -30px rgba(11,35,70,.42)
-  }
-
-  ::selection{background:#C89A2B;color:#0B2346}
-  ::-webkit-scrollbar{width:11px;height:11px}
-  ::-webkit-scrollbar-thumb{background:#d8d2c2;border-radius:999px;border:3px solid #FBFAF7}
-  ::-webkit-scrollbar-thumb:hover{background:#bdb6a0}
-
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-  }
-  @media (max-width:720px){
-    input,select,textarea{font-size:16px!important} /* avoids iOS auto-zoom */
-  }
-</style>
 </helmet>
 <div dir="{{ dir }}" style="min-height:100vh;background:#FBFAF7;color:#0B2346;font-family:'Plus Jakarta Sans','Tajawal',sans-serif;-webkit-font-smoothing:antialiased">
 
@@ -155,7 +87,7 @@
           <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
           <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
           <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
-          <button onClick="{{ goTerms }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.terms }}</button>
+          <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
           <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
           <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
           <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
@@ -344,6 +276,82 @@
       </div>
     </section>
 
+    <section style="max-width:1120px;margin:0 auto;padding:70px 32px 30px">
+      <div style="text-align:center;max-width:740px;margin:0 auto 48px">
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.adm.journeyEyebrow }}</div>
+        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;line-height:1.1;margin:12px 0 0;color:#0B2346">{{ t.adm.journeyHeading }}</h2>
+        <p style="color:#5B6472;font-size:17px;line-height:1.65;margin:16px 0 0">{{ t.adm.journeyIntro }}</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">1</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s1t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s1d }}</p>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">2</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s2t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s2d }}</p>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-top:13px">
+              <sc-for list="{{ t.adm.s2bullets }}" as="b" hint-placeholder-count="2">
+                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:15px;line-height:1.55"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div>
+              </sc-for>
+            </div>
+            <div style="margin-top:14px;background:#F7F5EF;border-inline-start:3px solid #C89A2B;border-radius:8px;padding:12px 16px;color:#5B6472;font-size:14px;line-height:1.55">{{ t.adm.s2note }}</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">3</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s3t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s3d }}</p>
+            <div style="margin-top:14px;display:inline-flex;gap:11px;align-items:center;background:rgba(200,154,43,.13);border:1px solid rgba(200,154,43,.4);border-radius:11px;padding:12px 18px;color:#0B2346;font-size:14.5px;font-weight:700;line-height:1.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>{{ t.adm.s3fee }}</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#C89A2B;color:#0B2346;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">4</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s4t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s4d }}</p>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
+          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">5</div>
+          <div style="flex:1">
+            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s5t }}</h3>
+            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s5d }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px 24px;margin-top:14px">
+              <sc-for list="{{ t.adm.s5docs }}" as="d" hint-placeholder-count="8">
+                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:14.5px;line-height:1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ d }}</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px">
+        <div style="background:#F1EFE8;border-radius:20px;padding:28px 30px">
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0;color:#0B2346">{{ t.adm.visitsH }}</h3></div>
+          <p style="color:#5B6472;font-size:15px;line-height:1.65;margin:0">{{ t.adm.visitsD }}</p>
+        </div>
+        <div style="background:#0B2346;border-radius:20px;padding:28px 30px;color:#fff">
+          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0 0 16px;color:#fff">{{ t.adm.contactH }}</h3>
+          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700;margin-bottom:12px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><span dir="ltr">{{ t.adm.contactPhone }}</span></div>
+          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg><span dir="ltr">{{ t.adm.contactEmail }}</span></div>
+        </div>
+      </div>
+    </section>
+
     <section style="max-width:1120px;margin:0 auto;padding:20px 32px 96px">
       <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
         <div style="max-width:620px;margin:20px auto;background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:56px 48px;text-align:center;box-shadow:0 40px 80px -50px rgba(11,35,70,.4)">
@@ -375,7 +383,7 @@
             <div style="grid-column:1/-1"><label for="ms-year" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.year }} *</label><select name="year" id="ms-year" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.yearOpts }}" as="y" hint-placeholder-count="2"><option>{{ y }}</option></sc-for></select></div>
             <div style="grid-column:1/-1"><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }} *</label><input name="sname" id="ms-sname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }} *</label><input name="arname" id="ms-arname" required="required" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-stDoc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.docType }} *</label><select name="stDoc" id="ms-stDoc" onChange="{{ onDocTypePick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;margin-bottom:16px"><option value="NationalID">{{ t.adm.f.docNid }}</option><option value="Passport">{{ t.adm.f.docPass }}</option></select><label for="ms-stNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.stNid }} *</label><input name="stNid" id="ms-stNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a 14-digit Egyptian national ID, or a passport number" onChange="{{ fillFromId }}" onInput="{{ normalizeId }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div style="{{ nidGovStyle }}"><span style="font-size:12px;color:#1B6B39;font-weight:700">{{ t.adm.f.govField }}: {{ govText }}</span></div><sc-if value="{{ hasNidError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;margin-top:8px;color:#8E2C20;font-size:12.5px;line-height:1.5"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ nidError }}</div></sc-if><label for="ms-govCode" style="display:none">{{ t.adm.f.govField }} code</label><label for="ms-govName" style="display:none">{{ t.adm.f.govField }} name</label><input type="hidden" name="govCode" id="ms-govCode"><input type="hidden" name="govName" id="ms-govName"></div>
+            <div><label for="ms-stNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.stNid }} *</label><input name="stNid" id="ms-stNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a 14-digit Egyptian national ID, or a passport number" onChange="{{ fillFromId }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select></div>
             <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" min="2006-01-01" max="2024-12-31" onChange="{{ computeAge }}" style="width:100%;padding:14px 15px;cursor:pointer;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" readonly placeholder="—" title="Calculated from date of birth" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#F1EFE8;color:#5B6472"></div>
@@ -549,94 +557,34 @@
   </div>
   </sc-if>
 
-  <!-- ================= ADMISSION TERMS ================= -->
-  <sc-if value="{{ isTerms }}" hint-placeholder-val="{{ false }}">
+  <!-- ================= REQUIREMENTS ================= -->
+  <sc-if value="{{ isRequirements }}" hint-placeholder-val="{{ false }}">
   <div>
     <section style="background:#0B2346;position:relative;overflow:hidden">
       <div style="position:absolute;top:-100px;inset-inline-start:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(200,154,43,.22),transparent 70%);pointer-events:none"></div>
       <div style="max-width:900px;margin:0 auto;padding:64px 32px;text-align:center;position:relative">
-        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.adm.eyebrow }}</div>
-        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.adm.termsH }}</h1>
-        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:640px">{{ t.adm.termsSub }}</p>
+        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.requirements.eyebrow }}</div>
+        <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:54px;line-height:1.08;color:#fff;margin:16px 0 0;text-wrap:balance">{{ t.requirements.title }}</h1>
+        <p style="color:rgba(255,255,255,.85);font-size:19px;line-height:1.6;margin:18px auto 0;max-width:680px">{{ t.requirements.sub }}</p>
       </div>
     </section>
-    <section style="max-width:1120px;margin:0 auto;padding:72px 32px 24px">
-      <div style="text-align:center;max-width:740px;margin:0 auto 48px">
-        <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.adm.journeyEyebrow }}</div>
-        <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;line-height:1.1;margin:12px 0 0;color:#0B2346">{{ t.adm.journeyHeading }}</h2>
-        <p style="color:#5B6472;font-size:17px;line-height:1.65;margin:16px 0 0">{{ t.adm.journeyIntro }}</p>
+    <section style="max-width:1120px;margin:0 auto;padding:64px 32px 96px">
+      <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;margin-bottom:28px">
+          <div>
+            <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.requirements.noteLabel }}</div>
+            <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:34px;color:#0B2346;margin:10px 0 0">{{ t.requirements.heading }}</h2>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button onClick="{{ goAdmissions }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:14px 24px;border-radius:12px" style-hover="background:#123763">{{ t.requirements.apply }}</button>
+            <button onClick="{{ goContact }}" style="background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:15px;font-weight:700;padding:14px 24px;border-radius:12px" style-hover="background:#F1EFE8">{{ t.requirements.contact }}</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+          <sc-for list="{{ t.requirements.items }}" as="item" hint-placeholder-count="6"><div style="background:#F9F7F0;border:1px solid #ECEAE3;border-radius:16px;padding:18px 18px 20px"><div style="width:38px;height:38px;border-radius:11px;background:rgba(200,154,43,.14);display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></div><div style="color:#0B2346;font-size:15px;font-weight:700;line-height:1.55">{{ item }}</div></div></sc-for>
+        </div>
+        <div style="margin-top:24px;background:rgba(200,154,43,.12);border:1px solid rgba(200,154,43,.25);border-radius:16px;padding:18px 20px;color:#5B6472;line-height:1.65">{{ t.requirements.note }}</div>
       </div>
-
-      <div style="display:flex;flex-direction:column;gap:18px">
-
-        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
-          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">1</div>
-          <div style="flex:1">
-            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s1t }}</h3>
-            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s1d }}</p>
-          </div>
-        </div>
-
-        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
-          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">2</div>
-          <div style="flex:1">
-            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s2t }}</h3>
-            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s2d }}</p>
-            <div style="display:flex;flex-direction:column;gap:9px;margin-top:13px">
-              <sc-for list="{{ t.adm.s2bullets }}" as="b" hint-placeholder-count="2">
-                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:15px;line-height:1.55"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ b }}</div>
-              </sc-for>
-            </div>
-            <div style="margin-top:14px;background:#F7F5EF;border-inline-start:3px solid #C89A2B;border-radius:8px;padding:12px 16px;color:#5B6472;font-size:14px;line-height:1.55">{{ t.adm.s2note }}</div>
-          </div>
-        </div>
-
-        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
-          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">3</div>
-          <div style="flex:1">
-            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s3t }}</h3>
-            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s3d }}</p>
-            <div style="margin-top:14px;display:inline-flex;gap:11px;align-items:center;background:rgba(200,154,43,.13);border:1px solid rgba(200,154,43,.4);border-radius:11px;padding:12px 18px;color:#0B2346;font-size:14.5px;font-weight:700;line-height:1.5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>{{ t.adm.s3fee }}</div>
-          </div>
-        </div>
-
-        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
-          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#C89A2B;color:#0B2346;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">4</div>
-          <div style="flex:1">
-            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s4t }}</h3>
-            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s4d }}</p>
-          </div>
-        </div>
-
-        <div style="background:#fff;border:1px solid #ECEAE3;border-radius:20px;padding:28px 30px;display:flex;gap:22px;align-items:flex-start;box-shadow:0 30px 60px -50px rgba(11,35,70,.4)">
-          <div style="width:46px;height:46px;flex-shrink:0;border-radius:13px;background:#0B2346;color:#C89A2B;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;font-family:'Cormorant Garamond',serif">5</div>
-          <div style="flex:1">
-            <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 8px;color:#0B2346">{{ t.adm.s5t }}</h3>
-            <p style="color:#5B6472;font-size:15.5px;line-height:1.65;margin:0">{{ t.adm.s5d }}</p>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px 24px;margin-top:14px">
-              <sc-for list="{{ t.adm.s5docs }}" as="d" hint-placeholder-count="8">
-                <div style="display:flex;gap:10px;align-items:flex-start;color:#5B6472;font-size:14.5px;line-height:1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ d }}</div>
-              </sc-for>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px">
-        <div style="background:#F1EFE8;border-radius:20px;padding:28px 30px">
-          <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="1.9"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg><h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0;color:#0B2346">{{ t.adm.visitsH }}</h3></div>
-          <p style="color:#5B6472;font-size:15px;line-height:1.65;margin:0">{{ t.adm.visitsD }}</p>
-        </div>
-        <div style="background:#0B2346;border-radius:20px;padding:28px 30px;color:#fff">
-          <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:23px;margin:0 0 16px;color:#fff">{{ t.adm.contactH }}</h3>
-          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700;margin-bottom:12px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><span dir="ltr">{{ t.adm.contactPhone }}</span></div>
-          <div style="display:flex;gap:11px;align-items:center;color:rgba(255,255,255,.92);font-size:15.5px;font-weight:700"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg><span dir="ltr">{{ t.adm.contactEmail }}</span></div>
-        </div>
-      </div>
-    </section>
-    <section style="max-width:1120px;margin:0 auto;padding:24px 32px 0">
-      <div style="text-align:center;padding:48px 0 88px"><button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px 34px;border-radius:13px" style-hover="background:#b98a1f">{{ t.nav.apply }}</button></div>
     </section>
   </div>
   </sc-if>
@@ -890,40 +838,13 @@
             <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:52px 44px;text-align:center;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)"><div style="width:70px;height:70px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 22px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 10px">{{ t.contact.conf.h }}</h2><p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0 0 22px">{{ t.contact.conf.sub }}</p><button onClick="{{ goHome }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:13px 26px;border-radius:12px" style-hover="background:#123763">{{ t.contact.conf.back }}</button></div>
           </sc-if>
           <sc-if value="{{ contactNot }}" hint-placeholder-val="{{ true }}">
-            <form onSubmit="{{ validateContact }}" novalidate="novalidate" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+            <form onSubmit="{{ submitContact }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
               <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:30px;color:#0B2346;margin:0 0 22px">{{ t.contact.formh }}</h2>
               <div style="display:grid;gap:15px">
-                <div>
-                  <label for="ms-name-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.name }} *</label>
-                  <input name="name_2" id="ms-name-2" style="{{ contactNameStyle }}">
-                  <sc-if value="{{ hasContactNameError }}" hint-placeholder-val="{{ false }}">
-                  <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactNameError }}</div>
-                  </sc-if>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
-                  <div>
-                    <label for="ms-email-3" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.email }} *</label>
-                    <input name="email_3" id="ms-email-3" type="email" style="{{ contactEmailStyle }}">
-                    <sc-if value="{{ hasContactEmailError }}" hint-placeholder-val="{{ false }}">
-                    <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactEmailError }}</div>
-                    </sc-if>
-                  </div>
-                  <div>
-                    <label for="ms-phone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.phone }}</label>
-                    <input name="phone_2" id="ms-phone-2" type="tel" inputmode="tel" maxlength="20" style="{{ contactPhoneStyle }}">
-                    <sc-if value="{{ hasContactPhoneError }}" hint-placeholder-val="{{ false }}">
-                    <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactPhoneError }}</div>
-                    </sc-if>
-                  </div>
-                </div>
+                <div><label for="ms-name-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.name }} *</label><input name="name_2" id="ms-name-2" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px"><div><label for="ms-email-3" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.email }} *</label><input name="email_3" id="ms-email-3" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div><div><label for="ms-phone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.phone }}</label><input name="phone_2" id="ms-phone-2" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div></div>
                 <div><label for="ms-subject" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.subject }}</label><input name="subject" id="ms-subject" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-                <div>
-                  <label for="ms-message" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.message }} *</label>
-                  <textarea name="message" id="ms-message" rows="5" style="{{ contactMessageStyle }}"></textarea>
-                  <sc-if value="{{ hasContactMessageError }}" hint-placeholder-val="{{ false }}">
-                  <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactMessageError }}</div>
-                  </sc-if>
-                </div>
+                <div><label for="ms-message" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.message }} *</label><textarea name="message" id="ms-message" required="required" rows="5" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
                 <button type="submit" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px;border-radius:13px" style-hover="background:#b98a1f">{{ t.contact.f.submit }}</button>
               </div>
             </form>
@@ -945,7 +866,7 @@
         <img src="uploads/masters-logo-white.png" alt="Masters" style="height:64px;width:auto;display:block;margin-bottom:18px">
         <p style="font-size:14.5px;line-height:1.7;margin:0 0 20px;max-width:300px">{{ t.foot.about }}</p>
         <div style="display:flex;gap:11px">
-          <a href="https://wa.me/201099787423" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+          <a href="https://wa.me/201037993762" target="_blank" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="19" height="19" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
           <a href="tel:01037993762" style="width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center" style-hover="background:#C89A2B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></a>
         </div>
       </div>
@@ -969,8 +890,8 @@
         <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.contactc }}</div>
         <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
           <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://www.google.com/maps/search/?api=1&amp;query=Masters+Language+School+El+Santa+Gharbia" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
-          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201099787423" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
-          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:mastersschool59@gmail.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201037993762" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:admission@masters-edu.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
         </div>
       </div>
     </div>
@@ -979,7 +900,7 @@
 
   <!-- FLOATING CTA -->
   <div style="position:fixed;bottom:26px;inset-inline-end:26px;z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end">
-    <a href="https://wa.me/201099787423" target="_blank" style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7)" style-hover="transform:scale(1.06)" title="WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
+    <a href="https://wa.me/201037993762" target="_blank" style="width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7)" style-hover="transform:scale(1.06)" title="WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.1-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.4-.5.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3a2.7 2.7 0 0 0-.8 2c0 1.2.9 2.4 1 2.5.1.2 1.7 2.7 4.2 3.7 1.5.6 2 .7 2.7.6.4-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1z"/></svg></a>
     <button onClick="{{ goAdmissions }}" style="background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:15px;font-weight:800;padding:14px 22px;border-radius:30px;box-shadow:0 14px 32px -10px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-2px)">{{ t.nav.apply }}</button>
   </div>
 
@@ -987,10 +908,10 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
+  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1179,140 +1100,31 @@ class Component extends DCLogic {
 
   // An Egyptian national ID already encodes the birth date and the holder's
   // sex, so a parent who typed it should not have to key those in again.
-  // Every change of a valid 14-digit ID re-syncs DOB / sex / citizenship /
-  // age / governorate, so correcting a mistyped number refreshes the derived
-  // fields instead of leaving stale values behind. Passports and partial or
-  // cleared input are left alone.
-  // Single source of truth for the Egyptian National ID (exactly 14 digits,
-  // layout C YY MM DD GG SSSS X). No check-digit algorithm is implemented —
-  // the official one is not available in this project, so structural, date
-  // and governorate validation is performed only (check-digit is a separate
-  // requirement and intentionally left out rather than approximated).
-  governorates() {
-    return {
-      "01": { en: "Cairo", ar: "القاهرة" }, "02": { en: "Alexandria", ar: "الإسكندرية" },
-      "03": { en: "Port Said", ar: "بورسعيد" }, "04": { en: "Suez", ar: "السويس" },
-      "11": { en: "Damietta", ar: "دمياط" }, "12": { en: "Dakahlia", ar: "الدقهلية" },
-      "13": { en: "Sharqia", ar: "الشرقية" }, "14": { en: "Qalyubia", ar: "القليوبية" },
-      "15": { en: "Kafr El Sheikh", ar: "كفر الشيخ" }, "16": { en: "Gharbia", ar: "الغربية" },
-      "17": { en: "Monufia", ar: "المنوفية" }, "18": { en: "Beheira", ar: "البحيرة" },
-      "19": { en: "Ismailia", ar: "الإسماعيلية" }, "21": { en: "Giza", ar: "الجيزة" },
-      "22": { en: "Beni Suef", ar: "بني سويف" }, "23": { en: "Fayoum", ar: "الفيوم" },
-      "24": { en: "Minya", ar: "المنيا" }, "25": { en: "Asyut", ar: "أسيوط" },
-      "26": { en: "Sohag", ar: "سوهاج" }, "27": { en: "Qena", ar: "قنا" },
-      "28": { en: "Aswan", ar: "أسوان" }, "29": { en: "Luxor", ar: "الأقصر" },
-      "31": { en: "Red Sea", ar: "البحر الأحمر" }, "32": { en: "New Valley", ar: "الوادي الجديد" },
-      "33": { en: "Matruh", ar: "مطروح" }, "34": { en: "North Sinai", ar: "شمال سيناء" },
-      "35": { en: "South Sinai", ar: "جنوب سيناء" }, "88": { en: "Born outside the Republic", ar: "مولود خارج الجمهورية" }
-    };
-  }
-  parseNid(v) {
-    const s = String(v || "").trim();
-    if (!/^\d{14}$/.test(s)) return { isValid: false, reason: /^\d*$/.test(s) ? "length" : "digits" };
-    if (s[0] !== "2" && s[0] !== "3") return { isValid: false, reason: "century" };
-    const yy = Number(s.slice(1, 3));
-    const mm = Number(s.slice(3, 5));
-    const dd = Number(s.slice(5, 7));
-    const year = (s[0] === "2" ? 1900 : 2000) + yy;
-    if (mm < 1 || mm > 12) return { isValid: false, reason: "month" };
-    const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-    const dim = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    if (dd < 1 || dd > dim[mm - 1]) return { isValid: false, reason: "day" };
-    const today = new Date(); today.setHours(23, 59, 59, 999);
-    if (new Date(year, mm - 1, dd) > today) return { isValid: false, reason: "future" };
-    const code = s.slice(7, 9);
-    const gov = this.governorates()[code];
-    if (!gov) return { isValid: false, reason: "gov" };
-    const pad = n => (n < 10 ? "0" : "") + n;
-    return {
-      isValid: true,
-      dateOfBirth: { year: year, month: mm, day: dd },
-      iso: year + "-" + pad(mm) + "-" + pad(dd),
-      govCode: code,
-      govEn: gov.en,
-      govAr: gov.ar,
-      gender: Number(s[12]) % 2 === 1 ? "Male" : "Female"
-    };
-  }
-  nidErrorFor(reason) {
-    const ar = this.state.lang === "ar";
-    const msg = {
-      length: ar ? "الرقم القومي يجب أن يتكوّن من 14 رقمًا." : "National ID must be exactly 14 digits.",
-      digits: ar ? "الرقم القومي يجب أن يحتوي أرقامًا فقط." : "National ID must contain digits only.",
-      century: ar ? "رقم القرن غير مدعوم في الرقم القومي." : "Unsupported century digit in the National ID.",
-      month: ar ? "شهر ميلاد غير صالح داخل الرقم القومي." : "Invalid birth month encoded in the National ID.",
-      day: ar ? "يوم ميلاد غير صالح لهذا الشهر." : "Invalid day for the birth month (check leap years).",
-      future: ar ? "تاريخ الميلاد لا يمكن أن يكون في المستقبل." : "Date of birth cannot be in the future.",
-      gov: ar ? "رمز المحافظة غير مدعوم في الرقم القومي." : "Unsupported governorate code in the National ID."
-    };
-    return msg[reason] || "";
-  }
-  // Some keyboards / mobile layouts type Arabic-Indic digits (٠-٩, ۰-۹).
-  // Normalise them to Latin digits and drop anything that isn't a letter or
-  // digit, so a 14-digit ID typed in Arabic still parses and validates.
-  normalizeId(e) {
-    const el = e && e.target;
-    if (!el) return;
-    const v = String(el.value || "");
-    const latin = v.replace(/[\u0660-\u0669\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) & 15));
-    const clean = latin.replace(/[^A-Za-z0-9]/g, "");
-    if (clean !== v) el.value = clean;
-    const docEl = el.form && el.form.querySelector('[name="stDoc"]');
-    const doc = docEl ? docEl.value : "NationalID";
-    const done = doc === "Passport"
-      ? /^[A-Za-z][A-Za-z0-9]{5,11}$/.test(clean)
-      : /^\d{14}$/.test(clean);
-    if (done) this.fillFromId({ target: el });
-  }
+  // Anything that is not a 14-digit ID (a passport, a half-typed number) is
+  // left alone, and nothing the parent already filled in is overwritten.
   fillFromId(e) {
     const el = e && e.target;
     const form = el && el.form;
     if (!form) return;
     const v = String(el.value || "").trim();
-    const docEl = form.querySelector('[name="stDoc"]');
-    const isPassport = docEl && docEl.value === "Passport";
-    // Passports carry no embedded DOB/gender/governorate, so nothing is derived.
-    if (isPassport) { this.setState({ nidError: "", govCode: "", govNameEn: "", govNameAr: "" }); return; }
-    // Field cleared: drop the derived governorate and any earlier error.
-    if (!v) { this.setState({ nidError: "", govCode: "", govNameEn: "", govNameAr: "" }); return; }
-    if (!/^\d{14}$/.test(v)) { this.setState({ nidError: "" }); return; }
-    const r = this.parseNid(v);
-    if (!r.isValid) {
-      this.setState({ nidError: this.nidErrorFor(r.reason), govCode: "", govNameEn: "", govNameAr: "" });
-      return;
-    }
-    // A valid National ID is the single source of truth for DOB / sex /
-    // governorate, so a corrected ID must re-sync them — keeping stale data
-    // when the parent edits the number would leave contradictory fields.
+    if (!/^[23]\d{13}$/.test(v)) return;
+    const year = (v[0] === "2" ? 1900 : 2000) + Number(v.slice(1, 3));
+    const month = Number(v.slice(3, 5));
+    const day = Number(v.slice(5, 7));
+    if (month < 1 || month > 12 || day < 1 || day > 31) return;
+    const pad = n => (n < 10 ? "0" : "") + n;
+    const iso = year + "-" + pad(month) + "-" + pad(day);
     const dobEl = form.querySelector('[name="dob"]');
-    if (dobEl) dobEl.value = r.iso;
-    const radio = form.querySelector('[name="gender"][value="' + r.gender + '"]');
-    if (radio) radio.checked = true;
+    if (dobEl && !dobEl.value) dobEl.value = iso;
+    // the 13th digit is odd for male, even for female
+    if (!form.querySelector('[name="gender"]:checked')) {
+      const which = Number(v[12]) % 2 === 1 ? "Male" : "Female";
+      const radio = form.querySelector('[name="gender"][value="' + which + '"]');
+      if (radio) radio.checked = true;
+    }
     const cit = form.querySelector('[name="citizenship"]');
-    if (cit) cit.value = r.govCode === "88" ? "" : (this.state.lang === "ar" ? "مصري" : "Egyptian");
-    const gc = form.querySelector('[name="govCode"]'); if (gc) gc.value = r.govCode;
-    const gn = form.querySelector('[name="govName"]'); if (gn) gn.value = r.govEn;
-    this.setState({ nidError: "", govCode: r.govCode, govNameEn: r.govEn, govNameAr: r.govAr });
-    this.setAgeFrom(dobEl ? dobEl.value || r.iso : r.iso, form);
-  }
-
-  onDocTypePick(e) {
-    const sel = e && e.target;
-    if (!sel || !sel.form) return;
-    const passport = sel.value === "Passport";
-    const inp = sel.form.querySelector('[name="stNid"]');
-    if (inp) {
-      inp.pattern = passport ? "[A-Za-z][A-Za-z0-9]{5,11}" : "[0-9]{14}";
-      inp.inputmode = passport ? "text" : "numeric";
-      inp.title = passport
-        ? (this.state.lang === "ar" ? "أدخل رقم جواز السفر (حرف يليه حروف أو أرقام)" : "Enter a passport number (a letter followed by letters or digits)")
-        : (this.state.lang === "ar" ? "أدخل الرقم القومي المكوّن من 14 رقمًا" : "Enter your 14-digit Egyptian national ID");
-    }
-    if (passport) {
-      const gc = sel.form.querySelector('[name="govCode"]'); if (gc) gc.value = "";
-      const gn = sel.form.querySelector('[name="govName"]'); if (gn) gn.value = "";
-      this.setState({ govCode: "", govNameEn: "", govNameAr: "", nidError: "" });
-    }
+    if (cit && !cit.value) cit.value = this.state.lang === "ar" ? "مصري" : "Egyptian";
+    this.setAgeFrom(dobEl ? dobEl.value : iso, form);
   }
 
   // "Other" is only useful if the parent can say what it is, so its text box
@@ -1479,39 +1291,6 @@ class Component extends DCLogic {
     return (map[pos] && map[pos][this.state.lang]) || t.formsub;
   }
   submitContact(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ contactSubmitted: true }); this.scrollTop(); }
-  validateContact(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    const t = this.content()[this.state.lang].contact.err;
-    const val = (id) => { const el = document.getElementById(id); return el ? String(el.value || "").trim() : ""; };
-    const name = val("ms-name-2");
-    const email = val("ms-email-3");
-    const phone = val("ms-phone-2");
-    const message = val("ms-message");
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRe = /^[+0-9 ()-]{7,20}$/;
-    const errors = { name: "", email: "", phone: "", message: "" };
-    if (!name) errors.name = t.name;
-    if (!email) errors.email = t.emailRequired;
-    else if (!emailRe.test(email)) errors.email = t.emailInvalid;
-    if (phone && !phoneRe.test(phone)) errors.phone = t.phoneInvalid;
-    if (!message) errors.message = t.messageRequired;
-    else if (message.length < 10) errors.message = t.messageShort;
-    this.setState({ contactErrors: errors });
-    const order = [["name", "ms-name-2"], ["email", "ms-email-3"], ["phone", "ms-phone-2"], ["message", "ms-message"]];
-    for (const [key, id] of order) {
-      if (errors[key]) {
-        const el = document.getElementById(id);
-        if (el && el.focus) el.focus();
-        return;
-      }
-    }
-    this.setState({ contactSubmitted: true, contactErrors: { name: "", email: "", phone: "", message: "" } });
-    this.scrollTop();
-  }
-  contactFieldStyle(hasError, extra) {
-    return "width:100%;padding:13px 15px;border:1.5px solid " + (hasError ? "#C0392B" : "#DCDAD2")
-      + ";border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346" + (extra || "");
-  }
   setGallery(tab) { this.setState({ galleryTab: tab }); }
 
   renderVals() {
@@ -1529,7 +1308,7 @@ class Component extends DCLogic {
       isAcademics: this.state.page === "academics",
       isAdmissions: this.state.page === "admissions",
       isAbout: this.state.page === "about",
-      isTerms: this.state.page === "terms",
+      isRequirements: this.state.page === "requirements",
       isLife: this.state.page === "life",
       isCareers: this.state.page === "careers",
       isGallery: this.state.page === "gallery",
@@ -1560,12 +1339,6 @@ class Component extends DCLogic {
       onOtherPick: (e) => this.onOtherPick(e),
       onAreaPick: (e) => this.onAreaPick(e),
       fillFromId: (e) => this.fillFromId(e),
-      normalizeId: (e) => this.normalizeId(e),
-      onDocTypePick: (e) => this.onDocTypePick(e),
-      nidError: this.state.nidError || "",
-      hasNidError: !!this.state.nidError,
-      govText: this.state.govCode ? (this.state.lang === "ar" ? this.state.govNameAr : this.state.govNameEn) + " (" + this.state.govCode + ")" : "",
-      nidGovStyle: this.state.govCode ? "" : "display:none",
       skipStep: () => this.skipStep(),
       // only the siblings step is genuinely optional
       skipBtnStyle: this.state.step === 4
@@ -1600,7 +1373,7 @@ class Component extends DCLogic {
       labelD4: this.slotLabel("d4", t.adm.f.d4hint), styleD4: this.slotStyle("d4"),
       goHome: () => this.go("home"),
       goAcademics: () => this.go("academics"),
-      goTerms: () => this.go("terms"),
+      goRequirements: () => this.go("requirements"),
       goAdmissions: () => this.go("admissions"),
       goContact: () => this.go("contact"),
       goAbout: () => this.go("about"),
@@ -1614,19 +1387,6 @@ class Component extends DCLogic {
       submitCareer: (e) => this.submitCareer(e),
       setCareerPosition: (e) => this.setCareerPosition(e),
       submitContact: (e) => this.submitContact(e),
-      validateContact: (e) => this.validateContact(e),
-      hasContactNameError: !!this.state.contactErrors.name,
-      contactNameError: this.state.contactErrors.name,
-      contactNameStyle: this.contactFieldStyle(!!this.state.contactErrors.name),
-      hasContactEmailError: !!this.state.contactErrors.email,
-      contactEmailError: this.state.contactErrors.email,
-      contactEmailStyle: this.contactFieldStyle(!!this.state.contactErrors.email),
-      hasContactPhoneError: !!this.state.contactErrors.phone,
-      contactPhoneError: this.state.contactErrors.phone,
-      contactPhoneStyle: this.contactFieldStyle(!!this.state.contactErrors.phone),
-      hasContactMessageError: !!this.state.contactErrors.message,
-      contactMessageError: this.state.contactErrors.message,
-      contactMessageStyle: this.contactFieldStyle(!!this.state.contactErrors.message, ";resize:vertical"),
       setGalPhotos: () => this.setGallery("photos"),
       setGalVideos: () => this.setGallery("videos"),
       setGalTour: () => this.setGallery("tour"),
@@ -1644,7 +1404,7 @@ class Component extends DCLogic {
       en: {
         meta: { title: "Masters Language School — Bilingual Education in El Santa, Gharbia", desc: "Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process." },
         brand: { name: "Masters", tag: "Language School" },
-        nav: { home: "Home", about: "About", academics: "Academics", terms: "Admission Terms", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
+        nav: { home: "Home", about: "About", academics: "Academics", requirements: "Requirements", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
         top: { portal: "Parents' Portal", hideMenu: "Hide menu", showMenu: "Show menu" },
         hero: {
           eyebrow: "Masters Language School · Est. 2026",
@@ -1679,9 +1439,9 @@ class Component extends DCLogic {
           about: "A premier bilingual language school in El Santa, Gharbia — shaping curious, confident and compassionate learners since 2026.",
           explore: "Explore", admissions: "Admissions", contactc: "Contact",
           rights: "© 2026 Masters Language School. All rights reserved.",
-          addr: "El Santa, Gharbia Governorate, Egypt", phone: "+201099787423", email: "mastersschool59@gmail.com",
+          addr: "El Santa, Gharbia Governorate, Egypt", phone: "+20 103 799 3762", email: "admission@masters-edu.com",
           links: ["About Us", "Academics", "Student Life", "News & Events", "Gallery"],
-          alinks: ["Apply Online", "Book a Tour", "Tuition & Fees", "Admission Terms", "FAQ"]
+          alinks: ["Apply Online", "Book a Tour", "Tuition & Fees", "Requirements", "FAQ"]
         },
         ac: {
           eyebrow: "Academics", title: "A bilingual education, built stage by stage.",
@@ -1698,7 +1458,6 @@ class Component extends DCLogic {
         adm: {
           eyebrow: "Admissions", title: "Admissions made simple.",
           sub: "Applications are open year-round, but seats are offered based on availability — we warmly encourage families to begin the journey early.",
-          termsH: "Admission terms & conditions", termsSub: "Everything you need to know before applying — read the full process, documents and fees before starting your application.",
           journeyEyebrow: "The Admissions Journey", journeyHeading: "Your step-by-step path to Masters",
           journeyIntro: "Thank you for your interest in joining the Masters School community. While we accept applications year-round, placements are offered strictly based on seat availability — so we highly encourage families to begin the process as early as possible.",
           s1t: "Online Application",
@@ -1718,7 +1477,7 @@ class Component extends DCLogic {
           visitsH: "School Visits & Tours",
           visitsD: "We warmly invite prospective parents to schedule a campus tour during a regular school day to experience the Masters environment and learn more about our community.",
           contactH: "Contact the Admissions Office",
-          contactPhone: "+201099787423", contactEmail: "mastersschool59@gmail.com",
+          contactPhone: "+20 103 799 3762", contactEmail: "admission@masters-edu.com",
           formh: "Online Application Form", formsub: "Academic Year 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
@@ -1732,7 +1491,7 @@ class Component extends DCLogic {
             required: "Fields marked * are required. Please upload files as PDF, JPG or PNG.",
             student: "Student information",
             photo: "Personal photo", year: "Academic year",
-              sname: "Full name in English", arname: "Full name in Arabic", docType: "Identity document type", docNid: "National ID", docPass: "Passport", govField: "Governorate", stNid: "Student's national ID or passport",
+              sname: "Full name in English", arname: "Full name in Arabic", stNid: "Student's national ID or passport",
             grade: "Grade applying for", gender: "Gender", gm: "Male", gf: "Female",
             dob: "Date of birth", age: "Age", citizenship: "Citizenship", country: "Area of residence", countryOther: "If other, specify the area",
             address: "Address",
@@ -1771,13 +1530,20 @@ class Component extends DCLogic {
           need: {
             h: "To schedule your assessment", items: ["Pre-K & KG1: current nursery report", "Transfer students: last two years' reports", "Letter of Good Conduct from current school", "Assessment fee: 600 EGP (non-refundable)"],
             datesh: "Key dates", dates: [{ l: "Applications", v: "Year-round" }, { l: "Results notified", v: "Within 5 working days" }, { l: "Final documents", v: "Before 1 Aug" }],
-            helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+201099787423", helpemail: "mastersschool59@gmail.com"
+            helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+20 103 799 3762", helpemail: "admission@masters-edu.com"
           },
           conf: {
             h: "Application received!", sub: "Thank you. Our admissions team will review your application and contact eligible applicants to schedule the assessment and parent interview.",
             idlabel: "Your application ID", back: "Back to home", note: "Please keep your application ID for follow-up.",
             demoNote: "Demo mode — this application was NOT saved or sent anywhere. Configure an applications endpoint before going live."
           }
+        },
+        requirements: {
+          eyebrow: "Requirements", title: "What you need to apply", sub: "A simple checklist of documents and steps so families can prepare with confidence before they begin the admissions process.",
+          noteLabel: "Before you apply", heading: "Admission requirements at a glance",
+          apply: "Start application", contact: "Contact admissions",
+          items: ["Completed online application form", "Student’s birth certificate or passport", "Parent national ID or passport copies", "Recent school reports or nursery report", "Letter of Good Conduct", "Assessment fee of 600 EGP"],
+          note: "Please keep your documents ready before you begin so the process stays smooth and your assessment can be scheduled promptly."
         },
         about: {
           eyebrow: "About Masters", title: "A community built on trust, excellence and heart.", sub: "Masters Language School has been a second home for the families of El Santa — where character and academics grow together.",
@@ -1818,17 +1584,16 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "Contact", title: "We’d love to hear from you.", sub: "Questions about admissions, careers or a campus visit? Reach out — we reply fast.",
-          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+201099787423", waT: "WhatsApp", waD: "+201099787423", mailT: "Email", mailD: "mastersschool59@gmail.com",
+          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+20 103 799 3762", waT: "WhatsApp", waD: "+20 103 799 3762", mailT: "Email", mailD: "admission@masters-edu.com",
           hoursh: "Office hours", hours: "Sunday – Thursday · 8:00 AM – 3:00 PM",
           formh: "Send us a message", f: { name: "Your name", email: "Email address", phone: "Phone number", subject: "Subject", message: "Message", submit: "Send message", required: "Fields marked * are required." },
-          err: { name: "Please enter your name.", emailRequired: "Please enter your email address.", emailInvalid: "Please enter a valid email address (e.g. name@example.com).", phoneInvalid: "Please enter a valid phone number (7–20 digits; + and spaces allowed).", messageRequired: "Please enter a message.", messageShort: "Please enter at least 10 characters so we understand your message." },
           maplabel: "Find us on the map", conf: { h: "Message sent!", sub: "Thank you for reaching out. Our team will reply within one working day.", back: "Back to home" }
         }
       },
       ar: {
         meta: { title: "مدرسة ماسترز للغات — تعليم ثنائي اللغة في السنطة، الغربية", desc: "مدرسة ماسترز للغات مدرسة رائدة ثنائية اللغة (عربي/إنجليزي) في السنطة بمحافظة الغربية — من رياض الأطفال حتى الثانوية. قدّم إلكترونيًا، واحجز زيارة للحرم المدرسي، وتعرّف على خطوات القبول." },
         brand: { name: "ماسترز", tag: "مدرسة اللغات" },
-        nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", terms: "شروط التقديم", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
+        nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", requirements: "المتطلبات", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
         top: { portal: "بوابة أولياء الأمور", hideMenu: "إخفاء القائمة", showMenu: "إظهار القائمة" },
         hero: {
           eyebrow: "مدرسة ماسترز للغات · تأسست 2026",
@@ -1863,9 +1628,9 @@ class Component extends DCLogic {
           about: "مدرسة لغات ثنائية رائدة في السنطة، الغربية — نصنع متعلّمين فضوليين واثقين ومتعاطفين منذ 2026.",
           explore: "استكشف", admissions: "القبول", contactc: "تواصل معنا",
           rights: "© 2026 مدرسة ماسترز للغات. جميع الحقوق محفوظة.",
-          addr: "السنطة، محافظة الغربية، مصر", phone: "+201099787423", email: "mastersschool59@gmail.com",
+          addr: "السنطة، محافظة الغربية، مصر", phone: "+20 103 799 3762", email: "admission@masters-edu.com",
           links: ["عن المدرسة", "البرامج الأكاديمية", "الحياة الطلابية", "الأخبار والفعاليات", "معرض الصور"],
-          alinks: ["التقديم أونلاين", "احجز زيارة", "المصروفات", "شروط التقديم", "الأسئلة الشائعة"]
+          alinks: ["التقديم أونلاين", "احجز زيارة", "المصروفات", "المتطلبات", "الأسئلة الشائعة"]
         },
         ac: {
           eyebrow: "البرامج الأكاديمية", title: "تعليمٌ ثنائي اللغة، مبنيٌّ مرحلةً تلو الأخرى.",
@@ -1882,7 +1647,6 @@ class Component extends DCLogic {
         adm: {
           eyebrow: "القبول والتسجيل", title: "قبولٌ ميسّرٌ وبسيط.",
           sub: "باب التقديم مفتوح طوال العام، لكن الأماكن تُمنح وفقًا للمتاح — لذا نشجّع الأسر على بدء إجراءات التقديم مبكرًا.",
-          termsH: "شروط التقديم والاشتراطات", termsSub: "كل ما تحتاج معرفته قبل التقديم — اطّلع على خطوات القبول والمستندات والرسوم كاملة قبل بدء تقديم طلبك.",
           journeyEyebrow: "رحلة القبول", journeyHeading: "طريقك إلى ماسترز خطوةً بخطوة",
           journeyIntro: "نشكركم على اهتمامكم بالانضمام إلى مجتمع مدرسة ماسترز التعليمي. باب التقديم مفتوح طوال العام، ولكن نظرًا لأن قبول الطلاب يعتمد على الأماكن المتاحة، فإننا نوصي بشدة ببدء إجراءات التقديم مبكرًا.",
           s1t: "التقديم الإلكتروني",
@@ -1902,7 +1666,7 @@ class Component extends DCLogic {
           visitsH: "زيارة المدرسة والجولات الميدانية",
           visitsD: "نشجّع أولياء الأمور على تحديد موعد لزيارة الحرم المدرسي خلال يوم دراسي عادي للاطلاع على بيئتنا التعليمية والحصول على إجابات وافية حول نظام القبول.",
           contactH: "تواصل مع قسم القبول والتسجيل",
-          contactPhone: "+201099787423", contactEmail: "mastersschool59@gmail.com",
+          contactPhone: "+201037993762", contactEmail: "admission@masters-edu.com",
           formh: "نموذج التقديم الإلكتروني", formsub: "العام الدراسي 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "الصف 1", "الصف 2", "الصف 3", "الصف 4", "الصف 5", "الصف 6", "الصف 7", "الصف 8", "الصف 9", "الصف 10", "الصف 11", "الصف 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
@@ -1916,7 +1680,7 @@ class Component extends DCLogic {
             required: "الحقول المعلّمة بـ * مطلوبة. يُرجى رفع الملفات بصيغة PDF أو JPG أو PNG.",
             student: "بيانات الطالب",
             photo: "الصورة الشخصية", year: "العام الدراسي",
-              sname: "الاسم بالكامل بالإنجليزية", arname: "الاسم بالكامل بالعربية", docType: "نوع مستند الهوية", docNid: "الرقم القومي", docPass: "جواز السفر", govField: "المحافظة", stNid: "الرقم القومي للطالب أو رقم الجواز",
+              sname: "الاسم بالكامل بالإنجليزية", arname: "الاسم بالكامل بالعربية", stNid: "الرقم القومي للطالب أو رقم الجواز",
             grade: "الصف المتقدَّم إليه", gender: "النوع", gm: "ذكر", gf: "أنثى",
             dob: "تاريخ الميلاد", age: "العمر", citizenship: "الجنسية", country: "منطقة الإقامة", countryOther: "إن اخترت «أخرى»، حدّد المنطقة",
             address: "العنوان",
@@ -1955,13 +1719,20 @@ class Component extends DCLogic {
           need: {
             h: "لتحديد موعد التقييم", items: ["Pre-K و KG1: تقرير الحضانة الحالي", "الطلاب المحوّلون: تقارير آخر عامين", "خطاب حسن سير وسلوك من المدرسة الحالية", "رسوم التقييم: 600 جنيه (غير مستردة)"],
             datesh: "مواعيد مهمة", dates: [{ l: "التقديم", v: "طوال العام" }, { l: "إعلان النتائج", v: "خلال 5 أيام عمل" }, { l: "المستندات النهائية", v: "قبل 1 أغسطس" }],
-            helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201099787423", helpemail: "mastersschool59@gmail.com"
+            helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201037993762", helpemail: "admission@masters-edu.com"
           },
           conf: {
             h: "تم استلام طلبك!", sub: "شكرًا لك. سيراجع فريق القبول طلبك ويتواصل مع المتقدمين المؤهلين لتحديد موعد التقييم ومقابلة الوالدين.",
             idlabel: "رقم طلبك", back: "العودة للرئيسية", note: "يُرجى الاحتفاظ برقم الطلب للمتابعة.",
             demoNote: "وضع تجريبي — لم يتم حفظ هذا الطلب أو إرساله إلى أي جهة. يجب ضبط نقطة استقبال الطلبات قبل التشغيل الفعلي."
           }
+        },
+        requirements: {
+          eyebrow: "المتطلبات", title: "ما الذي تحتاجه للتقديم", sub: "قائمة واضحة بالوثائق والخطوات حتى تتمكن الأسر من التحضير بثقة قبل البدء في إجراءات القبول.",
+          noteLabel: "قبل التقديم", heading: "متطلبات القبول في لمحة سريعة",
+          apply: "ابدأ التقديم", contact: "تواصل مع القبول",
+          items: ["نموذج التقديم الإلكتروني المكتمل", "شهادة ميلاد الطالب أو جواز السفر", "نسخ من البطاقة الشخصية أو جواز السفر للوالدين", "تقارير مدرسية حديثة أو تقرير حضانة", "خطاب حسن سير وسلوك", "رسوم التقييم 600 جنيه مصري"],
+          note: "يرجى تجهيز المستندات قبل البدء حتى تظل العملية سلسة ويمكن تحديد موعد التقييم بسرعة."
         },
         about: {
           eyebrow: "عن ماسترز", title: "مجتمعٌ قائمٌ على الثقة والتميّز والقلب.", sub: "مدرسة ماسترز للغات بيتٌ ثانٍ لأسر السنطة — حيث تنمو الأخلاق والعلم معًا.",
@@ -2002,10 +1773,9 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "تواصل معنا", title: "يسعدنا أن نسمع منك.", sub: "أسئلة عن القبول أو الوظائف أو زيارة الحرم؟ تواصل معنا — نردّ بسرعة.",
-          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+201099787423", waT: "واتساب", waD: "+201099787423", mailT: "البريد", mailD: "mastersschool59@gmail.com",
+          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+20 103 799 3762", waT: "واتساب", waD: "+20 103 799 3762", mailT: "البريد", mailD: "admission@masters-edu.com",
           hoursh: "مواعيد العمل", hours: "الأحد – الخميس · 8:00 ص – 3:00 م",
           formh: "أرسل لنا رسالة", f: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", subject: "الموضوع", message: "الرسالة", submit: "إرسال الرسالة", required: "الحقول المعلّمة بـ * مطلوبة." },
-          err: { name: "من فضلك أدخل اسمك.", emailRequired: "من فضلك أدخل بريدك الإلكتروني.", emailInvalid: "من فضلك أدخل بريدًا إلكترونيًا صحيحًا (مثل name@example.com).", phoneInvalid: "من فضلك أدخل رقم هاتف صحيح (٧–٢٠ رقمًا؛ يُسمح بـ + والمسافات).", messageRequired: "من فضلك أدخل رسالتك.", messageShort: "من فضلك أدخل 10 أحرف على الأقل حتى نفهم رسالتك." },
           maplabel: "موقعنا على الخريطة", conf: { h: "تم إرسال رسالتك!", sub: "شكرًا لتواصلك. سيردّ فريقنا خلال يوم عمل واحد.", back: "العودة للرئيسية" }
         }
       }
@@ -2015,4 +1785,3 @@ class Component extends DCLogic {
 </script>
 </body>
 </html>
-
