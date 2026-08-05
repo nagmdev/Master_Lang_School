@@ -37,7 +37,7 @@
     [style*="grid-template-columns: "],
     [style*="grid-template-columns:1.6fr 1fr"],
     [style*="grid-template-columns: 1.6fr 1fr"]{grid-template-columns:1fr!important}
-    nav > div, nav > div > div{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important}
+    nav > div, nav > div > div, nav div[style*="gap:1px"], nav div[style*="gap: 1px"]{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important}
     nav > div button,
     nav > div span{white-space:normal!important;min-width:0!important;line-height:1.3!important}
     nav > div button{padding:8px 10px!important}
@@ -81,17 +81,24 @@
           <span style="font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#C89A2B;font-weight:700">{{ t.brand.tag }}</span>
         </span>
       </button>
-      <div style="display:flex;align-items:center;gap:1px">
-        <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
-        <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
-        <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
-        <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
-        <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
-        <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
-        <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
-        <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
-        <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
-        <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:1px">
+          <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
+          <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
+          <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
+          <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
+          <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
+          <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
+          <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
+          <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
+          <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
+          <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
+        </div>
+        </sc-if>
+        <button onClick="{{ toggleNav }}" aria-label="{{ navToggleLabel }}" title="{{ navToggleLabel }}" style="margin-inline-start:4px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0" style-hover="background:#F1EFE8">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B2346" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{ navArrowStyle }}"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
     </div>
   </nav>
@@ -901,7 +908,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "" };
+  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
   go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
@@ -913,6 +920,9 @@ class Component extends DCLogic {
     const next = this.state.lang === "en" ? "ar" : "en";
     this.applyDocLang(next);
     this.setState({ lang: next });
+  }
+  toggleNav() {
+    this.setState({ navOpen: !this.state.navOpen });
   }
   // Keep <html lang>/<dir>, the page title and the meta description in step with
   // the active language — screen readers and search engines read these, and the
@@ -1381,6 +1391,10 @@ class Component extends DCLogic {
       setGalVideos: () => this.setGallery("videos"),
       setGalTour: () => this.setGallery("tour"),
       toggleLang: () => this.toggleLang(),
+      navOpen: this.state.navOpen,
+      toggleNav: () => this.toggleNav(),
+      navToggleLabel: this.state.navOpen ? t.top.hideMenu : t.top.showMenu,
+      navArrowStyle: "transition:transform .25s ease;transform:rotate(" + (this.state.navOpen ? "180" : "0") + "deg)",
       submit: (e) => this.submit(e)
     };
   }
@@ -1391,7 +1405,7 @@ class Component extends DCLogic {
         meta: { title: "Masters Language School — Bilingual Education in El Santa, Gharbia", desc: "Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process." },
         brand: { name: "Masters", tag: "Language School" },
         nav: { home: "Home", about: "About", academics: "Academics", requirements: "Requirements", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
-        top: { portal: "Parents' Portal" },
+        top: { portal: "Parents' Portal", hideMenu: "Hide menu", showMenu: "Show menu" },
         hero: {
           eyebrow: "Masters Language School · Est. 2026",
           title: "Where bright minds are shaped for a global future.",
@@ -1580,7 +1594,7 @@ class Component extends DCLogic {
         meta: { title: "مدرسة ماسترز للغات — تعليم ثنائي اللغة في السنطة، الغربية", desc: "مدرسة ماسترز للغات مدرسة رائدة ثنائية اللغة (عربي/إنجليزي) في السنطة بمحافظة الغربية — من رياض الأطفال حتى الثانوية. قدّم إلكترونيًا، واحجز زيارة للحرم المدرسي، وتعرّف على خطوات القبول." },
         brand: { name: "ماسترز", tag: "مدرسة اللغات" },
         nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", requirements: "المتطلبات", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
-        top: { portal: "بوابة أولياء الأمور" },
+        top: { portal: "بوابة أولياء الأمور", hideMenu: "إخفاء القائمة", showMenu: "إظهار القائمة" },
         hero: {
           eyebrow: "مدرسة ماسترز للغات · تأسست 2026",
           title: "حيث تُصقَل العقول النيّرة لمستقبلٍ عالمي.",
