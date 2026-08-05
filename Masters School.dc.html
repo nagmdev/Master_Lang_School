@@ -101,6 +101,7 @@
         <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
         <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
         <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
+        <button onClick="{{ toggleTopBar }}" style="margin-inline-start:8px;background:transparent;border:1px solid #0B2346;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:10px 14px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" style-hover="background:#F1EFE8" title="{{ topBarToggleLabel }}" aria-label="{{ topBarToggleLabel }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0B2346" stroke-width="2"><path d="{{ topBarToggleIcon }}"/></svg>{{ topBarToggleLabel }}</button>
       </div>
     </div>
   </nav>
