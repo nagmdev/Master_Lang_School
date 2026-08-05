@@ -892,7 +892,7 @@ test('shared modules are underscore-prefixed so Vercel does not expose them', ()
   assert(fs.existsSync(path.join(API_DIR, '_routes.js')), '_routes.js missing');
   assert(fs.existsSync(path.join(API_DIR, '_lib')), '_lib missing');
   const exposed = apiFiles.filter(f => !f.startsWith('_') &&
-    !['applications', 'application', 'login', 'logout', 'session', 'file'].includes(f.replace(/\.js$/, '')));
+    !['applications', 'application', 'login', 'logout', 'session', 'file', 'send-email'].includes(f.replace(/\.js$/, '')));
   assert(exposed.length === 0, 'unexpected public endpoints: ' + exposed.join(', '));
 });
 
