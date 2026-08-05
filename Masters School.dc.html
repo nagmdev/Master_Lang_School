@@ -838,13 +838,40 @@
             <div style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:52px 44px;text-align:center;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)"><div style="width:70px;height:70px;border-radius:50%;background:rgba(200,154,43,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 22px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 10px">{{ t.contact.conf.h }}</h2><p style="color:#5B6472;font-size:15.5px;line-height:1.6;margin:0 0 22px">{{ t.contact.conf.sub }}</p><button onClick="{{ goHome }}" style="background:#0B2346;color:#fff;border:none;cursor:pointer;font-size:15px;font-weight:700;padding:13px 26px;border-radius:12px" style-hover="background:#123763">{{ t.contact.conf.back }}</button></div>
           </sc-if>
           <sc-if value="{{ contactNot }}" hint-placeholder-val="{{ true }}">
-            <form onSubmit="{{ submitContact }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+            <form onSubmit="{{ validateContact }}" novalidate="novalidate" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:36px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
               <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:30px;color:#0B2346;margin:0 0 22px">{{ t.contact.formh }}</h2>
               <div style="display:grid;gap:15px">
-                <div><label for="ms-name-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.name }} *</label><input name="name_2" id="ms-name-2" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px"><div><label for="ms-email-3" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.email }} *</label><input name="email_3" id="ms-email-3" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div><div><label for="ms-phone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.phone }}</label><input name="phone_2" id="ms-phone-2" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div></div>
+                <div>
+                  <label for="ms-name-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.name }} *</label>
+                  <input name="name_2" id="ms-name-2" style="{{ contactNameStyle }}">
+                  <sc-if value="{{ hasContactNameError }}" hint-placeholder-val="{{ false }}">
+                  <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactNameError }}</div>
+                  </sc-if>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
+                  <div>
+                    <label for="ms-email-3" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.email }} *</label>
+                    <input name="email_3" id="ms-email-3" type="email" style="{{ contactEmailStyle }}">
+                    <sc-if value="{{ hasContactEmailError }}" hint-placeholder-val="{{ false }}">
+                    <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactEmailError }}</div>
+                    </sc-if>
+                  </div>
+                  <div>
+                    <label for="ms-phone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.phone }}</label>
+                    <input name="phone_2" id="ms-phone-2" type="tel" inputmode="tel" maxlength="20" style="{{ contactPhoneStyle }}">
+                    <sc-if value="{{ hasContactPhoneError }}" hint-placeholder-val="{{ false }}">
+                    <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactPhoneError }}</div>
+                    </sc-if>
+                  </div>
+                </div>
                 <div><label for="ms-subject" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.subject }}</label><input name="subject" id="ms-subject" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-                <div><label for="ms-message" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.message }} *</label><textarea name="message" id="ms-message" required="required" rows="5" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;resize:vertical"></textarea></div>
+                <div>
+                  <label for="ms-message" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.contact.f.message }} *</label>
+                  <textarea name="message" id="ms-message" rows="5" style="{{ contactMessageStyle }}"></textarea>
+                  <sc-if value="{{ hasContactMessageError }}" hint-placeholder-val="{{ false }}">
+                  <div role="alert" style="color:#C0392B;font-size:12.5px;font-weight:600;margin-top:6px">{{ contactMessageError }}</div>
+                  </sc-if>
+                </div>
                 <button type="submit" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:16px;font-weight:800;padding:16px;border-radius:13px" style-hover="background:#b98a1f">{{ t.contact.f.submit }}</button>
               </div>
             </form>
@@ -908,10 +935,10 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true };
+  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" } };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1291,6 +1318,39 @@ class Component extends DCLogic {
     return (map[pos] && map[pos][this.state.lang]) || t.formsub;
   }
   submitContact(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ contactSubmitted: true }); this.scrollTop(); }
+  validateContact(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const t = this.content()[this.state.lang].contact.err;
+    const val = (id) => { const el = document.getElementById(id); return el ? String(el.value || "").trim() : ""; };
+    const name = val("ms-name-2");
+    const email = val("ms-email-3");
+    const phone = val("ms-phone-2");
+    const message = val("ms-message");
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRe = /^[+0-9 ()-]{7,20}$/;
+    const errors = { name: "", email: "", phone: "", message: "" };
+    if (!name) errors.name = t.name;
+    if (!email) errors.email = t.emailRequired;
+    else if (!emailRe.test(email)) errors.email = t.emailInvalid;
+    if (phone && !phoneRe.test(phone)) errors.phone = t.phoneInvalid;
+    if (!message) errors.message = t.messageRequired;
+    else if (message.length < 10) errors.message = t.messageShort;
+    this.setState({ contactErrors: errors });
+    const order = [["name", "ms-name-2"], ["email", "ms-email-3"], ["phone", "ms-phone-2"], ["message", "ms-message"]];
+    for (const [key, id] of order) {
+      if (errors[key]) {
+        const el = document.getElementById(id);
+        if (el && el.focus) el.focus();
+        return;
+      }
+    }
+    this.setState({ contactSubmitted: true, contactErrors: { name: "", email: "", phone: "", message: "" } });
+    this.scrollTop();
+  }
+  contactFieldStyle(hasError, extra) {
+    return "width:100%;padding:13px 15px;border:1.5px solid " + (hasError ? "#C0392B" : "#DCDAD2")
+      + ";border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346" + (extra || "");
+  }
   setGallery(tab) { this.setState({ galleryTab: tab }); }
 
   renderVals() {
@@ -1387,6 +1447,19 @@ class Component extends DCLogic {
       submitCareer: (e) => this.submitCareer(e),
       setCareerPosition: (e) => this.setCareerPosition(e),
       submitContact: (e) => this.submitContact(e),
+      validateContact: (e) => this.validateContact(e),
+      hasContactNameError: !!this.state.contactErrors.name,
+      contactNameError: this.state.contactErrors.name,
+      contactNameStyle: this.contactFieldStyle(!!this.state.contactErrors.name),
+      hasContactEmailError: !!this.state.contactErrors.email,
+      contactEmailError: this.state.contactErrors.email,
+      contactEmailStyle: this.contactFieldStyle(!!this.state.contactErrors.email),
+      hasContactPhoneError: !!this.state.contactErrors.phone,
+      contactPhoneError: this.state.contactErrors.phone,
+      contactPhoneStyle: this.contactFieldStyle(!!this.state.contactErrors.phone),
+      hasContactMessageError: !!this.state.contactErrors.message,
+      contactMessageError: this.state.contactErrors.message,
+      contactMessageStyle: this.contactFieldStyle(!!this.state.contactErrors.message, ";resize:vertical"),
       setGalPhotos: () => this.setGallery("photos"),
       setGalVideos: () => this.setGallery("videos"),
       setGalTour: () => this.setGallery("tour"),
@@ -1587,6 +1660,7 @@ class Component extends DCLogic {
           visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+20 103 799 3762", waT: "WhatsApp", waD: "+20 103 799 3762", mailT: "Email", mailD: "admission@masters-edu.com",
           hoursh: "Office hours", hours: "Sunday – Thursday · 8:00 AM – 3:00 PM",
           formh: "Send us a message", f: { name: "Your name", email: "Email address", phone: "Phone number", subject: "Subject", message: "Message", submit: "Send message", required: "Fields marked * are required." },
+          err: { name: "Please enter your name.", emailRequired: "Please enter your email address.", emailInvalid: "Please enter a valid email address (e.g. name@example.com).", phoneInvalid: "Please enter a valid phone number (7–20 digits; + and spaces allowed).", messageRequired: "Please enter a message.", messageShort: "Please enter at least 10 characters so we understand your message." },
           maplabel: "Find us on the map", conf: { h: "Message sent!", sub: "Thank you for reaching out. Our team will reply within one working day.", back: "Back to home" }
         }
       },
@@ -1776,6 +1850,7 @@ class Component extends DCLogic {
           visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+20 103 799 3762", waT: "واتساب", waD: "+20 103 799 3762", mailT: "البريد", mailD: "admission@masters-edu.com",
           hoursh: "مواعيد العمل", hours: "الأحد – الخميس · 8:00 ص – 3:00 م",
           formh: "أرسل لنا رسالة", f: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", subject: "الموضوع", message: "الرسالة", submit: "إرسال الرسالة", required: "الحقول المعلّمة بـ * مطلوبة." },
+          err: { name: "من فضلك أدخل اسمك.", emailRequired: "من فضلك أدخل بريدك الإلكتروني.", emailInvalid: "من فضلك أدخل بريدًا إلكترونيًا صحيحًا (مثل name@example.com).", phoneInvalid: "من فضلك أدخل رقم هاتف صحيح (٧–٢٠ رقمًا؛ يُسمح بـ + والمسافات).", messageRequired: "من فضلك أدخل رسالتك.", messageShort: "من فضلك أدخل 10 أحرف على الأقل حتى نفهم رسالتك." },
           maplabel: "موقعنا على الخريطة", conf: { h: "تم إرسال رسالتك!", sub: "شكرًا لتواصلك. سيردّ فريقنا خلال يوم عمل واحد.", back: "العودة للرئيسية" }
         }
       }
