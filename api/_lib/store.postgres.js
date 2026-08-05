@@ -76,6 +76,30 @@ function migrate() {
         CREATE INDEX IF NOT EXISTS applications_submitted_idx ON applications (submitted_at DESC);
         CREATE INDEX IF NOT EXISTS applications_status_idx    ON applications (status);
         CREATE INDEX IF NOT EXISTS application_files_app_idx  ON application_files (application_id);
+
+        CREATE TABLE IF NOT EXISTS career_applications (
+          id            TEXT PRIMARY KEY,
+          submitted_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+          updated_at    TIMESTAMPTZ,
+          status        TEXT NOT NULL DEFAULT 'new',
+          notes         TEXT NOT NULL DEFAULT '',
+          fields        JSONB NOT NULL DEFAULT '{}'::jsonb,
+          search        TEXT NOT NULL DEFAULT ''
+        );
+        CREATE SEQUENCE IF NOT EXISTS career_ref_seq START 1000 MINVALUE 1000;
+        CREATE TABLE IF NOT EXISTS career_application_files (
+          id                  BIGSERIAL PRIMARY KEY,
+          career_application_id TEXT NOT NULL REFERENCES career_applications(id) ON DELETE CASCADE,
+          field               TEXT NOT NULL,
+          filename            TEXT NOT NULL,
+          stored_as           TEXT NOT NULL,
+          content_type        TEXT NOT NULL,
+          bytes               INTEGER NOT NULL,
+          data                BYTEA NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS career_applications_submitted_idx ON career_applications (submitted_at DESC);
+        CREATE INDEX IF NOT EXISTS career_applications_status_idx    ON career_applications (status);
+        CREATE INDEX IF NOT EXISTS career_application_files_app_idx  ON career_application_files (career_application_id);
       `;
       await getPool().query(sql);
     })().catch(err => { readyPromise = null; throw err; });
@@ -268,8 +292,171 @@ async function readFile(id, storedAs) {
 
 async function close() { if (pool) { await pool.end(); pool = null; readyPromise = null; } }
 
+/*
+ * ---------------------------------------------------------------------------
+ * Career / job applications — same shape and rationale as store.local.js's
+ * equivalent section: a separate table from admissions, reviewed by HR.
+ * ---------------------------------------------------------------------------
+ */
+const CAREER_STATUSES = ['new', 'reviewing', 'shortlisted', 'rejected', 'hired'];
+
+function rowToCareerApplication(r, files) {
+  return {
+    id: r.id,
+    submittedAt: new Date(r.submitted_at).toISOString(),
+    updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : undefined,
+    status: r.status,
+    notes: r.notes || '',
+    fields: r.fields || {},
+    files: files || [],
+  };
+}
+
+async function createCareerApplication(input) {
+  await migrate();
+  const fields = input.fields || {};
+  const files = (input.files || []).filter(f => f && f.buffer && f.buffer.length);
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const seq = (await client.query("SELECT nextval('career_ref_seq') AS n")).rows[0].n;
+    const id = 'MST-HR-' + seq;
+    await client.query(
+      'INSERT INTO career_applications (id, status, notes, fields, search) VALUES ($1, $2, $3, $4::jsonb, $5)',
+      [id, 'new', '', JSON.stringify(fields), searchBlob(id, fields)]
+    );
+    const stored = [];
+    for (const f of files) {
+      const storedAs = safeName(f.field + '-' + (f.filename || 'upload'));
+      await client.query(
+        `INSERT INTO career_application_files (career_application_id, field, filename, stored_as, content_type, bytes, data)
+         VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+        [id, f.field, f.filename || storedAs, storedAs,
+         f.contentType || 'application/octet-stream', f.buffer.length, f.buffer]
+      );
+      stored.push({
+        field: f.field, filename: f.filename || storedAs, storedAs,
+        contentType: f.contentType || 'application/octet-stream', bytes: f.buffer.length,
+      });
+    }
+    await client.query('COMMIT');
+    const r = await client.query('SELECT * FROM career_applications WHERE id = $1', [id]);
+    return rowToCareerApplication(r.rows[0], stored);
+  } catch (e) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw e;
+  } finally {
+    client.release();
+  }
+}
+
+async function listCareerApplications(opts) {
+  await migrate();
+  const { q = '', status = '', limit = 200, offset = 0 } = opts || {};
+  const where = [];
+  const params = [];
+  if (status) { params.push(status); where.push(`status = $${params.length}`); }
+  if (String(q).trim()) { params.push('%' + String(q).trim().toLowerCase() + '%'); where.push(`search LIKE $${params.length}`); }
+  const clause = where.length ? 'WHERE ' + where.join(' AND ') : '';
+
+  const pool = getPool();
+  const [countRes, countsRes, rowsRes] = await Promise.all([
+    pool.query(`SELECT count(*)::int AS n FROM career_applications ${clause}`, params),
+    pool.query('SELECT status, count(*)::int AS n FROM career_applications GROUP BY status'),
+    pool.query(
+      `SELECT id, submitted_at, updated_at, status, notes, fields
+         FROM career_applications ${clause}
+        ORDER BY submitted_at DESC
+        LIMIT ${Math.min(Number(limit) || 200, 500)} OFFSET ${Math.max(Number(offset) || 0, 0)}`,
+      params
+    ),
+  ]);
+
+  const ids = rowsRes.rows.map(r => r.id);
+  let byApp = {};
+  if (ids.length) {
+    const fr = await pool.query(
+      `SELECT career_application_id, field, filename, stored_as, content_type, bytes
+         FROM career_application_files WHERE career_application_id = ANY($1)`, [ids]
+    );
+    byApp = fr.rows.reduce((a, f) => {
+      (a[f.career_application_id] = a[f.career_application_id] || []).push({
+        field: f.field, filename: f.filename, storedAs: f.stored_as,
+        contentType: f.content_type, bytes: f.bytes,
+      });
+      return a;
+    }, {});
+  }
+  return {
+    total: countRes.rows[0].n,
+    counts: countsRes.rows.reduce((a, r) => (a[r.status] = r.n, a), {}),
+    rows: rowsRes.rows.map(r => rowToCareerApplication(r, byApp[r.id] || [])),
+  };
+}
+
+async function getCareerApplication(id) {
+  await migrate();
+  if (!id) return null;
+  const pool = getPool();
+  const r = await pool.query('SELECT * FROM career_applications WHERE id = $1', [id]);
+  if (!r.rowCount) return null;
+  const f = await pool.query(
+    `SELECT field, filename, stored_as, content_type, bytes
+       FROM career_application_files WHERE career_application_id = $1`, [id]
+  );
+  return rowToCareerApplication(r.rows[0], f.rows.map(x => ({
+    field: x.field, filename: x.filename, storedAs: x.stored_as,
+    contentType: x.content_type, bytes: x.bytes,
+  })));
+}
+
+async function updateCareerApplication(id, patch) {
+  await migrate();
+  if (!id) return null;
+  if (patch.status !== undefined && !CAREER_STATUSES.includes(patch.status)) {
+    throw new Error('invalid status: ' + patch.status);
+  }
+  const sets = ['updated_at = now()'];
+  const params = [];
+  if (patch.status !== undefined) { params.push(patch.status); sets.push(`status = $${params.length}`); }
+  if (patch.notes !== undefined) { params.push(String(patch.notes).slice(0, 4000)); sets.push(`notes = $${params.length}`); }
+  params.push(id);
+  const r = await getPool().query(
+    `UPDATE career_applications SET ${sets.join(', ')} WHERE id = $${params.length} RETURNING id`, params
+  );
+  if (!r.rowCount) return null;
+  return getCareerApplication(id);
+}
+
+async function deleteCareerApplication(id) {
+  await migrate();
+  if (!id) return null;
+  const existing = await getCareerApplication(id);
+  if (!existing) return null;
+  await getPool().query('DELETE FROM career_applications WHERE id = $1', [id]);
+  return existing;
+}
+
+async function readCareerFile(id, storedAs) {
+  await migrate();
+  if (!id || !storedAs) return null;
+  const r = await getPool().query(
+    `SELECT field, filename, stored_as, content_type, bytes, data
+       FROM career_application_files WHERE career_application_id = $1 AND stored_as = $2 LIMIT 1`,
+    [id, storedAs]
+  );
+  if (!r.rowCount) return null;
+  const x = r.rows[0];
+  return {
+    meta: { field: x.field, filename: x.filename, storedAs: x.stored_as, contentType: x.content_type, bytes: x.bytes },
+    buffer: x.data,
+  };
+}
+
 module.exports = {
   STATUSES, createApplication, listApplications, getApplication,
   updateApplication, deleteApplication, readFile, migrate, close,
+  CAREER_STATUSES, createCareerApplication, listCareerApplications, getCareerApplication,
+  updateCareerApplication, deleteCareerApplication, readCareerFile,
   driver: 'postgres',
 };
