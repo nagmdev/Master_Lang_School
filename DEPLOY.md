@@ -46,6 +46,10 @@ created automatically on the first request.
 | `MS_ADMIN_PASSWORD` | the shared admissions password (min 12 chars) — **not recorded in this repo** |
 | `MS_SESSION_SECRET` | a 64-character random string (generate below) |
 | `MS_ACADEMIC_YEAR` | *(optional)* the academic-year prefix on applicant references, e.g. `2026`. Defaults to `2026`. Change it each intake; references then read `<year>-<number>` from 1800. |
+| `RESEND_API_KEY` | API key from [resend.com](https://resend.com) — enables the "new application" email alert. Without it, submissions still save fine; the app just skips the email and logs a warning. |
+| `MS_NOTIFY_EMAIL` | *(optional)* who receives the alert. Defaults to `admission@masters-edu.com`. |
+| `MS_FROM_EMAIL` | *(optional)* verified sender, e.g. `Masters School <no-reply@masters-edu.com>`. Requires verifying `masters-edu.com` in Resend first — until then, leave unset to use Resend's shared test sender. |
+| `MS_SITE_URL` | *(optional)* your live domain, e.g. `https://masters-edu.com` — used to build the "view in dashboard" link inside the alert email. |
 
 Generate the session secret:
 
