@@ -8,6 +8,7 @@
 'use strict';
 const store = require('./_lib/store');
 const auth = require('./_lib/auth');
+const email = require('./_lib/email');
 const { json, parseRequest, send } = require('./_lib/http');
 
 function clientKey(req) {
@@ -36,6 +37,11 @@ async function createApplication(req, res) {
   }
 
   const row = await store.createApplication({ fields, files });
+
+  // Fire-and-forget: notifyNewApplication() catches its own errors, so a
+  // Resend/network hiccup never delays or breaks the parent's confirmation.
+  email.notifyNewApplication(row, fields);
+
   // Never echo the stored payload back to the public caller.
   return json(res, 201, { applicationId: row.id, submittedAt: row.submittedAt });
 }
