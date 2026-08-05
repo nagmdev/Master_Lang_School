@@ -338,7 +338,7 @@
 
   await check('Arabic phone renders left-to-right inside the RTL layout', () => {
     const ltr = [...document.querySelectorAll('[dir="ltr"]')]
-      .some(e => /799\s?3762|\+201037993762/.test(e.innerText));
+      .some(e => /799\s?3762|\+201099787423/.test(e.innerText));
     assert(ltr, 'phone is not wrapped in dir="ltr" — it will display mirrored');
   });
 
@@ -525,3 +525,4 @@
     `font-weight:bold;color:${failed ? '#c0392b' : '#27ae60'}`);
   return { passed, failed, total: results.length, failures: results.filter(r => !r.pass) };
 })();
+

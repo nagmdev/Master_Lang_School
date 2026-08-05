@@ -5,7 +5,7 @@
  * Configure with these Vercel env vars:
  *   RESEND_API_KEY   — API key from the Resend dashboard (required)
  *   MS_NOTIFY_EMAIL  — where new-application alerts are sent
- *                       (defaults to admission@masters-edu.com below)
+ *                       (defaults to mastersschool59@gmail.com below)
  *   MS_FROM_EMAIL    — verified sender, e.g. "Masters School <no-reply@masters-edu.com>"
  *                       (defaults to Resend's shared test sender, which only
  *                       works until you verify your own domain)
@@ -16,7 +16,7 @@
  * stored, so every error is caught and logged instead of propagated.
  */
 
-const NOTIFY_TO = process.env.MS_NOTIFY_EMAIL || 'admission@masters-edu.com';
+const NOTIFY_TO = process.env.MS_NOTIFY_EMAIL || 'mastersschool59@gmail.com';
 const FROM = process.env.MS_FROM_EMAIL || 'Masters School <onboarding@resend.dev>';
 
 async function notifyNewApplication(row, fields) {
@@ -72,3 +72,4 @@ async function notifyNewApplication(row, fields) {
 }
 
 module.exports = { notifyNewApplication };
+
