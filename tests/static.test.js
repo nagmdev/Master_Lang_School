@@ -231,9 +231,9 @@ test('School Visits & Tours section is present in both languages', () => {
 });
 
 test('Admissions Office contact details match the document', () => {
-  assertHas(EN, 'mastersschool59@gmail.com'); assertHas(AR, 'mastersschool59@gmail.com');
+  assertHas(EN, 'admission@masters-edu.com'); assertHas(AR, 'admission@masters-edu.com');
   assert(/\+20\s?10\s?3?\s?799\s?3762|\+201099787423/.test(EN.replace(/\s+/g, ' ')), 'English phone missing');
-  assertHas(AR, '+201099787423');
+  assertHas(AR, '+201037993762');
 });
 
 test('applications are described as open year-round in both languages', () => {
