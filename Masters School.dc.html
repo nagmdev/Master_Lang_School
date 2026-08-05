@@ -37,7 +37,7 @@
     [style*="grid-template-columns: "],
     [style*="grid-template-columns:1.6fr 1fr"],
     [style*="grid-template-columns: 1.6fr 1fr"]{grid-template-columns:1fr!important}
-    nav > div, nav > div > div{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important;padding:14px 18px!important}
+    nav > div, nav > div > div, nav div[style*="gap:1px"], nav div[style*="gap: 1px"]{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important}
     nav > div button,
     nav > div span{white-space:normal!important;min-width:0!important;line-height:1.3!important}
     nav > div button{padding:8px 10px!important}
@@ -48,21 +48,13 @@
     section[style*="padding:96px 32px"], section[style*="padding: 96px 32px"],
     section[style*="padding:100px 32px"], section[style*="padding: 100px 32px"],
     section[style*="padding:104px 32px"], section[style*="padding: 104px 32px"],
-    section[style*="padding:70px 56px"], section[style*="padding: 70px 56px"],
-    section[style*="padding:62px 32px"], section[style*="padding: 62px 32px"],
-    section[style*="padding:58px 32px"], section[style*="padding: 58px 32px"],
-    section[style*="padding:40px 32px"], section[style*="padding: 40px 32px"]{padding:32px 18px!important}
-    section[style*="padding: 32px"], section[style*="padding:32px"]{padding-left:18px!important;padding-right:18px!important}
+    section[style*="padding:70px 56px"], section[style*="padding: 70px 56px"]{padding:32px 20px!important}
   }
   @media (max-width:720px){
     [style*="grid-template-columns:"],
     [style*="grid-template-columns: "],
     [style*="grid-template-columns:1fr 1fr"],
     [style*="grid-template-columns: 1fr 1fr"]{grid-template-columns:1fr!important}
-    nav > div, nav > div > div{flex-wrap:wrap!important;justify-content:flex-start!important;gap:8px!important;width:100%!important;padding:12px 14px!important}
-    nav > div button,
-    nav > div span{white-space:normal!important;min-width:0!important;line-height:1.35!important;font-size:14px!important}
-    nav > div button{padding:8px 10px!important}
     form{padding:20px!important}
     h1{font-size:40px!important}
     h2{font-size:32px!important}
@@ -74,14 +66,13 @@
     section[style*="padding:96px 32px"], section[style*="padding: 96px 32px"]{padding:28px 18px!important}
     section[style*="padding:100px 32px"], section[style*="padding: 100px 32px"]{padding:28px 18px!important}
     section[style*="padding:104px 32px"], section[style*="padding: 104px 32px"]{padding:28px 18px!important}
-    section[style*="padding: 32px"], section[style*="padding:32px"]{padding-left:18px!important;padding-right:18px!important}
   }
 </style>
 </helmet>
 <div dir="{{ dir }}" style="min-height:100vh;background:#FBFAF7;color:#0B2346;font-family:'Plus Jakarta Sans','Tajawal',sans-serif;-webkit-font-smoothing:antialiased">
 
 
-  <nav style="{{ topBarStyle }}position:sticky;top:0;z-index:50;background:rgba(251,250,247,.85);backdrop-filter:blur(16px);border-bottom:1px solid #ECEAE3">
+  <nav style="position:sticky;top:0;z-index:50;background:rgba(251,250,247,.85);backdrop-filter:blur(16px);border-bottom:1px solid #ECEAE3">
     <div style="max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
       <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;padding:0">
         <img src="uploads/mssters-logo.png" alt="Masters" style="height:46px;width:auto;display:block">
@@ -90,25 +81,27 @@
           <span style="font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#C89A2B;font-weight:700">{{ t.brand.tag }}</span>
         </span>
       </button>
-      <div style="display:flex;align-items:center;gap:1px">
-        <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
-        <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
-        <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
-        <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
-        <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
-        <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
-        <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
-        <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
-        <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
-        <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
-        <button onClick="{{ toggleTopBar }}" style="margin-inline-start:8px;background:transparent;border:1px solid #0B2346;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:10px 14px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px" style-hover="background:#F1EFE8" title="{{ topBarToggleLabel }}" aria-label="{{ topBarToggleLabel }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0B2346" stroke-width="2"><path d="{{ topBarToggleIcon }}"/></svg>{{ topBarToggleLabel }}</button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:1px">
+          <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.home }}</button>
+          <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.about }}</button>
+          <button onClick="{{ goAcademics }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.academics }}</button>
+          <button onClick="{{ goRequirements }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.requirements }}</button>
+          <button onClick="{{ goLife }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.life }}</button>
+          <span style="font-size:14.5px;font-weight:600;color:#8A93A1;padding:8px 10px;white-space:nowrap">{{ t.top.portal }}</span>
+          <button onClick="{{ goCareers }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.careers }}</button>
+          <button onClick="{{ goContact }}" style="background:none;border:none;cursor:pointer;font-size:14.5px;font-weight:600;color:#0B2346;padding:8px 10px;border-radius:9px;white-space:nowrap" style-hover="background:#F1EFE8">{{ t.nav.contact }}</button>
+          <button onClick="{{ goAdmissions }}" style="margin-inline-start:8px;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:14.5px;font-weight:800;padding:11px 20px;border-radius:11px;white-space:nowrap;box-shadow:0 12px 26px -12px rgba(200,154,43,.9)" style-hover="background:#b98a1f;transform:translateY(-1px)">{{ t.nav.apply }}</button>
+          <button onClick="{{ toggleLang }}" style="margin-inline-start:6px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:13px;font-weight:800;padding:9px 15px;border-radius:20px;white-space:nowrap" style-hover="background:#F1EFE8">{{ langLabel }}</button>
+        </div>
+        </sc-if>
+        <button onClick="{{ toggleNav }}" aria-label="{{ navToggleLabel }}" title="{{ navToggleLabel }}" style="margin-inline-start:4px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0" style-hover="background:#F1EFE8">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B2346" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{ navArrowStyle }}"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
     </div>
   </nav>
-  <button onClick="{{ toggleTopBar }}" style="position:fixed;top:100px;right:16px;z-index:999;width:auto;min-width:130px;height:44px;padding:0 16px;border-radius:999px;background:#0B2346;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 24px 60px -28px rgba(0,0,0,.45);font-size:14px;font-weight:700" title="{{ topBarToggleLabel }}" aria-label="{{ topBarToggleLabel }}">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="{{ topBarToggleIcon }}"/></svg>
-    {{ topBarToggleLabel }}
-  </button>
 
   <!-- ================= HOME ================= -->
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
@@ -915,7 +908,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", topBarHidden: false };
+  state = { lang: "en", page: "home", step: 1, other: {}, submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", navOpen: true };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
   go(page) { this.setState({ page: page, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0 }); this.scrollTop(); }
@@ -928,8 +921,8 @@ class Component extends DCLogic {
     this.applyDocLang(next);
     this.setState({ lang: next });
   }
-  toggleTopBar() {
-    this.setState({ topBarHidden: !this.state.topBarHidden });
+  toggleNav() {
+    this.setState({ navOpen: !this.state.navOpen });
   }
   // Keep <html lang>/<dir>, the page title and the meta description in step with
   // the active language — screen readers and search engines read these, and the
@@ -1307,11 +1300,6 @@ class Component extends DCLogic {
       t: t,
       lang: this.state.lang,
       dir: this.state.lang === "ar" ? "rtl" : "ltr",
-      topBarHidden: this.state.topBarHidden,
-      topBarStyle: this.state.topBarHidden ? "display:none;" : "",
-      topBarToggleIcon: this.state.topBarHidden ? "M6 9l6 6 6-6" : "M6 15l6-6 6 6",
-      topBarToggleLabel: this.state.topBarHidden ? "Show top bar" : "Hide top bar",
-      topBarToggleText: this.state.topBarHidden ? "Show" : "Hide",
       langLabel: this.state.lang === "en" ? "العربية" : "English",
       // Always written in the language being offered, so a visitor who cannot
       // read the current one can still find the switch.
@@ -1394,7 +1382,6 @@ class Component extends DCLogic {
       goGallery: () => this.go("gallery"),
       goNews: () => this.go("news"),
       scrollCareer: () => this.scrollToEl("ms-career-form"),
-      toggleTopBar: () => this.toggleTopBar(),
       careerFormTitle: this.careerFormTitle(),
       careerFormSub: this.careerFormSub(),
       submitCareer: (e) => this.submitCareer(e),
@@ -1404,6 +1391,10 @@ class Component extends DCLogic {
       setGalVideos: () => this.setGallery("videos"),
       setGalTour: () => this.setGallery("tour"),
       toggleLang: () => this.toggleLang(),
+      navOpen: this.state.navOpen,
+      toggleNav: () => this.toggleNav(),
+      navToggleLabel: this.state.navOpen ? t.top.hideMenu : t.top.showMenu,
+      navArrowStyle: "transition:transform .25s ease;transform:rotate(" + (this.state.navOpen ? "180" : "0") + "deg)",
       submit: (e) => this.submit(e)
     };
   }
@@ -1414,7 +1405,7 @@ class Component extends DCLogic {
         meta: { title: "Masters Language School — Bilingual Education in El Santa, Gharbia", desc: "Masters Language School is a premier bilingual (English/Arabic) school in El Santa, Gharbia — from Kindergarten to Secondary. Apply online, book a campus tour and follow our step-by-step admissions process." },
         brand: { name: "Masters", tag: "Language School" },
         nav: { home: "Home", about: "About", academics: "Academics", requirements: "Requirements", admissions: "Admissions", life: "Student Life", careers: "Careers", contact: "Contact", apply: "Apply Now" },
-        top: { portal: "Parents' Portal" },
+        top: { portal: "Parents' Portal", hideMenu: "Hide menu", showMenu: "Show menu" },
         hero: {
           eyebrow: "Masters Language School · Est. 2026",
           title: "Where bright minds are shaped for a global future.",
@@ -1603,7 +1594,7 @@ class Component extends DCLogic {
         meta: { title: "مدرسة ماسترز للغات — تعليم ثنائي اللغة في السنطة، الغربية", desc: "مدرسة ماسترز للغات مدرسة رائدة ثنائية اللغة (عربي/إنجليزي) في السنطة بمحافظة الغربية — من رياض الأطفال حتى الثانوية. قدّم إلكترونيًا، واحجز زيارة للحرم المدرسي، وتعرّف على خطوات القبول." },
         brand: { name: "ماسترز", tag: "مدرسة اللغات" },
         nav: { home: "الرئيسية", about: "عن المدرسة", academics: "البرامج الأكاديمية", requirements: "المتطلبات", admissions: "القبول والتسجيل", life: "الحياة الطلابية", careers: "الوظائف", contact: "اتصل بنا", apply: "قدّم الآن" },
-        top: { portal: "بوابة أولياء الأمور" },
+        top: { portal: "بوابة أولياء الأمور", hideMenu: "إخفاء القائمة", showMenu: "إظهار القائمة" },
         hero: {
           eyebrow: "مدرسة ماسترز للغات · تأسست 2026",
           title: "حيث تُصقَل العقول النيّرة لمستقبلٍ عالمي.",
