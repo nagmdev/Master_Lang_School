@@ -318,6 +318,10 @@
     '.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;' +
     '  justify-content:center;gap:6px;text-align:center;padding:12px;box-sizing:border-box;' +
     '  cursor:pointer;user-select:none}' +
+    // A slot marked static is a fixed, non-uploadable placeholder (e.g. a
+    // named staff photo pending art) — no click/drop affordance at all.
+    ':host([static]) .empty{cursor:default}' +
+    ':host([static]) .empty .sub{display:none}' +
     '.empty svg{opacity:.45}' +
     '.empty .cap{max-width:90%;font-weight:500;letter-spacing:.01em}' +
     '.empty .sub{font-size:11px}' +
@@ -557,7 +561,10 @@
       this._subFn = () => this._render();
       // Shadow-DOM listeners live with the shadow DOM — bound once here so
       // disconnect/reconnect (e.g. React remount) doesn't stack handlers.
-      this._empty.addEventListener('click', () => this._input.click());
+      this._empty.addEventListener('click', () => {
+        if (this.hasAttribute('static')) return;
+        this._input.click();
+      });
       root.addEventListener('click', (e) => {
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
         if (!act) return;
@@ -820,13 +827,19 @@
     }
 
     // Public: host's "Import from computer" calls this to run local browse.
-    openFilePicker() { this._exitReframe(true); this._input.click(); }
+    openFilePicker() {
+      if (this.hasAttribute('static')) return;
+      this._exitReframe(true);
+      this._input.click();
+    }
 
     attributeChangedCallback() { if (this.shadowRoot) this._render(); }
 
     // handleEvent — one listener object for all four drag events keeps the
     // add/remove symmetric and the depth counter correct.
     handleEvent(e) {
+      // Static slots are fixed placeholders — no drag/drop ingestion either.
+      if (this.hasAttribute('static')) return;
       if (e.type === 'dragenter' || e.type === 'dragover') {
         // Without preventDefault the browser never fires 'drop'.
         e.preventDefault();
