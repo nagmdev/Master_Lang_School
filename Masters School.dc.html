@@ -119,9 +119,13 @@ second slot onto the first: one shared 21px row, identical gap for every
       field type. */
   .ms-err-slot + .ms-err-slot{margin-top:-21px}
   .ms-err-slot[data-err="true"] .ms-field-err{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s 0s}
-  div:has(> .ms-err-slot[data-err="true"]) input:not([type="hidden"]),
-  div:has(> .ms-err-slot[data-err="true"]) select,
-  div:has(> .ms-err-slot[data-err="true"]) textarea{border-color:#C0392B!important;box-shadow:0 0 0 4px rgba(192,57,43,.15)!important}
+  /* Only the wrapper that owns BOTH the control and its error slot is tinted.
+     The child combinator keeps one field's error from cascading to unrelated
+     inputs elsewhere in the step (e.g. a failed photo must not redden the
+     whole first grid). Upload tiles get their own label[data-err] styling. */
+  div:has(> .ms-err-slot[data-err="true"]) > input:not([type="hidden"]),
+  div:has(> .ms-err-slot[data-err="true"]) > select,
+  div:has(> .ms-err-slot[data-err="true"]) > textarea{border-color:#C0392B!important;box-shadow:0 0 0 4px rgba(192,57,43,.15)!important}
 
   /* Full-width notice banners (photo/emergency/send errors): same reserved-slot
      pattern so mounting an error never changes form width or height. */
@@ -129,6 +133,48 @@ second slot onto the first: one shared 21px row, identical gap for every
   .ms-alert-slot.ms-alert-lg{height:92px}
   .ms-alert{position:absolute;inset:0;margin:0;box-sizing:border-box;display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;color:#8E2C20;font-size:13.5px;line-height:1.5;overflow-wrap:anywhere;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s .22s}
   .ms-alert-slot[data-err="true"] .ms-alert{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s 0s}
+
+  /* Upload cards (photo + attachments) get the same treatment as invalid
+     fields — red border + soft glow — driven by the data-err flag on the
+     card label itself. */
+  label[data-err]{transition:border-color .18s ease,box-shadow .18s ease}
+  label[data-err="true"]{border-color:#C0392B!important;box-shadow:0 0 0 4px rgba(192,57,43,.15)!important}
+
+  /* Global validation message above the action buttons: occupies no space
+     while hidden and grows smoothly, so the buttons shift instead of
+     jumping when it fades in. */
+  .ms-global-slot{display:block;max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease,margin-bottom .25s ease}
+  .ms-global-slot[data-err="true"]{max-height:96px;opacity:1;margin-bottom:14px}
+  .ms-global-alert{margin:0;box-sizing:border-box;display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:11px 15px;color:#8E2C20;font-size:13.5px;line-height:1.45;overflow-wrap:anywhere}
+  .ms-global-alert svg{flex-shrink:0;margin-top:1px}
+
+  /* Custom radio buttons: the browser's square focus rectangle is removed and
+     replaced with a circular glow that matches the theme. Gold is the resting
+     and focus state; red replaces it only while the owning group is invalid.
+     Labels keep their inline flex centring, so the two stay perfectly aligned. */
+  #ms-apply-form input[type="radio"]{
+    -webkit-appearance:none;-moz-appearance:none;appearance:none;
+    width:17px;height:17px;margin:0;padding:0;flex:0 0 auto;cursor:pointer;
+    box-sizing:border-box;background:#fff;
+    border:2px solid #C89A2B;border-radius:50%;
+    outline:none;
+    transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease
+  }
+  #ms-apply-form input[type="radio"]:hover{border-color:#B98A1F;box-shadow:0 0 0 5px rgba(200,154,43,.13)}
+  #ms-apply-form input[type="radio"]:checked{border-color:#C89A2B;background-color:#C89A2B;box-shadow:inset 0 0 0 4px #fff}
+  #ms-apply-form input[type="radio"]:focus{outline:none}
+  #ms-apply-form input[type="radio"]:focus-visible{
+    outline:none;border-color:#C89A2B;
+    box-shadow:0 0 0 4px rgba(200,154,43,.3),0 0 14px 2px rgba(200,154,43,.55)
+  }
+  /* A group flagged invalid turns its radios red; the validation message
+     renders once beneath the whole group, never per individual radio. */
+  #ms-apply-form .ms-radios[data-err="true"] input[type="radio"]{border-color:#C0392B;box-shadow:0 0 0 4px rgba(192,57,43,.14)}
+  #ms-apply-form .ms-radios[data-err="true"] input[type="radio"]:checked{border-color:#C0392B;background-color:#C0392B;box-shadow:inset 0 0 0 4px #fff}
+  #ms-apply-form .ms-radios[data-err="true"] input[type="radio"]:focus-visible{
+    border-color:#C0392B;
+    box-shadow:0 0 0 4px rgba(192,57,43,.18),0 0 14px 2px rgba(192,57,43,.5)
+  }
 
   /* White cards get a shared gentle hover lift. Both serialised and
      un-serialised spellings of the inline background/radius are matched. */
@@ -422,9 +468,8 @@ second slot onto the first: one shared 21px row, identical gap for every
         </div>
       </sc-if>
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
-      <button type="button" onClick="{{ goTerms }}" style="display:block;margin:0 auto 28px;border:1.5px solid #C89A2B;background:rgba(200,154,43,.12);color:#0B2346;cursor:pointer;font-size:15px;font-weight:800;padding:15px 36px;border-radius:999px" style-hover="background:rgba(200,154,43,.24)">{{ t.adm.termsBtn }}</button>
       <div style="display:grid;grid-template-columns:1fr;gap:32px">
-        <form onSubmit="{{ submit }}" id="ms-apply-form" style="max-width:960px;margin:0 auto;background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <form onSubmit="{{ submit }}" id="ms-apply-form" style="max-width:1120px;margin:0 auto;background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0">{{ t.adm.formh }}</h2><span style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.04em">{{ t.adm.formsub }}</span></div>
           <p style="color:#8A93A1;font-size:13px;margin:0 0 20px">{{ t.adm.f.required }}</p>
           <div style="margin:0 0 26px">
@@ -434,9 +479,8 @@ second slot onto the first: one shared 21px row, identical gap for every
 
           <div id="ms-step-1" data-step="1" style="{{ step1 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.student }}</div>
-          <div class="ms-alert-slot" data-err="{{ hasFileError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-            <label style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:26px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }} *</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label><div style="grid-column:1/-1;font-size:12.5px;color:#8A93A1;line-height:1.5">{{ t.adm.f.photoHint }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:20px">
+            <label data-err="{{ hasPhotoErr }}" style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:26px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }} *</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label><div class="ms-err-slot" style="grid-column:1/-1" data-err="{{ hasPhotoErr }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ attachErr.photo }}</span></div></div><div style="grid-column:1/-1;font-size:12.5px;color:#8A93A1;line-height:1.5">{{ t.adm.f.photoHint }}</div>
           <div style="grid-column:1/-1"><label for="ms-year" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.year }} *</label><select name="year" id="ms-year" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.yearOpts }}" as="y" hint-placeholder-count="2"><option>{{ y }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.year }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.year }}</span></div></div></div>
             <div style="grid-column:1/-1"><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }} *</label><input name="sname" id="ms-sname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.sname }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.sname }}</span></div></div></div>
             <div style="grid-column:1/-1"><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }} *</label><input name="arname" id="ms-arname" required="required" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.arname }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.arname }}</span></div></div></div>
@@ -444,21 +488,21 @@ second slot onto the first: one shared 21px row, identical gap for every
             <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.grade }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.grade }}</span></div></div></div>
             <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" min="2006-01-01" max="2024-12-31" onChange="{{ computeAge }}" style="width:100%;padding:14px 15px;cursor:pointer;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.dob }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.dob }}</span></div></div></div>
             <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" readonly placeholder="—" title="Calculated from date of birth" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#F1EFE8;color:#5B6472"></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Male" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Female" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Male" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Female" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
             <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }} *</label><input name="citizenship" id="ms-citizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.citizenship }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.citizenship }}</span></div></div></div>
             <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" onChange="{{ onAreaPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="10"><option>{{ c }}</option></sc-for></select></div>
             <div style="{{ otherArea }}"><label for="ms-countryOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.countryOther }}</label><input name="countryOther" id="ms-countryOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-address" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.address }}</label><input name="address" id="ms-address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="French" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="German" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Muslim" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Christian" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.lang2 }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="French" style="accent-color:#C89A2B">{{ t.adm.f.l2a }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="lang2" value="German" style="accent-color:#C89A2B">{{ t.adm.f.l2b }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.religion }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Muslim" style="accent-color:#C89A2B">{{ t.adm.f.relA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Christian" style="accent-color:#C89A2B">{{ t.adm.f.relB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="religion" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.relC }}</label></div></div>
           </div>
 
           </div>
           <div id="ms-step-2" data-step="2" style="{{ step2 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
-          <div style="margin:0 0 20px"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.firstSchool }} *</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="Yes" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsYes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="No" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsNo }}</label></div><div class="ms-err-slot" data-err="{{ errStat.firstSchool }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.firstSchool }}</span></div></div></div>
+          <div style="margin:0 0 20px"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.firstSchool }} *</span><div class="ms-radios" data-err="{{ errStat.firstSchool }}" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="Yes" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsYes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="No" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsNo }}</label></div><div class="ms-err-slot" data-err="{{ errStat.firstSchool }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.firstSchool }}</span></div></div></div>
           <div style="{{ prevSchoolStyle }}">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:28px">
             <div><label for="ms-psName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psName }} *</label><input name="psName" id="ms-psName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psName }}</span></div></div></div>
             <div><label for="ms-psSystem" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psSystem }} *</label><input name="psSystem" id="ms-psSystem" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psSystem }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psSystem }}</span></div></div></div>
             <div><label for="ms-psGrades" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psGrades }} *</label><input name="psGrades" id="ms-psGrades" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psGrades }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psGrades }}</span></div></div></div>
@@ -471,7 +515,7 @@ second slot onto the first: one shared 21px row, identical gap for every
           <div id="ms-step-3" data-step="3" style="{{ step3 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.parent }}</div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.fatherH }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:22px">
             <div><label for="ms-faName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faName }} *</label><input name="faName" id="ms-faName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faName }}</span></div></div></div>
             <div><label for="ms-faOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOcc }}</label><input name="faOcc" id="ms-faOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOccCat }}</label><select name="faOccCat" id="ms-faOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatFatherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
@@ -482,7 +526,7 @@ second slot onto the first: one shared 21px row, identical gap for every
             <div><label for="ms-faAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faAddress }} *</label><input name="faAddress" id="ms-faAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faAddress }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faAddress }}</span></div></div></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.motherH }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:22px">
             <div><label for="ms-moName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moName }} *</label><input name="moName" id="ms-moName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moName }}</span></div></div></div>
             <div><label for="ms-moOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOcc }}</label><input name="moOcc" id="ms-moOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-moOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOccCat }}</label><select name="moOccCat" id="ms-moOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatMotherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
@@ -493,13 +537,13 @@ second slot onto the first: one shared 21px row, identical gap for every
             <div style="grid-column:1/-1"><label for="ms-moAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moAddress }} *</label><input name="moAddress" id="ms-moAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moAddress }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moAddress }}</span></div></div></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.familyH }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Married" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Separated" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Divorced" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Widowed" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:28px">
+            <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Married" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Separated" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Divorced" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Widowed" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
             <div><label for="ms-siblingsNo" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.siblingsNo }}</label><input name="siblingsNo" id="ms-siblingsNo" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-birthOrder" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.birthOrder }}</label><input name="birthOrder" id="ms-birthOrder" type="number" min="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }} *</label><select name="guardian" id="ms-guardian" required="required" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><option value="" disabled selected hidden>{{ t.adm.f.guardianSelect }}</option><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.guardian }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.guardian }}</span></div></div></div>
             <div style="{{ otherGuardian }}"><label for="ms-guardianOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardianOther }}</label><input name="guardianOther" id="ms-guardianOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Arabic" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="English" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Arabic" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="English" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
             <div style="{{ otherTongue }}"><label for="ms-tongueOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongueOther }}</label><input name="tongueOther" id="ms-tongueOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
@@ -513,12 +557,12 @@ second slot onto the first: one shared 21px row, identical gap for every
                 <span style="font-weight:800;color:#0B2346;font-size:13.5px">{{ t.adm.f.sibOne }} <span data-sib-num>1</span></span>
                 <button type="button" data-sib-remove style="display:none;background:none;border:none;color:#C0392B;font-weight:700;font-size:13px;cursor:pointer">{{ t.adm.f.remove }}</button>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px">
                 <div><label for="ms-sib1_name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibName }}</label><input name="sib1_name" id="ms-sib1_name" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
                 <div><label for="ms-sib1_school" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibSchool }}</label><input name="sib1_school" id="ms-sib1_school" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
                 <div><label for="ms-sib1_age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibAge }}</label><input name="sib1_age" id="ms-sib1_age" type="number" min="0" max="30" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
                 <div><label for="ms-sib1_grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibGrade }}</label><input name="sib1_grade" id="ms-sib1_grade" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-                <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibApply }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+                <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sibApply }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="sib1_apply" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
               </div>
             </div>
           </div>
@@ -530,7 +574,7 @@ second slot onto the first: one shared 21px row, identical gap for every
           <p style="color:#8A93A1;font-size:12.5px;margin:0 0 16px">{{ t.adm.f.emergencyNote }}</p>
           <div class="ms-alert-slot" data-err="{{ hasEmergencyError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ emergencyError }}</div></div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person1 }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:22px">
             <div><label for="ms-eName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName" id="ms-eName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.eName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eName }}</span></div></div></div>
             <div><label for="ms-ePhone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone" id="ms-ePhone" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.ePhone }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.ePhone }}</span></div></div></div>
             <div><label for="ms-eRelation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation" id="ms-eRelation" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.eRelation }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eRelation }}</span></div></div></div>
@@ -538,7 +582,7 @@ second slot onto the first: one shared 21px row, identical gap for every
             <div><label for="ms-eAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress" id="ms-eAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person2 }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:28px">
             <div><label for="ms-eName-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName_2" id="ms-eName-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.eName_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eName_2 }}</span></div></div></div>
             <div><label for="ms-ePhone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone_2" id="ms-ePhone-2" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.ePhone_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.ePhone_2 }}</span></div></div></div>
             <div><label for="ms-eRelation-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation_2" id="ms-eRelation-2" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.eRelation_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eRelation_2 }}</span></div></div></div>
@@ -556,8 +600,8 @@ second slot onto the first: one shared 21px row, identical gap for every
           </div>
 
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.otherH }}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-bottom:28px">
+            <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.bus }}</span><div class="ms-radios" style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="Yes" style="accent-color:#C89A2B">{{ t.adm.f.yes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="bus" value="No" style="accent-color:#C89A2B">{{ t.adm.f.no }}</label></div></div>
             <div><label for="ms-busRoute" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRoute }}</label><select name="busRoute" id="ms-busRoute" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.busRouteOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
             <div style="{{ otherBusRoute }}"><label for="ms-busRouteOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.busRouteOther }}</label><input name="busRouteOther" id="ms-busRouteOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
@@ -565,12 +609,11 @@ second slot onto the first: one shared 21px row, identical gap for every
           </div>
           <div id="ms-step-7" data-step="7" style="{{ step7 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.docs }}</div>
-          <div class="ms-alert-slot" data-err="{{ hasFileError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div></div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px">
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d1 }} *</div><div style="{{ styleD1 }}">{{ labelD1 }}</div><input type="file" name="d1" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px">
+            <div><label data-err="{{ hasD1Err }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d1 }} *</div><div style="{{ styleD1 }}">{{ labelD1 }}</div><input type="file" name="d1" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label><div class="ms-err-slot" data-err="{{ hasD1Err }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ attachErr.d1 }}</span></div></div></div>
+            <div><label data-err="{{ hasD2Err }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label><div class="ms-err-slot" data-err="{{ hasD2Err }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ attachErr.d2 }}</span></div></div></div>
+            <div><label data-err="{{ hasD3Err }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label><div class="ms-err-slot" data-err="{{ hasD3Err }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ attachErr.d3 }}</span></div></div></div>
+            <div><label data-err="{{ hasD4Err }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label><div class="ms-err-slot" data-err="{{ hasD4Err }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ attachErr.d4 }}</span></div></div></div>
             <div style="grid-column:1/-1"><label for="ms-d4Desc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.d4Desc }}</label><input name="d4Desc" id="ms-d4Desc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
@@ -585,6 +628,7 @@ second slot onto the first: one shared 21px row, identical gap for every
               <div style="font-size:12px;color:#8A93A1;margin-top:7px">{{ t.adm.f.uploadingHint }}</div>
             </div>
           </sc-if>
+          <div class="ms-global-slot" data-err="{{ hasGlobalErr }}"><div role="alert" class="ms-global-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ globalErr }}</span></div></div>
           <div style="display:flex;gap:12px;align-items:center">
             <button type="button" onClick="{{ prevStep }}" style="{{ backBtnStyle }}">{{ t.adm.f.back }}</button>
             <button type="button" onClick="{{ skipStep }}" style="{{ skipBtnStyle }}">{{ t.adm.f.skip }}</button>
@@ -592,7 +636,7 @@ second slot onto the first: one shared 21px row, identical gap for every
           </div>
         </form>
 
-        <aside style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:960px;margin:0 auto">
+        <aside style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:1120px;margin:0 auto">
           <div style="background:#0B2346;border-radius:20px;padding:30px 28px;color:#fff">
             <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 18px">{{ t.adm.need.h }}</h3>
             <div style="display:flex;flex-direction:column;gap:13px"><sc-for list="{{ t.adm.need.items }}" as="it" hint-placeholder-count="4"><div style="display:flex;gap:11px;align-items:flex-start;color:rgba(255,255,255,.9);font-size:14.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ it }}</div></sc-for></div>
@@ -726,7 +770,7 @@ second slot onto the first: one shared 21px row, identical gap for every
     </section>
     <section style="background:#F1EFE8">
       <div style="max-width:1120px;margin:0 auto;padding:62px 32px;display:grid;grid-template-columns:1fr 1.2fr;gap:52px;align-items:center">
-        <div style="border-radius:24px;overflow:hidden;height:440px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-principal" shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Principal portrait"></image-slot></div>
+        <div style="border-radius:24px;overflow:hidden;height:440px;position:relative;box-shadow:0 40px 80px -50px rgba(11,35,70,.5)"><image-slot id="ms-principal" static shape="rect" fit="cover" src="uploads/school/hero-students.png" placeholder="Principal portrait"></image-slot></div>
         <div>
           <div style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase">{{ t.about.prineyebrow }}</div>
           <p style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:500;font-size:30px;line-height:1.4;color:#0B2346;margin:18px 0 24px;text-wrap:pretty">“{{ t.about.prinq }}”</p>
@@ -737,10 +781,10 @@ second slot onto the first: one shared 21px row, identical gap for every
     <section style="max-width:1120px;margin:0 auto;padding:62px 32px">
       <div style="text-align:center;margin-bottom:48px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;margin:0">{{ t.about.leadh }}</h2><p style="color:#5B6472;font-size:17px;margin:12px 0 0">{{ t.about.leadsub }}</p></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px">
-        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-1" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p1r }}</div></div>
-        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-2" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p2r }}</div></div>
-        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-3" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p3r }}</div></div>
-        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-4" shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p4r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-1" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p1r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-2" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p2r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-3" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p3r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-4" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p4r }}</div></div>
       </div>
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:58px 32px 68px">
@@ -980,10 +1024,10 @@ second slot onto the first: one shared 21px row, identical gap for every
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:70px 32px 20px">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=Masters+Language+School+El+Santa+Gharbia" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.visitT }}</div><div style="color:#5B6472;font-size:14px;line-height:1.5">{{ t.contact.visitD }}</div></a>
-        <a href="tel:+201099787423" dir="ltr" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.callT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.callD }}</div></a>
-        <a href="https://wa.me/201099787423" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.waT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.waD }}</div></a>
-        <a href="mailto:masterschool59@gmail.com" dir="ltr" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.mailT }}</div><div style="color:#5B6472;font-size:14px">{{ t.contact.mailD }}</div></a>
+        <a href="https://maps.app.goo.gl/CV79bAtZbfLcC1CW8?g_st=iw" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.visitT }}</div><div style="color:#5B6472;font-size:14px;line-height:1.5">{{ t.contact.visitD }}</div></a>
+        <a href="tel:+201099787423" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.callT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.callD }}</div></a>
+        <a href="https://wa.me/201099787423" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.waT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.waD }}</div></a>
+        <a href="mailto:masterschool59@gmail.com" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.mailT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.mailD }}</div></a>
       </div>
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:30px 32px 96px">
@@ -1036,7 +1080,7 @@ second slot onto the first: one shared 21px row, identical gap for every
           </sc-if>
         </div>
         <div style="display:flex;flex-direction:column;gap:20px">
-          <div style="flex:1;min-height:300px;position:relative;border-radius:20px;overflow:hidden;border:1px solid #ECEAE3;background:#F1EFE8"><iframe title="Masters Language School location" src="https://www.google.com/maps?q=Masters%20Language%20School%20El%20Santa%20Gharbia&z=14&output=embed" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+          <div style="flex:1;min-height:300px;position:relative;border-radius:20px;overflow:hidden;border:1px solid #ECEAE3;background:#F1EFE8"><iframe title="Masters Language School location" src="https://www.google.com/maps?q=30.7352109,31.1242686&z=15&output=embed" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
           <div style="background:#0B2346;border-radius:20px;padding:26px 28px;color:#fff"><div style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:22px;margin-bottom:8px">{{ t.contact.hoursh }}</div><div style="color:rgba(255,255,255,.85);font-size:15px">{{ t.contact.hours }}</div></div>
         </div>
       </div>
@@ -1074,7 +1118,7 @@ second slot onto the first: one shared 21px row, identical gap for every
       <div>
         <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:16px">{{ t.foot.contactc }}</div>
         <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
-          <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://www.google.com/maps/search/?api=1&amp;query=Masters+Language+School+El+Santa+Gharbia" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://maps.app.goo.gl/CV79bAtZbfLcC1CW8?g_st=iw" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
           <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201099787423" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
           <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:masterschool59@gmail.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
         </div>
@@ -1093,10 +1137,10 @@ second slot onto the first: one shared 21px row, identical gap for every
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", emergencyError: "", parentNidError: {}, fieldErrors: {}, navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
+  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {}, fileError: "", emergencyError: "", parentNidError: {}, fieldErrors: {}, uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {},  emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1223,6 +1267,24 @@ class Component extends DCLogic {
     const form = document.getElementById("ms-apply-form");
     if (!form || !form.contains(el)) return;
     this.validateField(el);
+    // Keep the global message in sync as the parent edits: it fades out once
+    // every error is corrected. setState merges synchronously, so the read
+    // right after reflects the freshly validated field.
+    this.setState({ globalErr: this.globalErrorFor(this.state) });
+  }
+  // Derive the one-line message above the action buttons from every error
+  // source; an empty result hides the slot entirely. Field/NID/emergency
+  // problems read as "complete the fields"; any upload problem reads as the
+  // attachment message.
+  globalErrorFor(st) {
+    const t = this.content()[this.state.lang].adm.f;
+    const fe = st.fieldErrors || {};
+    const hasFields = Object.keys(fe).length > 0;
+    const hasAttach = !!(st.attachErr && Object.keys(st.attachErr).length);
+    const hasEmerg = !!st.emergencyError;
+    if (hasFields || hasEmerg) return t.stepErr;
+    if (hasAttach) return t.attachErr;
+    return "";
   }
   componentDidMount() {
     this.__onFieldEvent = (e) => this.onFieldEvent(e);
@@ -1242,6 +1304,17 @@ class Component extends DCLogic {
     try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
     try { el.focus({ preventScroll: true }); } catch (e) { try { el.focus(); } catch (e2) {} }
   }
+  // Upload cards are <label> tiles rather than focusable controls — scroll the
+  // card to the center of the viewport so the missing attachment is obvious.
+  focusUpload(el) {
+    try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
+  }
+  uploadCard(name) {
+    const form = document.getElementById("ms-apply-form");
+    if (!form) return null;
+    const el = form.querySelector("[name='" + name + "']");
+    return el ? el.closest("label") : null;
+  }
   showStep(n) {
     this.setState({ step: n });
     const f = document.getElementById("ms-apply-form");
@@ -1254,14 +1327,24 @@ class Component extends DCLogic {
   submit(e) {
     if (e && e.preventDefault) e.preventDefault();
     const form = document.getElementById("ms-apply-form");
+    const t = this.content()[this.state.lang].adm.f;
+    // The global message above the buttons is per-attempt: clear it, then let
+    // whichever gate fails restate it in the same task (React batches, so the
+    // message never flickers).
+    this.setState({ globalErr: "" });
     const here = this.validateStep(this.state.step);
-    if (here) { this.focusInvalid(here); return; }
+    if (here) { this.setState({ globalErr: t.stepErr }); this.focusInvalid(here); return; }
     const badNid = this.parentNidIssue(this.state.step);
-    if (badNid) { this.focusNidProblem(badNid); return; }
+    if (badNid) { this.setState({ globalErr: t.stepErr }); this.focusNidProblem(badNid); return; }
     // The student photo is the one attachment that must exist before the parent
     // can leave the first step at all — it cannot be deferred to the final submit.
+    // Scroll to the upload card, highlight it and show the inline + global
+    // message in the same pass, so the parent never has to hunt for the
+    // missing item.
     if (this.state.step === 1 && !this.state.picked.photo) {
-      this.setState({ fileError: this.content()[this.state.lang].adm.f.photoRequired });
+      this.setState({ attachErr: { photo: t.photoRequired }, globalErr: t.attachErr });
+      const card = this.uploadCard("photo");
+      if (card) this.focusUpload(card);
       return;
     }
     if (this.state.step < this.totalSteps()) { this.showStep(this.state.step + 1); return; }
@@ -1270,12 +1353,14 @@ class Component extends DCLogic {
     for (let n = 1; n < this.totalSteps(); n++) {
       const el = this.validateStep(n);
       if (el) {
+        this.setState({ globalErr: t.stepErr });
         this.showStep(n);
         setTimeout(() => { try { this.focusInvalid(el); } catch (err) {} }, 0);
         return;
       }
       const nid = this.parentNidIssue(n);
       if (nid) {
+        this.setState({ globalErr: t.stepErr });
         this.showStep(n);
         setTimeout(() => { try { this.focusNidProblem(nid); } catch (err) {} }, 0);
         return;
@@ -1286,25 +1371,28 @@ class Component extends DCLogic {
     // them here instead, and take the parent back to the step that owns the
     // missing item. The photo must exist before ANY submission; the attachment
     // step must be completed before the final submit.
-    const admF = this.content()[this.state.lang].adm.f;
     if (!this.state.picked.photo) {
-      this.setState({ fileError: admF.photoRequired });
+      this.setState({ attachErr: { photo: t.photoRequired }, globalErr: t.attachErr });
       this.showStep(1);
+      setTimeout(() => { const card = this.uploadCard("photo"); if (card) this.focusUpload(card); }, 0);
       return;
     }
     for (const k of ["d1", "d2", "d3"]) {
       if (!this.state.picked[k]) {
-        this.setState({ fileError: admF.docsRequired });
+        const missing = {};
+        for (const kk of ["d1", "d2", "d3"]) if (!this.state.picked[kk]) missing[kk] = t.docsRequired;
+        this.setState({ attachErr: missing, globalErr: t.attachErr });
         this.showStep(7);
+        setTimeout(() => { const card = this.uploadCard(k); if (card) this.focusUpload(card); }, 0);
         return;
       }
     }
     if (!this.emergencyComplete(form)) {
-      this.setState({ emergencyError: admF.emergencyRequired });
+      this.setState({ emergencyError: t.emergencyRequired, globalErr: t.stepErr });
       this.showStep(5);
       return;
     }
-    this.setState({ emergencyError: "" });
+    this.setState({ emergencyError: "", globalErr: "" });
     this.sendApplication(form);
   }
 
@@ -1343,14 +1431,14 @@ class Component extends DCLogic {
       const t = this.content()[this.state.lang].adm.f;
       this.setState({
         sending: false, uploadPercent: 0,
-        fileError: t.totalTooLarge
+        globalErr: t.totalTooLarge
           .replace("{size}", this.humanSize(total))
           .replace("{max}", this.humanSize(this.maxTotalBytes()))
       });
       return;
     }
 
-    this.setState({ sending: true, sendError: "", fileError: "", uploadPercent: 0 });
+    this.setState({ sending: true, sendError: "", attachErr: {}, globalErr: "", uploadPercent: 0 });
 
     // XMLHttpRequest rather than fetch: only XHR reports upload progress, which
     // is what drives the 0-100% bar while documents are being transferred.
@@ -1670,17 +1758,21 @@ class Component extends DCLogic {
     if (el.name === "photo" && files.length) { this.validatePhoto(el, files[0]); return; }
     const picked = Object.assign({}, this.state.picked);
     const t = this.content()[this.state.lang].adm.f;
+    const attachErr = Object.assign({}, this.state.attachErr || {});
+    delete attachErr[el.name];
 
     const tooBig = files.filter(f => f.size > this.maxFileBytes());
     if (tooBig.length) {
       el.value = "";
       delete picked[el.name];
+      attachErr[el.name] = t.tooLarge
+        .replace("{name}", tooBig[0].name)
+        .replace("{max}", this.humanSize(this.maxFileBytes()));
       this.setState({
         picked: picked,
-        fileError: t.tooLarge
-          .replace("{name}", tooBig[0].name)
-          .replace("{max}", this.humanSize(this.maxFileBytes()))
+        attachErr: attachErr
       });
+      this.setState({ globalErr: this.globalErrorFor(this.state) });
       return;
     }
     if (!files.length) delete picked[el.name];
@@ -1689,7 +1781,8 @@ class Component extends DCLogic {
       count: files.length,
       size: files.reduce((a, f) => a + f.size, 0)
     };
-    this.setState({ picked: picked, fileError: "" });
+    this.setState({ picked: picked, attachErr: attachErr });
+    this.setState({ globalErr: this.globalErrorFor(this.state) });
   }
 
   // The personal photo is checked before it is accepted: it must decode as a
@@ -1705,7 +1798,10 @@ class Component extends DCLogic {
       el.value = "";
       const picked = Object.assign({}, this.state.picked);
       delete picked.photo;
-      this.setState({ picked: picked, fileError: msg, uploadPercent: 0 });
+      const attachErr = Object.assign({}, this.state.attachErr || {});
+      attachErr.photo = msg;
+      this.setState({ picked: picked, attachErr: attachErr, uploadPercent: 0 });
+      this.setState({ globalErr: this.globalErrorFor(this.state) });
     };
     if (file.size > this.maxFileBytes()) {
       drop(t.tooLarge.replace("{name}", file.name).replace("{max}", this.humanSize(this.maxFileBytes())));
@@ -1719,7 +1815,10 @@ class Component extends DCLogic {
       if (!this.photoSpecOk(img)) { drop(t.photoSpecs); return; }
       const picked = Object.assign({}, this.state.picked);
       picked.photo = { name: file.name, count: 1, size: file.size };
-      this.setState({ picked: picked, fileError: "" });
+      const attachErr = Object.assign({}, this.state.attachErr || {});
+      delete attachErr.photo;
+      this.setState({ picked: picked, attachErr: attachErr });
+      this.setState({ globalErr: this.globalErrorFor(this.state) });
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
@@ -1865,9 +1964,9 @@ class Component extends DCLogic {
   }
   setCareerPosition(e) { const el = e && e.target; if (el) this.setState({ careerPosition: el.value || "" }); }
   currentJob() { const j = this.content()[this.state.lang].careers.positions[this.state.job]; return j || null; }
-  goJob(i) { if (i === null || i === undefined) return; this.setState({ page: "job", job: Number(i), step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  goJob(i) { if (i === null || i === undefined) return; this.setState({ page: "job", job: Number(i), step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
   openJobFromEvent(e) { const el = e && e.currentTarget; const v = el && el.getAttribute("data-job"); if (v === null || v === undefined || v === "") return; this.goJob(Number(v)); }
-  applyToJob() { const j = this.currentJob(); this.setState({ page: "careers", careerPosition: (j && j.key) || "", careerFormOpen: true, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerSending: false, careerSendError: "", contactSubmitted: false, picked: {}, fileError: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); const el = document.getElementById("ms-career-form"); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (err) { window.scrollTo(0, el.offsetTop); } } }
+  applyToJob() { const j = this.currentJob(); this.setState({ page: "careers", careerPosition: (j && j.key) || "", careerFormOpen: true, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerSending: false, careerSendError: "", contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); const el = document.getElementById("ms-career-form"); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (err) { window.scrollTo(0, el.offsetTop); } } }
   closeCareerForm() { this.setState({ careerFormOpen: false, careerSubmitted: false, careerId: "", careerPosition: "", careerSending: false, careerSendError: "" }); this.scrollTop(); }
   careerFormTitle() {
     const t = this.content()[this.state.lang].careers;
@@ -2120,8 +2219,14 @@ class Component extends DCLogic {
       pctLabel: this.state.uploadPercent + "%",
       barStyle: "height:100%;background:#C89A2B;border-radius:999px;transition:width .25s ease;width:"
         + this.state.uploadPercent + "%",
-      hasFileError: !!this.state.fileError,
-      fileError: this.state.fileError,
+      hasGlobalErr: !!this.state.globalErr,
+      globalErr: this.state.globalErr,
+      attachErr: Object.assign({ photo: "", d1: "", d2: "", d3: "", d4: "" }, this.state.attachErr || {}),
+      hasPhotoErr: !!((this.state.attachErr || {})["photo"]),
+      hasD1Err: !!((this.state.attachErr || {})["d1"]),
+      hasD2Err: !!((this.state.attachErr || {})["d2"]),
+      hasD3Err: !!((this.state.attachErr || {})["d3"]),
+      hasD4Err: !!((this.state.attachErr || {})["d4"]),
       hasEmergencyError: !!this.state.emergencyError,
       emergencyError: this.state.emergencyError,
       onFilePick: (e) => this.onFilePick(e),
@@ -2241,7 +2346,6 @@ class Component extends DCLogic {
         adm: {
           eyebrow: "Admissions", title: "Admissions made simple.",
           sub: "Applications are open year-round, but seats are offered based on availability — we warmly encourage families to begin the journey early.",
-          termsBtn: "Admission Terms",
           termsH: "Admission terms & conditions", termsSub: "Everything you need to know before applying — read the full process, documents and fees before starting your application.",
           journeyEyebrow: "The Admissions Journey", journeyHeading: "Your step-by-step path to Masters",
           journeyIntro: "Thank you for your interest in joining the Masters School community. While we accept applications year-round, placements are offered strictly based on seat availability — so we highly encourage families to begin the process as early as possible.",
@@ -2283,6 +2387,8 @@ class Component extends DCLogic {
             photoSpecs: "Photo must be white-background and portrait (3:4).",
             docsRequired: "Upload all required files.",
             emergencyRequired: "Emergency contact required.",
+            attachErr: "Please upload the required attachment(s) before continuing.",
+            stepErr: "Please complete the required fields before proceeding.",
             student: "Student information",
             photo: "Personal photo", year: "Academic year",
               sname: "Full name in English", arname: "Full name in Arabic", docType: "Identity document type", docNid: "National ID", docPass: "Passport", govField: "Governorate", stNid: "Student's national ID or passport",
@@ -2450,7 +2556,6 @@ class Component extends DCLogic {
         adm: {
           eyebrow: "القبول والتسجيل", title: "قبولٌ ميسّرٌ وبسيط.",
           sub: "باب التقديم مفتوح طوال العام، لكن الأماكن تُمنح وفقًا للمتاح — لذا نشجّع الأسر على بدء إجراءات التقديم مبكرًا.",
-          termsBtn: "شروط القبول",
           termsH: "شروط التقديم والاشتراطات", termsSub: "كل ما تحتاج معرفته قبل التقديم — اطّلع على خطوات القبول والمستندات والرسوم كاملة قبل بدء تقديم طلبك.",
           journeyEyebrow: "رحلة القبول", journeyHeading: "طريقك إلى ماسترز خطوةً بخطوة",
           journeyIntro: "نشكركم على اهتمامكم بالانضمام إلى مجتمع مدرسة ماسترز التعليمي. باب التقديم مفتوح طوال العام، ولكن نظرًا لأن قبول الطلاب يعتمد على الأماكن المتاحة، فإننا نوصي بشدة ببدء إجراءات التقديم مبكرًا.",
@@ -2492,6 +2597,8 @@ class Component extends DCLogic {
             photoSpecs: "الصورة يجب أن تكون بخلفية بيضاء وبوضع عمودي.",
             docsRequired: "ارفع جميع الملفات المطلوبة.",
             emergencyRequired: "جهة اتصال الطوارئ مطلوبة.",
+            attachErr: "يرجى رفع المرفقات المطلوبة قبل المتابعة.",
+            stepErr: "يرجى إكمال الحقول المطلوبة قبل المتابعة.",
             student: "بيانات الطالب",
             photo: "الصورة الشخصية", year: "العام الدراسي",
               sname: "الاسم بالكامل بالإنجليزية", arname: "الاسم بالكامل بالعربية", docType: "نوع مستند الهوية", docNid: "الرقم القومي", docPass: "جواز السفر", govField: "المحافظة", stNid: "الرقم القومي للطالب أو رقم الجواز",
