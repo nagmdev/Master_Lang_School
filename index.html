@@ -778,6 +778,16 @@ second slot onto the first: one shared 21px row, identical gap for every
         </div>
       </div>
     </section>
+    <!-- School Team section temporarily hidden — remove hidden="hidden" to restore -->
+    <section hidden="hidden" style="max-width:1120px;margin:0 auto;padding:62px 32px">
+      <div style="text-align:center;margin-bottom:48px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:44px;color:#0B2346;margin:0">{{ t.about.leadh }}</h2><p style="color:#5B6472;font-size:17px;margin:12px 0 0">{{ t.about.leadsub }}</p></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px">
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-1" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p1r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-2" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p2r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-3" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p3r }}</div></div>
+        <div style="text-align:center"><div style="width:130px;height:130px;border-radius:50%;overflow:hidden;margin:0 auto 16px;border:3px solid #F1EFE8;box-shadow:0 20px 40px -24px rgba(11,35,70,.5)"><image-slot id="ms-lead-4" static shape="circle" fit="cover" placeholder="Photo"></image-slot></div><div style="color:#C89A2B;font-size:13.5px;font-weight:600;margin-top:3px">{{ t.about.p4r }}</div></div>
+      </div>
+    </section>
     <section style="max-width:1120px;margin:0 auto;padding:58px 32px 68px">
       <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 36px">{{ t.about.accredh }}</h2>
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
@@ -2420,7 +2430,7 @@ class Component extends DCLogic {
           },
           need: {
             h: "To schedule your assessment", items: ["Pre-K & KG1: current nursery report", "Transfer students: last two years' reports", "Letter of Good Conduct from current school", "Assessment fee: 600 EGP (non-refundable)"],
-            datesh: "Key dates", dates: [{ l: "Applications", v: "Year-round" }, { l: "Results notified", v: "Within 5 working days" }, { l: "Final documents", v: "Before 1 Aug" }],
+            datesh: "Key dates", dates: [{ l: "Applications", v: "Until 15 August" }, { l: "Results notified", v: "After Interview" }, { l: "Final documents", v: "Before 15 August" }],
             helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+20 109 978 7423", helpemail: "admissions@masters-edu.com"
           },
           conf: {
@@ -2630,7 +2640,7 @@ class Component extends DCLogic {
           },
           need: {
             h: "لتحديد موعد التقييم", items: ["Pre-K و KG1: تقرير الحضانة الحالي", "الطلاب المحوّلون: تقارير آخر عامين", "خطاب حسن سير وسلوك من المدرسة الحالية", "رسوم التقييم: 600 جنيه (غير مستردة)"],
-            datesh: "مواعيد مهمة", dates: [{ l: "التقديم", v: "طوال العام" }, { l: "إعلان النتائج", v: "خلال 5 أيام عمل" }, { l: "المستندات النهائية", v: "قبل 1 أغسطس" }],
+            datesh: "مواعيد مهمة", dates: [{ l: "التقديم", v: "حتى 15 أغسطس" }, { l: "إعلان النتائج", v: "بعد المقابلة" }, { l: "المستندات النهائية", v: "قبل 15 أغسطس" }],
             helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201099787423", helpemail: "admissions@masters-edu.com"
           },
           conf: {
