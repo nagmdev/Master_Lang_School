@@ -692,7 +692,8 @@ test('oversized files are rejected before upload, in both languages', () => {
   assert(enKeys.has('tooLarge') && arKeys.has('tooLarge'), 'no bilingual per-file size message');
   assert(enKeys.has('totalTooLarge') && arKeys.has('totalTooLarge'), 'no bilingual total size message');
   assert(/maxFileBytes|maxTotalBytes/.test(SCRIPT), 'no size limits enforced');
-  assertHas(ADMISSIONS, '{{ fileError }}', 'size errors are never displayed');
+  assert(/attachErr\[[^\]]+\]\s*=\s*t\.tooLarge/.test(SCRIPT),
+    'size errors are never shown next to the offending field');
 });
 
 test('picked files are cleared when navigating away', () => {
