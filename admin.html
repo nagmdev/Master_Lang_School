@@ -5,211 +5,386 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B2346'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' font-weight='700' fill='%23C89A2B' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 <meta name="robots" content="noindex, nofollow">
-<title>Staff Admin — Masters Language School</title>
+<title>Admissions Admin — Masters Language School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0B2346; --gold:#C89A2B; --bg:#FBFAF7; --line:#ECEAE3;
+    --navy:#0B2346; --navy-2:#122C54; --gold:#C89A2B; --gold-deep:#A87F1F;
+    --bg:#F4F5F7; --line:#E6E8EC; --line-soft:#EDEFF3;
     --muted:#5B6472; --faint:#8A93A1; --card:#fff;
+    --radius:14px; --radius-lg:18px; --radius-sm:9px;
+    --shadow-sm:0 1px 2px rgba(11,35,70,.06);
+    --shadow-md:0 4px 14px -4px rgba(11,35,70,.12);
+    --shadow-lg:0 18px 44px -18px rgba(11,35,70,.25);
+    --focus:0 0 0 3px rgba(200,154,43,.35);
+    --red:#C0392B; --red-bg:#FDECEA; --red-line:#F0B4AE;
   }
   *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{margin:0;background:var(--bg);color:var(--navy);
-       font-family:'Plus Jakarta Sans',-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+       font-family:'Plus Jakarta Sans',-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+       -webkit-font-smoothing:antialiased;font-size:14.5px;line-height:1.5}
   button{font:inherit;cursor:pointer}
   input,select,textarea{font:inherit;color:inherit}
+  a{color:inherit}
   .hidden{display:none!important}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .icon{width:16px;height:16px;flex:none;vertical-align:-3px}
+  .icon.sm{width:14px;height:14px}
 
-  header{background:var(--navy);color:#fff;padding:14px 24px;display:flex;
-         align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  header h1{font-size:17px;margin:0;font-weight:800;letter-spacing:.01em}
-  header .sub{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;
-         padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700}
-  .ghost:hover{background:rgba(255,255,255,.12)}
+  /* ------------------------------ top bar ------------------------------ */
+  .topbar{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-2) 100%);
+          color:#fff;padding:0 28px;min-height:64px;display:flex;align-items:center;
+          justify-content:space-between;gap:16px;box-shadow:0 2px 10px rgba(11,35,70,.18);
+          border-bottom:3px solid var(--gold);flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(160deg,var(--gold),#a87f1f);
+              display:grid;place-items:center;font-family:Georgia,serif;font-weight:800;font-size:20px;color:var(--navy);
+              box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .brand-title{font-size:15.5px;margin:0;font-weight:800;letter-spacing:.01em;line-height:1.2}
+  .brand-sub{color:var(--gold);font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:800}
+  .topbar-actions{display:flex;gap:8px}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;
+         padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;display:inline-flex;
+         align-items:center;gap:7px;transition:background .15s ease,border-color .15s ease}
+  .ghost:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.55)}
+  .ghost:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-  main{max-width:1180px;margin:0 auto;padding:24px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  main{max-width:1200px;margin:0 auto;padding:28px 24px 60px}
 
-  /* login */
-  .login{max-width:380px;margin:12vh auto}
-  .login h2{margin:0 0 6px;font-size:22px}
-  .login p{margin:0 0 20px;color:var(--muted);font-size:14px}
-  label{display:block;font-weight:600;font-size:13px;margin-bottom:6px}
-  .field{width:100%;padding:12px 14px;border:1px solid #DCDAD2;border-radius:10px;
-         font-size:15px;background:#FCFBF8}
-  .primary{background:var(--gold);color:var(--navy);border:none;padding:13px 20px;
-           border-radius:11px;font-weight:800;font-size:15px}
-  .primary:hover{background:#b98a1f}
-  .primary[disabled]{opacity:.55;cursor:not-allowed}
-  .error{background:#FDECEA;border:1px solid #F0B4AE;color:#8E2C20;
+  /* ------------------------------- buttons ------------------------------ */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+       border-radius:11px;padding:10px 16px;font-size:13.5px;font-weight:700;
+       border:1px solid transparent;transition:background .15s ease,border-color .15s ease,
+       box-shadow .15s ease,transform .1s ease;white-space:nowrap;text-decoration:none}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:none;box-shadow:var(--focus)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  .btn-primary{background:var(--gold);color:var(--navy);box-shadow:0 2px 6px rgba(200,154,43,.35)}
+  .btn-primary:hover:not(:disabled){background:#c08f22;box-shadow:0 4px 10px rgba(200,154,43,.4)}
+  .btn-secondary{background:var(--navy);color:#fff;box-shadow:var(--shadow-sm)}
+  .btn-secondary:hover:not(:disabled){background:var(--navy-2)}
+  .btn-outline{background:#fff;color:var(--navy);border-color:#D6DAE2}
+  .btn-outline:hover:not(:disabled){background:#F7F8FA;border-color:#B9BFCB}
+  .btn-ghost{background:transparent;color:var(--muted);border-color:transparent}
+  .btn-ghost:hover:not(:disabled){background:#EEF0F4;color:var(--navy)}
+  .btn-danger{background:#fff;color:var(--red);border-color:var(--red-line)}
+  .btn-danger:hover:not(:disabled){background:var(--red-bg);border-color:var(--red)}
+  .btn-danger-solid{background:var(--red);color:#fff;border:none}
+  .btn-danger-solid:hover:not(:disabled){background:#a5301f}
+  .btn-sm{padding:7px 12px;font-size:12.5px;border-radius:9px}
+  .iconbtn{padding:9px;width:38px;height:38px}
+
+  /* ------------------------------- login ------------------------------- */
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-md)}
+  .login{max-width:420px;margin:10vh auto;padding:34px 34px 30px;text-align:center}
+  .login .brand-mark{width:54px;height:54px;font-size:28px;margin:0 auto 16px;border-radius:14px}
+  .login h2{margin:0 0 6px;font-size:21px}
+  .login p{margin:0 0 24px;color:var(--muted);font-size:13.5px}
+  label{display:block;font-weight:600;font-size:12.5px;margin-bottom:6px;color:var(--muted)}
+  .field{width:100%;padding:10px 13px;border:1px solid #DCDAD2;border-radius:10px;
+         font-size:14px;background:#FCFBF8;transition:border-color .15s ease,box-shadow .15s ease}
+  .field:focus{outline:none;border-color:var(--gold);box-shadow:var(--focus)}
+  .error{background:var(--red-bg);border:1px solid var(--red-line);color:#8E2C20;
          padding:11px 14px;border-radius:10px;font-size:13.5px;margin-bottom:14px}
   .warn{background:#FDF4E3;border:1px solid #E8C97A;color:#7A5B12;
         padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
 
-  /* tabs */
-  .tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:0}
-  .tab{background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;
-       font-size:14.5px;font-weight:700;color:var(--muted);padding:10px 4px;margin-bottom:-1px}
-  .tab.on{color:var(--navy);border-bottom-color:var(--gold)}
-  .tab .n{color:var(--faint);font-weight:600;margin-inline-start:6px}
+  /* ------------------------------ toolbar ------------------------------ */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .searchbox{flex:1;min-width:250px;position:relative;display:flex;align-items:center}
+  .searchbox .search-ic{position:absolute;inset-inline-start:13px;color:var(--faint);pointer-events:none;display:flex}
+  .searchbox .field{flex:1;padding:10px 40px 10px 38px;border-radius:12px;background:#fff;border-color:#DDE0E6}
+  .searchbox .field:focus{border-color:var(--gold);box-shadow:var(--focus)}
+  .search-clear{position:absolute;inset-inline-end:8px;width:26px;height:26px;border:none;background:#EEF0F4;
+                border-radius:50%;color:var(--muted);display:grid;place-items:center;transition:background .15s ease}
+  .search-clear:hover{background:#DFE3EA}
 
-  /* toolbar */
-  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-  .toolbar .field{flex:1;min-width:220px}
-  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:20px;
-        padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{border:1px solid #D6DAE2;background:#fff;border-radius:20px;
+        padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--muted);
+        display:inline-flex;align-items:center;gap:7px;
+        transition:all .18s ease;box-shadow:var(--shadow-sm)}
+  .chip:hover{border-color:var(--gold);color:var(--navy)}
+  .chip:focus-visible{outline:none;box-shadow:var(--focus)}
+  .chip .n{background:#F0F2F5;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800;color:var(--muted);transition:all .18s ease}
   .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .chip .n{opacity:.65;margin-inline-start:5px;font-weight:600}
+  .chip.on .n{background:rgba(255,255,255,.18);color:#fff}
+  .chip.on:hover{color:#fff}
 
-  /* table */
-  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
-  table{border-collapse:collapse;width:100%;min-width:720px}
-  th,td{text-align:start;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px}
-  th{background:#F7F5EF;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  /* ------------------------------- table ------------------------------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-lg);
+             background:#fff;box-shadow:var(--shadow-sm)}
+  table{border-collapse:separate;border-spacing:0;width:100%;min-width:780px}
+  th,td{text-align:start;padding:13px 16px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+  th{background:#F8F9FB;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);
+     font-weight:800;position:sticky;top:0;z-index:2}
+  th:first-child{border-start-start-radius:var(--radius-lg)}
+  th:last-child{border-start-end-radius:var(--radius-lg)}
+  tbody tr{transition:background .12s ease}
   tbody tr:last-child td{border-bottom:none}
-  tbody tr:hover{background:#FAF9F5;cursor:pointer}
-  .id{font-weight:800;white-space:nowrap}
-  .empty{padding:44px 20px;text-align:center;color:var(--faint);font-size:14.5px}
+  tbody tr:hover{background:#FAFBFD}
+  tbody tr.selected{background:#FBF4E3}
+  tbody tr.selected td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+  tbody tr:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--gold)}
+  .id{font-weight:800;white-space:nowrap;font-size:13px}
+  .app-id-wrap{display:inline-flex;align-items:center;gap:8px}
+  .id-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+  .stud{display:inline-flex;align-items:center;gap:10px}
+  .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(150deg,var(--navy),#24407a);
+          color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;
+          justify-content:center;flex:none}
+  .avatar::before{content:attr(data-i)}
+  .stud-name{font-weight:600}
+  .cell-phone{color:var(--muted);white-space:nowrap}
+  .cell-date{color:var(--muted);white-space:nowrap}
+  .empty{padding:52px 20px;text-align:center;color:var(--faint);font-size:14px}
+  .empty .empty-ico{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:14px;
+                    background:#F0F2F5;color:var(--faint);margin-bottom:12px}
+  .empty .empty-ico .icon{width:24px;height:24px}
+  .empty strong{display:block;color:var(--navy);font-size:15px;margin-bottom:4px}
 
-  .status{display:inline-block;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:800;white-space:nowrap}
-  .s-new{background:#E8F0FE;color:#1A4B8F}
-  .s-reviewing{background:#FFF3DC;color:#8A6100}
-  .s-assessment_booked{background:#E7F2FF;color:#12507F}
+  .open-hint{display:flex;align-items:center;gap:10px;margin-top:18px;padding:14px 18px;
+             border:1px dashed #CBD2DC;border-radius:12px;color:var(--faint);font-size:13px;
+             background:#FBFCFE;transition:opacity .18s ease}
+  .open-hint .icon{color:var(--gold)}
+
+  /* --------------------------- status badges --------------------------- */
+  .status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;
+          font-size:11.5px;font-weight:800;white-space:nowrap;letter-spacing:.02em}
+  .status .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+  .s-new{background:#F1E9FE;color:#7C3AED}
+  .s-reviewing{background:#E8F0FE;color:#1A4B8F}
+  .s-assessment_booked{background:#E0F2FE;color:#075985}
   .s-accepted{background:#E4F6EA;color:#1B6B39}
   .s-provisionally_accepted{background:#EAF5E9;color:#4A7A2E}
   .s-rejected{background:#FDECEA;color:#8E2C20}
   .s-waiting_list{background:#FBEEDC;color:#8A5A12}
-  .s-withdrawn{background:#EFEFEF;color:#5B6472}
-  .s-assessment_booked{background:#E7F2FF;color:#12507F}
-  .s-shortlisted{background:#E8F0FE;color:#1A4B8F}
-  .s-hired{background:#E4F6EA;color:#1B6B39}
+  .s-withdrawn{background:#EDEEF2;color:#5B6472}
 
-  /* drawer */
-  .backdrop{position:fixed;inset:0;background:rgba(11,35,70,.45);z-index:40}
-  .drawer{position:fixed;inset-block:0;inset-inline-end:0;width:min(560px,100%);
-          background:#fff;z-index:41;overflow-y:auto;box-shadow:-24px 0 60px -30px rgba(11,35,70,.5)}
-  .drawer .head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);
-                padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-  .drawer .body{padding:22px}
-  .sec{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);
-       font-weight:800;margin:22px 0 10px}
-  .kv{display:grid;grid-template-columns:minmax(120px,38%) 1fr;gap:6px 14px;font-size:14px}
-  .kv dt{color:var(--muted)}
-  .kv dd{margin:0;font-weight:600;word-break:break-word}
-  .files{display:flex;flex-direction:column;gap:8px}
-  .file{display:flex;justify-content:space-between;align-items:center;gap:12px;
-        border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:13.5px}
-  .file a{color:#a37e1f;font-weight:800;text-decoration:none;white-space:nowrap}
-  .file a:hover{text-decoration:underline}
-  .filelinks{display:inline-flex;gap:14px;flex-shrink:0}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:8px}
-  .saved{color:#1B6B39;font-size:13px;font-weight:700}
-  .danger{background:#fff;color:#8E2C20;border:1px solid #E4A9A2;padding:13px 20px;
-          border-radius:11px;font-weight:800;font-size:15px}
-  .danger:hover{background:#FDECEA;border-color:#C0392B}
-  .danger[disabled]{opacity:.55;cursor:not-allowed}
-  .danger-solid{background:#C0392B;color:#fff;border:none;padding:13px 20px;
-                border-radius:11px;font-weight:800;font-size:15px}
-  .danger-solid:hover{background:#a5301f}
-  .confirm{background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;
+  /* --------------------------- application view ------------------------ */
+  .appview{margin-top:24px;scroll-margin-top:12px}
+  .appview.open{animation:avfade .22s ease both}
+  .appview.closing{animation:avclose .18s ease both}
+  @keyframes avfade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes avclose{to{opacity:0;transform:translateY(10px)}}
+
+  .stickybar{position:sticky;top:10px;z-index:30;display:flex;align-items:center;justify-content:space-between;
+             gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;
+             box-shadow:0 6px 22px -8px rgba(11,35,70,.18);padding:10px 14px;margin-bottom:18px}
+  .stickybar-id{font-weight:800;font-size:13px;color:var(--navy);display:inline-flex;align-items:center;gap:8px}
+  .stickybar-id .icon{color:var(--gold)}
+  .stickybar-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+  .app-head{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+            box-shadow:var(--shadow-md);padding:26px 28px 22px;margin-bottom:20px;
+            background-image:linear-gradient(180deg,#FDFCF9 0%,#fff 46%)}
+  .app-head-top{display:flex;gap:22px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+  .app-head-main{flex:1;min-width:280px}
+  .app-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;
+               letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:8px}
+  .app-eyebrow .icon{width:14px;height:14px}
+  .app-title{margin:0 0 12px;font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+  .app-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .meta-chip{display:inline-flex;align-items:center;gap:6px;background:#F4F5F8;border:1px solid var(--line-soft);
+             border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted)}
+  .meta-chip .icon{color:var(--faint);width:13px;height:13px}
+  .app-photo{width:92px;height:112px;border-radius:12px;border:1px solid var(--line);box-shadow:var(--shadow-sm);
+             object-fit:cover;background:#F1F2F5;flex:none}
+  .app-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:18px;
+                    padding-top:16px;border-top:1px solid var(--line-soft)}
+
+  .menu-wrap{position:relative}
+  .menu{position:absolute;inset-inline-end:0;top:calc(100% + 6px);min-width:250px;background:#fff;
+        border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:6px;z-index:40;
+        animation:avfade .15s ease both}
+  .menu-item{display:flex;align-items:center;gap:10px;width:100%;text-align:start;border:none;background:none;
+             padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--navy);transition:background .13s ease}
+  .menu-item:hover{background:#F4F5F8}
+  .menu-item .icon{color:var(--faint)}
+  .menu-item.danger{color:var(--red)}
+  .menu-item.danger .icon{color:var(--red)}
+  .menu-sep{height:1px;background:var(--line-soft);margin:5px 4px}
+
+  /* --------------------------- section cards --------------------------- */
+  .app-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+            box-shadow:var(--shadow-sm);padding:24px 26px;margin-bottom:18px}
+  .app-card-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;
+                 border-bottom:1px solid var(--line-soft)}
+  .app-card-head .icon{color:var(--gold);width:18px;height:18px}
+  .app-card-head h3{margin:0;font-size:14.5px;font-weight:800;letter-spacing:.02em}
+  .fld-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  .fld-label{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+  .fld-value{background:#F6F7FA;border:1px solid #E9EBF0;border-radius:10px;padding:9px 12px;
+             font-size:13.5px;font-weight:600;color:var(--navy);min-height:40px;display:flex;align-items:center;
+             word-break:break-word;transition:border-color .15s ease}
+  .fld-value.none{color:#B4BAC4;font-weight:500;font-style:italic}
+  .empty-state{display:flex;flex-direction:column;align-items:center;gap:8px;padding:34px 20px;text-align:center;
+               border:1px dashed #D5DAE2;border-radius:12px;background:#FAFBFD;color:var(--faint)}
+  .empty-state .icon{width:30px;height:30px;color:#C3C9D3}
+  .empty-state strong{color:var(--muted);font-size:13.5px;font-weight:700}
+
+  /* ---------------------------- attachments ---------------------------- */
+  .files-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .filecard{display:flex;gap:13px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;
+            padding:14px;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+  .filecard:hover{border-color:#C9CFD8;box-shadow:var(--shadow-md)}
+  .file-thumb{width:46px;height:46px;border-radius:10px;overflow:hidden;flex:none;background:#F1F3F7;
+              display:grid;place-items:center;border:1px solid var(--line-soft)}
+  .file-thumb img{width:100%;height:100%;object-fit:cover}
+  .file-thumb .icon{width:22px;height:22px;color:#94A0B0}
+  .file-meta{flex:1;min-width:0}
+  .file-title{font-size:12.5px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:6px}
+  .file-type{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+             color:var(--gold-deep);background:#F7EFDD;border-radius:5px;padding:1px 6px}
+  .file-name{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+  .file-sub{font-size:11px;color:var(--faint);margin-top:3px}
+  .filelinks{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+  .filelinks .btn{padding:5px 10px;font-size:11.5px;border-radius:8px}
+
+  /* ----------------------------- review card --------------------------- */
+  .review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .ctl{display:flex;flex-direction:column;gap:4px}
+  .ctl-wide{grid-column:1/-1}
+  .saved{color:#1B6B39;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+  .saved .icon{width:14px;height:14px}
+  .autosave-note{color:var(--faint);font-size:12px;margin:10px 0 0}
+  .none-note{color:var(--faint);font-size:12.5px;font-style:italic;margin:8px 0 0}
+  .confirm{background:var(--red-bg);border:1px solid var(--red-line);border-radius:12px;
            padding:16px 18px;margin-top:14px}
   .confirm h4{margin:0 0 6px;font-size:15px;color:#8E2C20}
   .confirm p{margin:0 0 14px;font-size:13.5px;color:#8E2C20;line-height:1.55}
-  @media (max-width:640px){ .kv{grid-template-columns:1fr} main{padding:14px} }
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .stamp{color:var(--faint);font-size:12px;margin:16px 0 0;display:flex;align-items:center;gap:6px}
+  .stamp .icon{width:13px;height:13px}
+  .app-card.flash{animation:flashring 1.4s ease}
+  @keyframes flashring{0%{box-shadow:0 0 0 0 rgba(200,154,43,.55)}70%{box-shadow:0 0 0 10px rgba(200,154,43,0)}100%{box-shadow:0 0 0 0 rgba(200,154,43,0)}}
+
+  /* ------------------------------ printing ----------------------------- */
+  .print-only{display:none}
+  @media print{
+    @page{size:A4 portrait;margin:12mm}
+    html{scroll-behavior:auto}
+    body{background:#fff;font-size:12px}
+    .topbar,.toolbar,.chips,.tablewrap,.open-hint,.stickybar,.app-head-actions,
+    .menu-wrap,.review,.no-print,#list-error,#empty{display:none!important}
+    main{max-width:none;padding:0;margin:0}
+    .appview{margin:0;animation:none}
+    .print-only{display:block}
+    .print-masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;
+                    border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:16px}
+    .print-masthead .pm-logo{height:40px;width:auto}
+    .print-masthead .pm-school{font-size:15px;font-weight:800;color:var(--navy)}
+    .print-masthead .pm-sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);font-weight:800}
+    .print-masthead .pm-right{text-align:end;font-size:11px;color:var(--muted)}
+    .app-head{padding:16px;box-shadow:none;margin-bottom:12px;border-radius:8px}
+    .app-head-top{gap:12px}
+    .app-title{font-size:18px}
+    .app-card{padding:14px 16px;margin-bottom:12px;border-radius:8px;box-shadow:none;break-inside:avoid-page}
+    .app-card-head{margin-bottom:10px;padding-bottom:8px}
+    .fld-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .fld-value{border-radius:6px;padding:6px 9px;min-height:0;font-size:12px}
+    .fld-label{font-size:9px}
+    .files-grid{grid-template-columns:1fr;gap:8px}
+    .filecard{border-radius:8px;padding:10px}
+    .filelinks{display:none}
+    .print-footer{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);
+                  border-top:1px solid var(--line);margin-top:18px;padding-top:8px}
+    .print-footer .icon{display:none}
+  }
+  @media (max-width:900px){
+    .fld-grid,.review-grid,.files-grid{grid-template-columns:1fr}
+    main{padding:18px 14px 48px}
+    .topbar{padding:12px 16px}
+  }
+  @media (max-width:640px){
+    .app-head{padding:18px}
+    .app-photo{width:72px;height:88px}
+    .stickybar{position:static}
+    .stickybar-actions{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    html{scroll-behavior:auto}
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="sub">Masters Language School</div>
-    <h1>Admissions &amp; Careers Administration</h1>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">M</div>
+    <div>
+      <div class="brand-sub">Masters Language School</div>
+      <h1 class="brand-title">Admissions Administration</h1>
+    </div>
   </div>
-  <div id="hdr-actions" class="hidden">
-    <button class="ghost" id="refresh">Refresh</button>
-    <button class="ghost" id="logout">Sign out</button>
+  <div id="hdr-actions" class="topbar-actions hidden">
+    <button class="ghost" id="refresh"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>Refresh</button>
+    <button class="ghost" id="logout"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sign out</button>
   </div>
 </header>
 
 <!-- login -->
 <main id="login-view">
   <div class="card login">
+    <div class="brand-mark" aria-hidden="true">M</div>
     <h2>Sign in</h2>
     <p>Enter the admissions password to view applications.</p>
-    <div id="login-error" class="error hidden"></div>
+    <div id="login-error" class="error hidden" role="alert"></div>
     <div id="config-error" class="warn hidden"></div>
     <form id="login-form">
       <label for="pw">Password</label>
       <input class="field" type="password" id="pw" autocomplete="current-password" required>
-      <div style="margin-top:16px"><button class="primary" type="submit" id="login-btn">Sign in</button></div>
+      <div style="margin-top:16px"><button class="btn btn-primary" type="submit" id="login-btn" style="width:100%">Sign in</button></div>
     </form>
   </div>
 </main>
 
 <!-- dashboard -->
 <main id="app-view" class="hidden">
-  <div class="tabs" id="tabs">
-    <button class="tab on" data-tab="admissions">Admissions</button>
-    <button class="tab" data-tab="careers">Careers</button>
+  <div class="toolbar">
+    <div class="searchbox">
+      <span class="search-ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></span>
+      <input class="field" id="q" type="search" placeholder="Search by name, ID, mobile, grade…" aria-label="Search applications">
+      <button type="button" class="search-clear hidden" id="q-clear" aria-label="Clear search"><svg class="icon sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    </div>
+    <button class="btn btn-primary" id="search-btn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>Search</button>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Filter by status"></div>
+  <div id="list-error" class="error hidden" role="alert"></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th scope="col">Application</th><th scope="col">Student</th><th scope="col">Grade</th><th scope="col">Parent</th><th scope="col">Mobile</th><th scope="col">Received</th><th scope="col">Status</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty hidden"></div>
   </div>
 
-  <div id="tab-admissions">
-    <div class="toolbar">
-      <input class="field" id="q" type="search" placeholder="Search by name, ID, mobile, grade…">
-      <button class="primary" id="search-btn">Search</button>
-    </div>
-    <div class="chips" id="chips"></div>
-    <div id="list-error" class="error hidden" role="alert"></div>
-    <div class="tablewrap">
-      <table>
-        <thead><tr>
-          <th>Application</th><th>Student</th><th>Grade</th><th>Parent</th><th>Mobile</th><th>Received</th><th>Status</th>
-        </tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-      <div id="empty" class="empty hidden"></div>
-    </div>
+  <div class="open-hint" id="open-hint">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+    <span>Select an application to open its full record below.</span>
   </div>
 
-  <div id="tab-careers" class="hidden">
-    <div class="toolbar">
-      <input class="field" id="c-q" type="search" placeholder="Search by name, position, phone, email…">
-      <button class="primary" id="c-search-btn">Search</button>
-    </div>
-    <div class="chips" id="c-chips"></div>
-    <div id="c-list-error" class="error hidden" role="alert"></div>
-    <div class="tablewrap">
-      <table>
-        <thead><tr>
-          <th>Reference</th><th>Candidate</th><th>Position</th><th>Phone</th><th>Received</th><th>Status</th>
-        </tr></thead>
-        <tbody id="c-rows"></tbody>
-      </table>
-      <div id="c-empty" class="empty hidden"></div>
-    </div>
-  </div>
+  <!-- application viewer (same page, below the table) -->
+  <section id="appview" class="appview hidden" aria-label="Application details" aria-live="polite"></section>
 </main>
-
-<div id="backdrop" class="backdrop hidden"></div>
-<aside id="drawer" class="drawer hidden" aria-label="Application detail">
-  <div class="head">
-    <div><div class="sub" style="color:var(--gold)">Application</div><strong id="d-id" class="id"></strong></div>
-    <button class="ghost" id="close-drawer" style="border-color:#DCDAD2;color:var(--navy)">Close</button>
-  </div>
-  <div class="body" id="d-body"></div>
-</aside>
 
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pretty = s => String(s).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
 let STATUSES = [];
 let activeStatus = '';
-let CAREER_STATUSES = [];
-let activeCareerStatus = '';
-let activeTab = 'admissions';
+let currentApp = null;
 
 const LABELS = {
   sname: 'Full name (English)', arname: 'Full name (Arabic)',
@@ -240,19 +415,102 @@ const LABELS = {
   bus: 'School bus', busRoute: 'Bus route', busRouteOther: 'Bus route (other)',
   d4Desc: 'Other attachments — description',
 };
+
 const GROUPS = [
-  ['Student', ['sname', 'arname', 'stNid', 'year', 'grade', 'dob', 'age', 'gender', 'citizenship', 'country', 'countryOther', 'address', 'lang2', 'religion']],
-  ['Previous school', ['psName', 'psSystem', 'psGrades', 'psYears', 'psLocation']],
-  ['Father', ['faName', 'faOcc', 'faOccCat', 'faMobile', 'faNid', 'faEmail', 'faAddress', 'faCitizenship']],
-  ['Mother', ['moName', 'moOcc', 'moOccCat', 'moMobile', 'moNid', 'moEmail', 'moAddress', 'moCitizenship']],
-  ['Family', ['marital', 'siblingsNo', 'birthOrder', 'tongue', 'tongueOther', 'guardian', 'guardianOther', 'sibName', 'sibSchool', 'sibAge', 'sibGrade', 'sibApply']],
-  ['Emergency', ['eName', 'ePhone', 'eRelation', 'eRelationOther', 'eAddress', 'eName_2', 'ePhone_2', 'eRelation_2', 'eRelationOther_2', 'eAddress_2']],
-  ['Notes', ['cHealth', 'cPsych', 'cAcademic', 'd4Desc']],
-  ['Transport', ['bus', 'busRoute', 'busRouteOther']],
+  { title: 'Student information', icon: 'user', keys: [
+    'sname', 'arname', 'gender', 'dob', 'age', 'citizenship', 'stNid',
+    'religion', 'lang2', 'tongue', 'tongueOther', 'country', 'countryOther', 'address' ] },
+  { title: 'School details', icon: 'school', keys: [
+    'year', 'grade', 'psName', 'psSystem', 'psGrades', 'psYears', 'psLocation',
+    'bus', 'busRoute', 'busRouteOther' ] },
+  { title: 'Father information', icon: 'father', keys: [
+    'faName', 'faOcc', 'faOccCat', 'faMobile', 'faNid', 'faEmail', 'faAddress', 'faCitizenship' ] },
+  { title: 'Mother information', icon: 'mother', keys: [
+    'moName', 'moOcc', 'moOccCat', 'moMobile', 'moNid', 'moEmail', 'moAddress', 'moCitizenship' ] },
+  { title: 'Family information', icon: 'family', keys: [
+    'marital', 'siblingsNo', 'birthOrder', 'guardian', 'guardianOther' ] },
+  { title: 'Emergency contact', icon: 'emergency', keys: [
+    'eName', 'ePhone', 'eRelation', 'eRelationOther', 'eAddress',
+    'eName_2', 'ePhone_2', 'eRelation_2', 'eRelationOther_2', 'eAddress_2' ] },
+  { title: 'Notes & concerns', icon: 'notes', keys: [
+    'cHealth', 'cPsych', 'cAcademic', 'd4Desc' ] },
 ];
-const pretty = s => String(s).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-const CAREER_FIELD_LABELS = { cv: 'CV / Résumé', cert: 'Certificates', portfolio: 'Portfolio' };
-const CAREER_LABELS = { name: 'Full name', phone: 'Phone', email_2: 'Email', position: 'Position', years: 'Years of experience', edu: 'Highest qualification' };
+
+const ICON_PATHS = {
+  user: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c.6-4 3.7-6 8-6s7.4 2 8 6"></path>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+  school: '<path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"></path>',
+  father: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c.6-4 3.7-6 8-6s7.4 2 8 6"></path>',
+  mother: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c.6-4 3.7-6 8-6s7.4 2 8 6"></path>',
+  family: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+  emergency: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.31 1.61.57 2.38a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6 6l1.7-1.7a2 2 0 0 1 2.11-.45c.77.26 1.57.45 2.38.57A2 2 0 0 1 22 16.92z"></path>',
+  notes: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path>',
+  docs: '<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>',
+  search: '<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path>',
+  printer: '<path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v8H6z"></path>',
+  pen: '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>',
+  paperclip: '<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>',
+  more: '<circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle>',
+  x: '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>',
+  trash: '<path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>',
+  inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path>',
+  clock: '<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>',
+  folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>',
+  check: '<path d="M20 6 9 17l-5-5"></path>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path>',
+};
+function icon(name, cls) {
+  return '<svg class="icon' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
+}
+
+const STATUS_INFO = {
+  new:                    { label: 'New',                    cls: 's-new',            ic: '#7C3AED' },
+  reviewing:              { label: 'Reviewing',              cls: 's-reviewing',      ic: '#1A4B8F' },
+  assessment_booked:      { label: 'Assessment booked',      cls: 's-assessment_booked', ic: '#075985' },
+  provisionally_accepted: { label: 'Provisionally accepted', cls: 's-provisionally_accepted', ic: '#4A7A2E' },
+  accepted:               { label: 'Accepted',               cls: 's-accepted',       ic: '#1B6B39' },
+  rejected:               { label: 'Rejected',               cls: 's-rejected',       ic: '#8E2C20' },
+  waiting_list:           { label: 'Waiting list',           cls: 's-waiting_list',   ic: '#8A5A12' },
+  withdrawn:              { label: 'Withdrawn',              cls: 's-withdrawn',      ic: '#5B6472' },
+};
+function statusInfo(status) { return STATUS_INFO[status] || { label: pretty(status), cls: 's-withdrawn', ic: '#5B6472' }; }
+function statusBadge(status) {
+  const s = statusInfo(status);
+  return '<span class="status ' + s.cls + '" role="status"><span class="dot" aria-hidden="true"></span>' + esc(s.label) + '</span>';
+}
+
+const FIELD_NAMES = {
+  photo: 'Personal-Photo',
+  d1: 'Guardian-National-ID',
+  d2: 'Student-Birth-Certificate',
+  d3: 'Last-Stage-Certificate',
+  d4: 'Additional-Document',
+};
+function zipNameFor(x) {
+  const base = FIELD_NAMES[x.field] || 'Document';
+  const ext = (/\.([A-Za-z0-9]+)$/.exec(x.filename || '') || [, ''])[1];
+  return ext ? base + '.' + ext.toLowerCase() : base;
+}
+function friendlyBytes(b) {
+  if (b == null || isNaN(b)) return '—';
+  const u = ['B', 'KB', 'MB', 'GB'];
+  let i = 0, v = b;
+  while (v >= 1024 && i < 3) { v /= 1024; i++; }
+  const n = i ? (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) : String(v);
+  return n + ' ' + u[i];
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); }
+  catch (e) { return String(d); }
+}
+function fmtDateTime(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  catch (e) { return String(d); }
+}
 
 async function api(path, opts) {
   const res = await fetch(path, Object.assign({ credentials: 'same-origin' }, opts || {}));
@@ -267,6 +525,7 @@ function showLogin() {
   $('#login-view').classList.remove('hidden');
   $('#app-view').classList.add('hidden');
   $('#hdr-actions').classList.add('hidden');
+  closeViewer(true);
 }
 function showApp() {
   $('#login-view').classList.add('hidden');
@@ -299,68 +558,53 @@ $('#logout').addEventListener('click', async () => {
   showLogin();
 });
 
-// Tabs: switching shows/hides the two sections and always pulls a fresh list,
-// so stale data from before sign-in (or from the other tab) is never shown.
-$('#tabs').addEventListener('click', e => {
-  const btn = e.target.closest('.tab');
-  if (!btn) return;
-  activeTab = btn.dataset.tab;
-  $('#tabs').querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t === btn));
-  $('#tab-admissions').classList.toggle('hidden', activeTab !== 'admissions');
-  $('#tab-careers').classList.toggle('hidden', activeTab !== 'careers');
-  refresh();
-});
-
-// Every caller goes through this: a bare `load()` returns a promise whose
-// rejection is swallowed, so a failed refresh looked like nothing happened.
 async function refresh(btn) {
   const label = btn ? btn.textContent : null;
   if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
   hideError();
   try {
-    if (activeTab === 'careers') await loadCareers();
-    else await load();
+    await load();
   } catch (e) {
-    showError((activeTab === 'careers' ? 'Could not load career applications: ' : 'Could not load applications: ') + e.message);
+    showError('Could not load applications: ' + e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = label; }
   }
 }
 function showError(msg) {
-  const el = $(activeTab === 'careers' ? '#c-list-error' : '#list-error');
+  const el = $('#list-error');
   el.textContent = msg;
   el.classList.remove('hidden');
 }
-function hideError() { $('#list-error').classList.add('hidden'); $('#c-list-error').classList.add('hidden'); }
+function hideError() { $('#list-error').classList.add('hidden'); }
 
 $('#refresh').addEventListener('click', e => refresh(e.currentTarget));
 $('#search-btn').addEventListener('click', e => refresh(e.currentTarget));
 $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') refresh($('#search-btn')); });
-// clearing the box restores the full list without needing to press Search
 $('#q').addEventListener('search', () => refresh($('#search-btn')));
-
-$('#c-search-btn').addEventListener('click', e => refresh(e.currentTarget));
-$('#c-q').addEventListener('keydown', e => { if (e.key === 'Enter') refresh($('#c-search-btn')); });
-$('#c-q').addEventListener('search', () => refresh($('#c-search-btn')));
+$('#q').addEventListener('input', () => {
+  $('#q-clear').classList.toggle('hidden', !$('#q').value.trim());
+});
+$('#q-clear').addEventListener('click', () => {
+  const q = $('#q');
+  q.value = '';
+  $('#q-clear').classList.add('hidden');
+  q.dispatchEvent(new Event('search', { bubbles: true }));
+  q.focus();
+});
 
 function renderChips(counts) {
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
-  const items = [['', 'All', total]].concat(STATUSES.map(s => [s, pretty(s), counts[s] || 0]));
+  const items = [['', 'All', total]].concat(STATUSES.map(s => [s, statusInfo(s).label, counts[s] || 0]));
   $('#chips').innerHTML = items.map(([v, label, n]) =>
-    `<button class="chip ${v === activeStatus ? 'on' : ''}" data-status="${esc(v)}">${esc(label)}<span class="n">${n}</span></button>`
+    '<button class="chip ' + (v === activeStatus ? 'on' : '') + '" data-status="' + esc(v) + '" aria-pressed="' + (v === activeStatus) + '">' + esc(label) + '<span class="n">' + n + '</span></button>'
   ).join('');
   $('#chips').querySelectorAll('.chip').forEach(c =>
     c.addEventListener('click', () => { activeStatus = c.dataset.status; refresh(); }));
 }
 
-function renderCareerChips(counts) {
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
-  const items = [['', 'All', total]].concat(CAREER_STATUSES.map(s => [s, pretty(s), counts[s] || 0]));
-  $('#c-chips').innerHTML = items.map(([v, label, n]) =>
-    `<button class="chip ${v === activeCareerStatus ? 'on' : ''}" data-status="${esc(v)}">${esc(label)}<span class="n">${n}</span></button>`
-  ).join('');
-  $('#c-chips').querySelectorAll('.chip').forEach(c =>
-    c.addEventListener('click', () => { activeCareerStatus = c.dataset.status; refresh(); }));
+function initialOf(f) {
+  const src = String(f.sname || f.arname || 'A').trim();
+  return esc((src.charAt(0) || 'A').toUpperCase());
 }
 
 async function load() {
@@ -375,183 +619,259 @@ async function load() {
   $('#rows').innerHTML = rows.map(r => {
     const f = r.fields || {};
     const student = f.sname || f.arname || '—';
-    return `<tr data-id="${esc(r.id)}">
-      <td class="id">${esc(r.id)}</td>
-      <td>${esc(student)}</td>
-      <td>${esc(f.grade || '—')}</td>
-      <td>${esc(f.faName || f.moName || '—')}</td>
-      <td>${esc(f.faMobile || f.moMobile || '—')}</td>
-      <td>${esc(new Date(r.submittedAt).toLocaleDateString())}</td>
-      <td><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></td>
-    </tr>`;
+    return '<tr data-id="' + esc(r.id) + '" tabindex="0" aria-label="Open application ' + esc(r.id) + '"' + (currentApp && currentApp.id === r.id ? ' class="selected"' : '') + '>' +
+      '<td class="id"><span class="app-id-wrap"><span class="id-dot" aria-hidden="true"></span>' + esc(r.id) + '</span></td>' +
+      '<td><span class="stud"><span class="avatar" data-i="' + initialOf(f) + '" aria-hidden="true"></span><span class="stud-name">' + esc(student) + '</span></span></td>' +
+      '<td>' + esc(f.grade || '—') + '</td>' +
+      '<td>' + esc(f.faName || f.moName || '—') + '</td>' +
+      '<td class="cell-phone">' + esc(f.faMobile || f.moMobile || '—') + '</td>' +
+      '<td class="cell-date">' + esc(fmtDate(r.submittedAt)) + '</td>' +
+      '<td>' + statusBadge(r.status) + '</td>' +
+    '</tr>';
   }).join('');
 
   const empty = $('#empty');
   if (!rows.length) {
     empty.classList.remove('hidden');
-    empty.textContent = ($('#q').value || activeStatus)
-      ? 'No applications match this search.'
-      : 'No applications yet. When a parent submits the admissions form, it appears here.';
+    empty.innerHTML = '<div class="empty-ico">' + icon('inbox') + '</div><strong>' +
+      (($('#q').value || activeStatus) ? 'No applications match this search.' : 'No applications yet.') + '</strong>' +
+      (($('#q').value || activeStatus) ? 'Try a different search or filter.' : 'When a parent submits the admissions form, it appears here.');
   } else {
     empty.classList.add('hidden');
   }
-  $('#rows').querySelectorAll('tr').forEach(tr =>
-    tr.addEventListener('click', () => openDrawer(tr.dataset.id, 'admission')));
 }
 
-async function loadCareers() {
-  const params = new URLSearchParams();
-  if ($('#c-q').value.trim()) params.set('q', $('#c-q').value.trim());
-  if (activeCareerStatus) params.set('status', activeCareerStatus);
-  const data = await api('/api/careers?' + params.toString());
-  CAREER_STATUSES = data.statuses || [];
-  renderCareerChips(data.counts || {});
+/* ------------------------- application viewer ------------------------- */
 
-  const rows = data.rows || [];
-  $('#c-rows').innerHTML = rows.map(r => {
-    const f = r.fields || {};
-    return `<tr data-id="${esc(r.id)}">
-      <td class="id">${esc(r.id)}</td>
-      <td>${esc(f.name || '—')}</td>
-      <td>${esc(f.position || '—')}</td>
-      <td>${esc(f.phone || '—')}</td>
-      <td>${esc(new Date(r.submittedAt).toLocaleDateString())}</td>
-      <td><span class="status s-${esc(r.status)}">${esc(pretty(r.status))}</span></td>
-    </tr>`;
+function renderApplication(r) {
+  const f = r.fields || {};
+  const adm = r.admin || {};
+  const studentName = f.sname || f.arname || '';
+  const photo = (r.files || []).find(x => x.field === 'photo');
+  const groups = collectGroups(r);
+  const files = r.files || [];
+  const stat = statusInfo(r.status);
+
+  let html = '';
+
+  html += '<div class="print-only print-masthead">' +
+    '<div style="display:flex;align-items:center;gap:12px"><img class="pm-logo" src="uploads/mssters-logo.png" alt=""><div><div class="pm-school">Masters Language School</div><div class="pm-sub">Admissions Administration</div></div></div>' +
+    '<div class="pm-right"><div>Application <strong>' + esc(r.id) + '</strong></div><div>Status: ' + esc(stat.label) + '</div><div>Generated ' + esc(fmtDateTime(new Date())) + '</div></div>' +
+    '</div>';
+
+  html += '<div class="stickybar no-print">' +
+    '<span class="stickybar-id">' + icon('inbox') + esc(r.id) + '</span>' +
+    '<div class="stickybar-actions">' +
+      '<button class="btn btn-sm btn-secondary" data-act="edit">' + icon('pen') + 'Edit</button>' +
+      '<button class="btn btn-sm btn-primary" data-act="pdf">' + icon('download') + 'Download PDF</button>' +
+      '<button class="btn btn-sm btn-secondary" data-act="print">' + icon('printer') + 'Print</button>' +
+      '<button class="btn btn-sm btn-outline" data-act="zip">' + icon('folder') + '+ Attachments</button>' +
+      '<button class="btn btn-sm btn-outline" data-act="zipattach">' + icon('paperclip') + 'Attachments</button>' +
+      '<button class="btn btn-sm btn-ghost" id="close-drawer" data-act="close">' + icon('x') + 'Close</button>' +
+    '</div></div>';
+
+  html += '<header class="app-head">' +
+    '<div class="app-head-top">' +
+      '<div class="app-head-main">' +
+        '<div class="app-eyebrow">' + icon('inbox') + 'Admission application · <span id="d-id" class="app-num">' + esc(r.id) + '</span></div>' +
+        '<h2 class="app-title">' + (studentName ? esc(studentName) : 'Untitled application') + '</h2>' +
+        '<div class="app-meta">' +
+          '<span class="meta-chip">' + icon('calendar') + esc(f.year || '—') + '</span>' +
+          '<span class="meta-chip">' + icon('school') + esc(f.grade || '—') + '</span>' +
+          '<span class="meta-chip">' + icon('clock') + 'Submitted ' + esc(fmtDate(r.submittedAt)) + '</span>' +
+          statusBadge(r.status) +
+        '</div>' +
+      '</div>' +
+      (photo ? '<img class="app-photo" src="' + fileUrl(r.id, photo, 'inline') + '" alt="Applicant photo">' : '') +
+    '</div>' +
+    '<div class="app-head-actions no-print">' +
+      '<button class="btn btn-secondary" data-act="edit">' + icon('pen') + 'Edit</button>' +
+      '<button class="btn btn-primary" data-act="pdf">' + icon('download') + 'Download PDF</button>' +
+      '<button class="btn btn-secondary" data-act="print">' + icon('printer') + 'Print</button>' +
+      '<button class="btn btn-outline" data-act="zipattach">' + icon('paperclip') + 'Attachments</button>' +
+      '<div class="menu-wrap">' +
+        '<button class="btn btn-ghost iconbtn" id="more-btn" data-act="more" aria-haspopup="menu" aria-expanded="false" aria-label="More actions">' + icon('more') + '</button>' +
+        '<div class="menu hidden" id="more-menu" role="menu" aria-label="More actions">' +
+          '<button class="menu-item" role="menuitem" data-act="zip">' + icon('folder') + 'Download with Attachments</button>' +
+          '<button class="menu-item" role="menuitem" data-act="zipattach">' + icon('paperclip') + 'Download Attachments Only</button>' +
+          '<button class="menu-item" role="menuitem" data-act="print">' + icon('printer') + 'Print Application</button>' +
+          '<div class="menu-sep"></div>' +
+          '<button class="menu-item danger" role="menuitem" data-act="delete">' + icon('trash') + 'Delete application…</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</header>';
+
+  html += groups.map(g => {
+    const body = g.rows.length
+      ? '<div class="fld-grid">' + g.rows.map(([label, value]) => fld(label, value)).join('') + '</div>'
+      : (g.title === 'Emergency contact'
+          ? '<div class="empty-state">' + icon('emergency') + '<strong>No emergency contact provided.</strong></div>'
+          : '');
+    if (!body) return '';
+    return '<section class="app-card"><header class="app-card-head"><h3>' + icon(g.icon) + esc(g.title) + '</h3></header>' + body + '</section>';
   }).join('');
 
-  const empty = $('#c-empty');
-  if (!rows.length) {
-    empty.classList.remove('hidden');
-    empty.textContent = ($('#c-q').value || activeCareerStatus)
-      ? 'No career applications match this search.'
-      : 'No career applications yet. When a candidate applies on the Careers pages, it appears here.';
+  html += '<section class="app-card"><header class="app-card-head"><h3>' + icon('paperclip') + 'Attachments</h3></header>';
+  if (files.length) {
+    html += '<div class="files-grid">' + files.map(x => fileCard(r, x)).join('') + '</div>';
   } else {
-    empty.classList.add('hidden');
+    html += '<div class="empty-state">' + icon('inbox') + '<strong>No attachments uploaded.</strong></div>';
   }
-  $('#c-rows').querySelectorAll('tr').forEach(tr =>
-    tr.addEventListener('click', () => openDrawer(tr.dataset.id, 'career')));
+  html += '</section>';
+
+  html += '<section class="app-card review no-print" id="review">' +
+    '<header class="app-card-head"><h3>' + icon('pen') + 'Review &amp; follow-up</h3></header>' +
+    '<div class="review-grid">' +
+      '<label class="ctl">Status <span style="display:flex;align-items:center;gap:10px"><select class="field" id="d-status" style="flex:1">' +
+        STATUSES.map(s => '<option value="' + esc(s) + '"' + (s === r.status ? ' selected' : '') + '>' + esc(statusInfo(s).label) + '</option>').join('') +
+      '</select><span id="d-saved" class="saved hidden">' + icon('check') + 'Saved</span></span></label>' +
+      '<label class="ctl">Follow-up <select class="field" id="a-followupStatus">' +
+        ['', 'Not started', 'Email sent', 'SMS sent', 'Email + SMS', 'Interview held', 'Completed'].map(o =>
+          '<option' + (o === (adm.followupStatus || '') ? ' selected' : '') + '>' + esc(o) + '</option>').join('') +
+      '</select></label>' +
+      '<label class="ctl">Payment responsible <input class="field" id="a-paymentResponsible" placeholder="Staff member / role" value="' + esc(adm.paymentResponsible || '') + '"></label>' +
+      '<label class="ctl">Interview date <input class="field" id="a-interviewDate" type="date" value="' + esc(adm.interviewDate || '') + '"></label>' +
+      '<label class="ctl">Registration date <input class="field" id="a-registrationDate" type="date" value="' + esc(adm.registrationDate || '') + '"></label>' +
+      '<label class="ctl ctl-wide">Internal notes <textarea class="field" id="d-notes" rows="3" placeholder="Visible to staff only">' + esc(r.notes || '') + '</textarea></label>' +
+    '</div>' +
+    (r.notes ? '' : '<p class="none-note">No internal notes yet.</p>') +
+    '<p class="autosave-note">Status, notes and workflow fields save automatically.</p>' +
+    '<div class="row" style="margin-top:18px;justify-content:flex-end">' +
+      '<button class="btn btn-danger" id="d-delete">' + icon('trash') + 'Delete</button>' +
+    '</div>' +
+    '<div class="confirm hidden" id="d-confirm" role="alertdialog" aria-label="Confirm deletion">' +
+      '<h4>Delete this application permanently?</h4>' +
+      '<p><strong>' + esc(r.id) + '</strong>' + (studentName ? ' — ' + esc(studentName) : '') + ' will be erased, along with ' + files.length + ' uploaded document' + (files.length === 1 ? '' : 's') + '. This cannot be undone.</p>' +
+      '<div class="row" style="margin-top:0">' +
+        '<button class="btn btn-danger-solid" id="d-delete-yes">Yes, delete permanently</button>' +
+        '<button class="btn btn-ghost" id="d-delete-no">Cancel</button>' +
+      '</div>' +
+    '</div>' +
+    '<p class="stamp">' + icon('clock') + 'Received ' + esc(fmtDateTime(r.submittedAt)) + (r.updatedAt ? ' · updated ' + esc(fmtDateTime(r.updatedAt)) : '') + '</p>' +
+  '</section>';
+
+  html += '<div class="print-only print-footer">' +
+    '<span>Masters Language School — Admissions</span><span>Generated on ' + esc(fmtDateTime(new Date())) + ' · by the admissions system</span>' +
+  '</div>';
+
+  return html;
 }
 
-function closeDrawer() {
-  $('#drawer').classList.add('hidden');
-  $('#backdrop').classList.add('hidden');
+function fld(label, value) {
+  const v = String(value == null ? '' : value).trim();
+  return '<div class="fld"><span class="fld-label">' + esc(label) + '</span>' +
+    '<span class="fld-value' + (v ? '' : ' none') + '" dir="auto" title="' + (v ? '' : 'Not provided') + '">' + (v ? esc(v) : '—') + '</span></div>';
 }
-$('#close-drawer').addEventListener('click', closeDrawer);
-$('#backdrop').addEventListener('click', closeDrawer);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-async function openDrawer(id, kind) {
-  if (kind === 'career') return openCareerDrawer(id);
-  const r = await api('/api/application?id=' + encodeURIComponent(id));
+function fileUrl(id, x, mode) {
+  return '/api/file?id=' + encodeURIComponent(id) + '&name=' + encodeURIComponent(x.storedAs) + (mode === 'inline' ? '&mode=inline' : '');
+}
+
+function fileCard(r, x) {
+  const base = fileUrl(r.id, x);
+  const inline = fileUrl(r.id, x, 'inline');
+  const viewable = x.contentType === 'application/pdf' || /^image\//.test(x.contentType || '');
+  const isImg = /^image\//.test(x.contentType || '');
+  const kind = x.contentType === 'application/pdf' ? 'PDF' : isImg ? 'Image' : 'File';
+  const thumb = isImg
+    ? '<img src="' + inline + '" alt="" loading="lazy">'
+    : (x.contentType === 'application/pdf' ? icon('notes') : icon('docs'));
+  return '<div class="filecard">' +
+    '<div class="file-thumb">' + thumb + '</div>' +
+    '<div class="file-meta">' +
+      '<div class="file-title">' + esc(LABELS[x.field] || pretty(x.field)) + '<span class="file-type">' + kind + '</span></div>' +
+      '<div class="file-name" title="' + esc(x.filename) + '">' + esc(x.filename) + '</div>' +
+      '<div class="file-sub">' + friendlyBytes(x.bytes) + ' · Uploaded ' + esc(fmtDate(r.submittedAt)) + '</div>' +
+      '<div class="filelinks">' +
+        (viewable ? '<a class="btn btn-sm btn-outline" href="' + inline + '" target="_blank" rel="noopener">Preview</a>' : '') +
+        '<a class="btn btn-sm btn-outline" href="' + base + '">Download</a>' +
+        '<a class="btn btn-sm btn-ghost" href="' + (viewable ? inline : base) + '" target="_blank" rel="noopener">Open</a>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function collectGroups(r) {
   const f = r.fields || {};
-  const studentName = f.sname || f.arname || '';
-  const adm = r.admin || {};
-  $('#d-id').textContent = r.id;
-
   const used = new Set();
-  let html = '';
-  for (const [title, keys] of GROUPS) {
-    const present = keys.filter(k => String(f[k] || '').trim());
-    if (!present.length) continue;
-    present.forEach(k => used.add(k));
-    html += `<div class="sec">${esc(title)}</div><dl class="kv">` +
-      present.map(k => `<dt>${esc(LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') +
-      `</dl>`;
+  const groups = [];
+  for (const g of GROUPS) {
+    const rows = [];
+    for (const k of g.keys) {
+      const v = String(f[k] || '').trim();
+      if (v) { rows.push([LABELS[k] || pretty(k), v]); used.add(k); }
+    }
+    groups.push({ title: g.title, icon: g.icon, rows });
   }
-  // Siblings arrive as sib1_name, sib1_school, … sib2_name, … — group them by
-  // index into one row each so all siblings show, not just the first.
-  const sibFields = ['name', 'school', 'age', 'grade', 'apply'];
   const sibLabels = { name: 'Name', school: 'Current school', age: 'Age', grade: 'Grade', apply: 'Applying?' };
   const sibIdx = [...new Set(Object.keys(f)
     .map(k => (/^sib(\d+)_/.exec(k) || [])[1]).filter(Boolean))].sort((a, b) => a - b);
-  const sibsWithData = sibIdx.filter(n => sibFields.some(p => String(f['sib' + n + '_' + p] || '').trim()));
-  if (sibsWithData.length) {
-    html += `<div class="sec">Siblings</div>`;
-    for (const n of sibsWithData) {
-      const parts = sibFields
-        .filter(p => String(f['sib' + n + '_' + p] || '').trim())
-        .map(p => `<dt>${esc(sibLabels[p])}</dt><dd>${esc(f['sib' + n + '_' + p])}</dd>`).join('');
-      html += `<div style="font-weight:800;color:var(--navy);font-size:13px;margin:10px 0 4px">Sibling ${esc(n)}</div>
-        <dl class="kv">${parts}</dl>`;
+  const sibRows = [];
+  for (const n of sibIdx) {
+    for (const p of ['name', 'school', 'age', 'grade', 'apply']) {
+      const k = 'sib' + n + '_' + p;
+      const v = String(f[k] || '').trim();
+      if (v) { sibRows.push(['Sibling ' + n + ' — ' + sibLabels[p], v]); used.add(k); }
     }
-    Object.keys(f).forEach(k => { if (/^sib\d+_/.test(k)) used.add(k); });
   }
-
+  if (sibRows.length) groups.push({ title: 'Siblings', icon: 'users', rows: sibRows });
   const extra = Object.keys(f).filter(k => !used.has(k) && String(f[k] || '').trim());
   if (extra.length) {
-    html += `<div class="sec">Other</div><dl class="kv">` +
-      extra.map(k => `<dt>${esc(LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') + `</dl>`;
+    groups.push({ title: 'Additional information', icon: 'docs', rows: extra.map(k => [LABELS[k] || pretty(k), String(f[k]).trim()]) });
   }
+  return groups;
+}
 
-  html += `<div class="sec">Documents</div>`;
-  const canView = x => x.contentType === 'application/pdf' || /^image\//.test(x.contentType || '');
-  html += (r.files && r.files.length)
-    ? `<div class="files">` + r.files.map(x => {
-        const base = `/api/file?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}`;
-        const view = canView(x)
-          ? `<a href="${base}&mode=inline" target="_blank" rel="noopener">View</a>` : '';
-        return `<div class="file"><span>${esc(LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
-           <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
-           <span class="filelinks">${view}<a href="${base}">Download</a></span></div>`;
-      }).join('') + `</div>`
-    : `<p style="color:var(--faint);font-size:14px;margin:0">No documents were uploaded.</p>`;
+function openViewerScroll() {
+  const v = $('#appview');
+  v.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-  // Status and notes are shown read-only: the Update control was removed, so
-  // offering editable inputs with no way to save them would be a dead end.
-  // Status and notes save as soon as they change — no Update button to press.
-  html += `<div class="sec">Status</div>
-    <div class="row" style="margin-top:0;align-items:center">
-      <select class="field" id="d-status" style="flex:1;min-width:180px">${STATUSES.map(s =>
-        `<option value="${esc(s)}"${s === r.status ? ' selected' : ''}>${esc(pretty(s))}</option>`).join('')}</select>
-      <span id="d-saved" class="saved hidden">Saved</span>
-    </div>
-    <div class="sec">Internal notes</div>
-    <textarea class="field" id="d-notes" rows="3" placeholder="Visible to staff only">${esc(r.notes || '')}</textarea>
+function closeDrawer() {
+  const v = $('#appview');
+  if (v.classList.contains('hidden')) return;
+  const row = $('#rows tr.selected');
+  v.classList.remove('open');
+  v.classList.add('closing');
+  setTimeout(() => {
+    v.classList.add('hidden');
+    v.classList.remove('closing', 'open');
+    $('#open-hint').classList.remove('hidden');
+    if (row) row.focus();
+  }, 200);
+}
+function closeViewer(instant) {
+  const v = $('#appview');
+  v.classList.add('hidden');
+  v.classList.remove('open', 'closing');
+  $('#open-hint').classList.remove('hidden');
+  if (instant) return;
+  const row = $('#rows tr.selected');
+  if (row) row.focus();
+}
 
-    <div class="sec">Admissions workflow</div>
-    <div class="kv" style="grid-template-columns:1fr 1fr;gap:12px 14px">
-      <label style="font-weight:600;font-size:13px">Payment responsible
-        <input class="field" id="a-paymentResponsible" placeholder="Staff member / role"
-          value="${esc(adm.paymentResponsible || '')}" style="margin-top:5px"></label>
-      <label style="font-weight:600;font-size:13px">Follow-up
-        <select class="field" id="a-followupStatus" style="margin-top:5px">${
-          ['', 'Not started', 'Email sent', 'SMS sent', 'Email + SMS', 'Interview held', 'Completed'].map(o =>
-            `<option${o === (adm.followupStatus || '') ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select></label>
-      <label style="font-weight:600;font-size:13px">Interview date
-        <input class="field" id="a-interviewDate" type="date"
-          value="${esc(adm.interviewDate || '')}" style="margin-top:5px"></label>
-      <label style="font-weight:600;font-size:13px">Registration date
-        <input class="field" id="a-registrationDate" type="date"
-          value="${esc(adm.registrationDate || '')}" style="margin-top:5px"></label>
-    </div>
-    <p style="color:var(--faint);font-size:12px;margin:8px 0 0">Changes save automatically.</p>
+async function openDrawer(id) {
+  const r = await api('/api/application?id=' + encodeURIComponent(id));
+  currentApp = r;
+  $('#rows').querySelectorAll('tr').forEach(tr =>
+    tr.classList.toggle('selected', tr.dataset.id === id));
+  const v = $('#appview');
+  const wasOpen = !v.classList.contains('hidden');
+  v.innerHTML = '<div id="d-body" role="region" aria-label="Application ' + esc(r.id) + '">' + renderApplication(r) + '</div>';
+  v.classList.remove('hidden', 'closing');
+  void v.offsetWidth;
+  v.classList.add('open');
+  $('#open-hint').classList.add('hidden');
+  bindWorkflow(r);
+  openViewerScroll();
+  if (wasOpen) {
+    v.classList.remove('open');
+    void v.offsetWidth;
+    v.classList.add('open');
+  }
+}
 
-    <div class="row" style="margin-top:22px;justify-content:flex-end">
-      <button class="danger" id="d-delete">Delete</button>
-    </div>
-    <div class="confirm hidden" id="d-confirm">
-      <h4>Delete this application permanently?</h4>
-      <p>
-        <strong>${esc(r.id)}</strong>${studentName ? ' — ' + esc(studentName) : ''} will be erased,
-        along with ${(r.files || []).length} uploaded document${(r.files || []).length === 1 ? '' : 's'}.
-        This cannot be undone.
-      </p>
-      <div class="row" style="margin-top:0">
-        <button class="danger-solid" id="d-delete-yes">Yes, delete permanently</button>
-        <button class="ghost" id="d-delete-no" style="border-color:#DCDAD2;color:var(--navy)">Cancel</button>
-      </div>
-    </div>
-    <p style="color:var(--faint);font-size:12.5px;margin-top:18px">
-      Received ${esc(new Date(r.submittedAt).toLocaleString())}${r.updatedAt ? ' · updated ' + esc(new Date(r.updatedAt).toLocaleString()) : ''}
-    </p>`;
-
-  $('#d-body').innerHTML = html;
-  $('#drawer').classList.remove('hidden');
-  $('#backdrop').classList.remove('hidden');
-
-  // Auto-save: status on change, notes on blur. Keeps the drawer button-free
-  // while making both editable again.
+function bindWorkflow(r) {
   async function patch(payload, control) {
     if (control) control.disabled = true;
     try {
@@ -562,9 +882,15 @@ async function openDrawer(id, kind) {
       });
       if (payload.admin) r.admin = Object.assign({}, r.admin, payload.admin);
       else Object.assign(r, payload);
-      $('#d-saved').classList.remove('hidden');
-      setTimeout(() => { const s = $('#d-saved'); if (s) s.classList.add('hidden'); }, 1600);
-      await load(); // keep the row, chips and counts in step
+      const saved = $('#d-saved');
+      if (saved) { saved.classList.remove('hidden'); setTimeout(() => { if (saved) saved.classList.add('hidden'); }, 1600); }
+      if (payload.status !== undefined) {
+        await load();
+        const b = $('#appview .app-head .status');
+        if (b) b.outerHTML = statusBadge(r.status);
+      } else {
+        await load();
+      }
     } catch (e) {
       alert('Could not save: ' + e.message);
     } finally {
@@ -572,20 +898,19 @@ async function openDrawer(id, kind) {
     }
   }
 
-  $('#d-status').addEventListener('change', e =>
-    patch({ status: e.currentTarget.value }, e.currentTarget));
+  const st = $('#d-status');
+  if (st) st.addEventListener('change', e => patch({ status: e.currentTarget.value }, e.currentTarget));
 
   let lastNotes = r.notes || '';
-  $('#d-notes').addEventListener('blur', e => {
+  const nt = $('#d-notes');
+  if (nt) nt.addEventListener('blur', e => {
     const v = e.currentTarget.value;
-    if (v === lastNotes) return;   // don't write on every focus change
+    if (v === lastNotes) return;
     lastNotes = v;
     patch({ notes: v }, e.currentTarget);
   });
 
-  // Admissions-workflow fields: selects/dates save on change, the text field on
-  // blur (to avoid a write per keystroke). Each is nested under admin.<key>.
-  const savedAdmin = Object.assign({}, adm);
+  const savedAdmin = Object.assign({}, r.admin || {});
   function saveAdmin(key, el) {
     if (el.value === (savedAdmin[key] || '')) return;
     savedAdmin[key] = el.value;
@@ -598,8 +923,6 @@ async function openDrawer(id, kind) {
   const pr = $('#a-paymentResponsible');
   if (pr) pr.addEventListener('blur', () => saveAdmin('paymentResponsible', pr));
 
-  // Deletion is irreversible, so it takes two deliberate clicks: the first only
-  // reveals what will be destroyed.
   $('#d-delete').addEventListener('click', () => {
     $('#d-confirm').classList.remove('hidden');
     $('#d-delete').disabled = true;
@@ -616,6 +939,7 @@ async function openDrawer(id, kind) {
       await api('/api/application?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
       closeDrawer();
       await load();
+      currentApp = null;
     } catch (e) {
       alert('Could not delete: ' + e.message);
       yes.disabled = false; yes.textContent = 'Yes, delete permanently';
@@ -623,119 +947,999 @@ async function openDrawer(id, kind) {
   });
 }
 
-async function openCareerDrawer(id) {
-  const r = await api('/api/career?id=' + encodeURIComponent(id));
+/* ------------------------- viewer actions ------------------------- */
+
+function toggleMore() {
+  const menu = $('#more-menu'), btn = $('#more-btn');
+  if (!menu) return;
+  const show = menu.classList.toggle('hidden');
+  if (btn) btn.setAttribute('aria-expanded', String(!show));
+  return !show;
+}
+
+async function withBusy(btn, fn) {
+  if (!btn) return fn();
+  const prev = btn.innerHTML;
+  btn.disabled = true; btn.classList.add('busy');
+  btn.innerHTML = 'Preparing…';
+  try { await fn(); }
+  catch (err) { alert(err.message || String(err)); }
+  finally {
+    btn.disabled = false; btn.classList.remove('busy');
+    btn.innerHTML = prev;
+  }
+}
+
+function handleViewerAction(btn) {
+  const act = btn.dataset.act;
+  if (act === 'more') { toggleMore(); return; }
+  const menu = $('#more-menu');
+  if (menu) menu.classList.add('hidden');
+  if (act === 'close') { closeDrawer(); return; }
+  if (!currentApp) return;
+  if (act === 'edit') {
+    const rev = $('#review');
+    if (rev) {
+      rev.classList.remove('flash'); void rev.offsetWidth; rev.classList.add('flash');
+      rev.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => rev.classList.remove('flash'), 1600);
+    }
+    const st = $('#d-status');
+    if (st) st.focus();
+    return;
+  }
+  if (act === 'print') { withBusy(btn, () => printOfficialApplication()); return; }
+  if (act === 'delete') {
+    const c = $('#d-confirm');
+    if (c) {
+      c.classList.remove('hidden');
+      $('#d-delete').disabled = true;
+      $('#d-delete-yes').focus();
+      const rev = $('#review');
+      if (rev) rev.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    return;
+  }
+  if (act === 'pdf') withBusy(btn, () => downloadApplicationPdf());
+  else if (act === 'zip') withBusy(btn, () => downloadPdfWithAttachments());
+  else if (act === 'zipattach') withBusy(btn, () => downloadAttachmentsOnly());
+}
+
+$('#appview').addEventListener('click', e => {
+  const menu = $('#more-menu');
+  if (menu && !e.target.closest('.menu-wrap')) menu.classList.add('hidden');
+  const btn = e.target.closest('[data-act]');
+  if (btn) handleViewerAction(btn);
+});
+$('#rows').addEventListener('click', e => {
+  const tr = e.target.closest('tr[data-id]');
+  if (tr) openDrawer(tr.dataset.id);
+});
+$('#rows').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const tr = e.target.closest('tr[data-id]');
+  if (tr) { e.preventDefault(); openDrawer(tr.dataset.id); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const menu = $('#more-menu');
+    if (menu && !menu.classList.contains('hidden')) { menu.classList.add('hidden'); return; }
+    closeDrawer();
+  }
+});
+
+/* ------------------------- file downloads ------------------------- */
+
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a);
+  a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+async function fetchFileBytes(id, name) {
+  const res = await fetch('/api/file?id=' + encodeURIComponent(id) + '&name=' + encodeURIComponent(name), { credentials: 'same-origin' });
+  if (!res.ok) throw new Error('Could not download ' + (name || 'file'));
+  return new Uint8Array(await res.arrayBuffer());
+}
+
+function loadImageSafe(src) {
+  return new Promise(res => {
+    const im = new Image();
+    im.onload = () => res(im);
+    im.onerror = () => res(null);
+    im.src = src;
+  });
+}
+
+async function downloadApplicationPdf() {
+  const a = currentApp;
+  if (!a) return;
+  const pdf = await generateApplicationPdf(a);
+  downloadBlob(pdf, 'Application-' + a.id + '.pdf');
+}
+
+async function printOfficialApplication() {
+  const a = currentApp;
+  if (!a) return;
+  const w = window.open('', '_blank', 'width=900,height=1240');
+  if (!w) { alert('Please allow pop-ups for this site so the admission form can be printed.'); return; }
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Preparing the admission form…</title>' +
+    '<style>body{font-family:Arial,sans-serif;text-align:center;color:#444;background:#fff;padding:80px 20px}</style>' +
+    '</head><body><p>Preparing the official admission form for printing…</p></body></html>');
+  w.document.close();
+  try {
+    const pages = await buildPdfPages(a);
+    populatePrintWindow(w, pages, 'Masters Language School — Admission Application ' + a.id);
+  } catch (e) {
+    w.close();
+    alert('Could not generate the printable form: ' + e.message);
+  }
+}
+
+function populatePrintWindow(w, pages, title) {
+  const imgs = pages.map((p, i) =>
+    '<img class="pg" src="' + p.dataUrl + '" alt="Page ' + (i + 1) + ' of ' + pages.length + '"/>').join('');
+  w.document.open();
+  w.document.write('<!doctype html><html><head><meta charset="utf-8">' +
+    '<title>' + esc(title) + '</title>' +
+    '<style>' +
+      'html,body{margin:0;padding:0;background:#E7E9EE}' +
+      '.wrap{max-width:210mm;margin:0 auto;background:#fff;padding:8mm}' +
+      'img.pg{display:block;width:100%;height:auto;margin:0 0 6mm}' +
+      '@media print{' +
+        '@page{size:A4 portrait;margin:0}' +
+        'html,body{background:#fff !important}' +
+        '.wrap{max-width:none;padding:0}' +
+        'img.pg{width:210mm;height:297mm;margin:0;page-break-after:always}' +
+        'img.pg:last-child{page-break-after:auto}' +
+      '}' +
+    '</style></head><body><div class="wrap">' + imgs + '</div>' +
+    '<script>' +
+      'var tries=0;var ims=document.querySelectorAll("img.pg");' +
+      'function go(){if(tries++>80)return;var ok=true;for(var i=0;i<ims.length;i++){' +
+      'if(!ims[i].complete||ims[i].naturalWidth===0){ok=false;break;}}' +
+      'if(ok){window.focus();setTimeout(function(){window.print();},250);}else{setTimeout(go,150);}}' +
+      'setTimeout(go,200);' +
+    '<\/script></body></html>');
+  w.document.close();
+  return w;
+}
+
+async function downloadPdfWithAttachments() {
+  const a = currentApp;
+  if (!a) return;
+  const pdf = await generateApplicationPdf(a);
+  const entries = [{ name: 'Application-' + a.id + '.pdf', data: new Uint8Array(await pdf.arrayBuffer()) }];
+  for (const x of (a.files || [])) {
+    const bytes = await fetchFileBytes(a.id, x.storedAs);
+    entries.push({ name: a.id + '-' + zipNameFor(x), data: bytes });
+  }
+  downloadBlob(buildZip(entries), 'Application-' + a.id + '-with-attachments.zip');
+}
+
+async function downloadAttachmentsOnly() {
+  const a = currentApp;
+  if (!a) return;
+  const files = a.files || [];
+  if (!files.length) { alert('This application has no attachments to download.'); return; }
+  const entries = [];
+  for (const x of files) {
+    const bytes = await fetchFileBytes(a.id, x.storedAs);
+    entries.push({ name: a.id + '-' + zipNameFor(x), data: bytes });
+  }
+  downloadBlob(buildZip(entries), 'Application-' + a.id + '-attachments.zip');
+}
+
+/* ------------------------- zip (store, no deps) ------------------------- */
+
+const CRC_TABLE = (function () {
+  const t = new Int32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c;
+  }
+  return t;
+})();
+function crc32(u8) {
+  let crc = -1;
+  for (let i = 0; i < u8.length; i++) crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ u8[i]) & 0xFF];
+  return (crc ^ -1) >>> 0;
+}
+function dosDateTime() {
+  const d = new Date();
+  const time = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  const date = ((Math.max(d.getFullYear(), 1980) - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  return { time, date };
+}
+function concatBytes(arrs) {
+  const total = arrs.reduce((a, b) => a + b.byteLength, 0);
+  const out = new Uint8Array(total);
+  let o = 0;
+  for (const a of arrs) { out.set(a, o); o += a.byteLength; }
+  return out;
+}
+function buildZip(entries) {
+  const enc = new TextEncoder();
+  const parts = [];
+  const central = [];
+  const stamp = dosDateTime();
+  let offset = 0;
+  for (const e of entries) {
+    const name = enc.encode(e.name);
+    const data = e.data;
+    const crc = crc32(data);
+    const lh = new Uint8Array(30);
+    const dv = new DataView(lh.buffer);
+    dv.setUint32(0, 0x04034b50, true);
+    dv.setUint16(4, 20, true);
+    dv.setUint16(6, 0x0800, true);
+    dv.setUint16(8, 0, true);
+    dv.setUint16(10, stamp.time, true);
+    dv.setUint16(12, stamp.date, true);
+    dv.setUint32(14, crc, true);
+    dv.setUint32(18, data.length, true);
+    dv.setUint32(22, data.length, true);
+    dv.setUint16(26, name.length, true);
+    dv.setUint16(28, 0, true);
+    parts.push(lh, name, data);
+    central.push({ name, data, crc, off: offset });
+    offset += 30 + name.length + data.length;
+  }
+  const cdStart = offset;
+  const cdParts = [];
+  for (const c of central) {
+    const ch = new Uint8Array(46);
+    const dv = new DataView(ch.buffer);
+    dv.setUint32(0, 0x02014b50, true);
+    dv.setUint16(4, 20, true);
+    dv.setUint16(6, 20, true);
+    dv.setUint16(8, 0x0800, true);
+    dv.setUint16(10, 0, true);
+    dv.setUint16(12, stamp.time, true);
+    dv.setUint16(14, stamp.date, true);
+    dv.setUint32(16, c.crc, true);
+    dv.setUint32(20, c.data.length, true);
+    dv.setUint32(24, c.data.length, true);
+    dv.setUint16(28, c.name.length, true);
+    dv.setUint16(30, 0, true);
+    dv.setUint16(32, 0, true);
+    dv.setUint16(34, 0, true);
+    dv.setUint16(36, 0, true);
+    dv.setUint32(38, c.off, true);
+    cdParts.push(ch, c.name);
+  }
+  const cd = concatBytes(cdParts);
+  const eocd = new Uint8Array(22);
+  const dv = new DataView(eocd.buffer);
+  dv.setUint32(0, 0x06054b50, true);
+  dv.setUint16(4, 0, true);
+  dv.setUint16(6, 0, true);
+  dv.setUint16(8, central.length, true);
+  dv.setUint16(10, central.length, true);
+  dv.setUint32(12, cd.length, true);
+  dv.setUint32(16, cdStart, true);
+  dv.setUint16(20, 0, true);
+  return new Blob([concatBytes(parts.concat([cd, eocd]))], { type: 'application/zip' });
+}
+
+/* ------------------------- pdf (pure client side) ------------------------- */
+
+const PDF_W = 595, PDF_H = 842, PDF_SCALE = 3;
+const PDF_M = { top: 56, right: 50, bottom: 64, left: 50 };
+const PDF_CW = PDF_W - PDF_M.left - PDF_M.right;
+const F = {
+  display: '700 24px "Cormorant Garamond", Amiri, Georgia, "Times New Roman", serif',
+  arTitle: '700 17px Amiri, "Cormorant Garamond", Georgia, serif',
+  disp2:   '500 12.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  h1n:     '700 13.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  h2n:     '600 10px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  h3:      '700 14px "Cormorant Garamond", Amiri, Georgia, "Times New Roman", serif',
+  sub:     '600 8.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  label:   '600 7.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  value:   '11px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  small:   '8.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+  caption: '600 7.5px "Plus Jakarta Sans", Tajawal, "Segoe UI", Arial, sans-serif',
+};
+function setLsp(ctx, v) { try { ctx.letterSpacing = v; } catch (e) {} }
+const SEC_HEAD_H = 34;
+const DECLARATION_TEXT = 'I hereby confirm that all information provided in this application is true and accurate to the best of my knowledge. I understand that providing incorrect information may result in rejection of the application.';
+const DECLARATION_TEXT_AR = 'أُقرّ بأن جميع المعلومات المقدَّمة في هذا الطلب صحيحة ودقيقة حسب علمي، وأتفهَّم أن تقديم معلومات غير صحيحة قد يؤدي إلى رفض هذا الطلب.';
+const AR_TITLES = {
+  'Student Information': 'بيانات الطالب',
+  'Parent / Guardian Information': 'بيانات ولي الأمر',
+  'Medical Information': 'البيانات الطبية',
+  'Emergency Contact': 'جهات الاتصال في حالات الطوارئ',
+  'Declaration': 'إقرار',
+  'Signatures & Approval': 'التوقيعات والاعتماد',
+  'Internal Notes': 'ملاحظات داخلية',
+};
+const AR_LABELS = {
+  sname: 'الاسم بالكامل بالإنجليزية',
+  arname: 'الاسم بالكامل بالعربية',
+  stNid: 'الرقم القومي للطالب أو رقم الجواز',
+  year: 'العام الدراسي',
+  grade: 'الصف المتقدَّم إليه',
+  gender: 'النوع',
+  dob: 'تاريخ الميلاد',
+  age: 'العمر',
+  citizenship: 'الجنسية',
+  country: 'منطقة الإقامة',
+  countryOther: 'إن اخترت «أخرى»، حدّد المنطقة',
+  address: 'العنوان',
+  lang2: 'اللغة الثانية',
+  religion: 'الديانة',
+  tongue: 'اللغة الأم',
+  tongueOther: 'إن اخترت «أخرى»، حدّد اللغة الأم',
+  psName: 'اسم المدرسة',
+  psSystem: 'نظام التعليم',
+  psGrades: 'الصفوف',
+  psYears: 'سنوات الحضور',
+  psLocation: 'موقع المدرسة',
+  bus: 'حافلة المدرسة',
+  busRoute: 'خط سير الحافلة',
+  busRouteOther: 'إن اخترت «أخرى»، حدّد خط السير',
+  faName: 'اسم الأب',
+  faOcc: 'الوظيفة',
+  faOccCat: 'قطاع الوظيفة',
+  faEmail: 'البريد الإلكتروني للأب',
+  faAddress: 'عنوان الأب',
+  faCitizenship: 'جنسية الأب',
+  faMobile: 'رقم محمول الأب',
+  faNid: 'الرقم القومي للأب أو رقم الجواز',
+  moName: 'اسم الأم',
+  moOcc: 'وظيفة الأم',
+  moOccCat: 'قطاع وظيفة الأم',
+  moEmail: 'البريد الإلكتروني للأم',
+  moAddress: 'عنوان الأم',
+  moCitizenship: 'جنسية الأم',
+  moMobile: 'رقم محمول الأم',
+  moNid: 'الرقم القومي للأم أو رقم الجواز',
+  marital: 'الحالة الاجتماعية للوالدين',
+  siblingsNo: 'عدد الإخوة',
+  birthOrder: 'ترتيب الطالب بين إخوته',
+  guardian: 'ولي الأمر المسؤول / الوصي',
+  guardianOther: 'إن اخترت «أخرى»، حدّد صلة ولي الأمر',
+  eName: 'اسم جهة الاتصال',
+  ePhone: 'رقم التواصل',
+  eRelation: 'صلة القرابة',
+  eRelationOther: 'إن اخترت «أخرى»، حدّد صلة القرابة',
+  eAddress: 'العنوان',
+  cHealth: 'ملاحظات صحية',
+  cPsych: 'ملاحظات نفسية',
+  cAcademic: 'ملاحظات أكاديمية',
+  d4Desc: 'وصف المرفقات الإضافية',
+};
+const OPTION_AR = {
+  Male: 'ذكر', Female: 'أنثى',
+  Muslim: 'مسلم', Christian: 'مسيحي', Other: 'أخرى',
+  Arabic: 'عربي', English: 'إنجليزي', French: 'فرنسي', German: 'ألماني',
+  Married: 'متزوج', Separated: 'منفصل', Divorced: 'مطلق', Widowed: 'أرمل',
+  Father: 'الأب', Mother: 'الأم', Grandfather: 'الجد',
+  'Maternal uncle': 'الخال', 'Paternal uncle': 'العم',
+  'Public sector': 'قطاع عام', 'Private sector': 'قطاع خاص',
+  'Self-employed': 'أعمال حرة', Housewife: 'ربة منزل',
+  'El Santa': 'السنطة', Tanta: 'طنطا', Basyoun: 'بسيون', Qutur: 'قطور',
+  'Kafr El Zayat': 'كفر الزيات', Zifta: 'زفتى', 'El Mahalla El Kubra': 'المحلة الكبرى',
+  Samannoud: 'سمانود', 'Mahallet Marhoum': 'محلة مرحوم',
+  'Pre-K': 'ما قبل الروضة', KG1: 'روضة أولى', KG2: 'روضة ثانية',
+  Egyptian: 'مصري', No: 'لا', Yes: 'نعم',
+};
+function hasArabic(s) { return /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(String(s)); }
+function gradeAr(v) {
+  const m = /^Grade\s+(\d+)$/.exec(String(v || '').trim());
+  if (!m) return null;
+  const n = parseInt(m[1], 10);
+  const ord = ['', 'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر'];
+  return (n >= 1 && n <= 12) ? 'الصف ' + ord[n] : null;
+}
+function enOnlyVal(v) {
+  const s = String(v == null ? '' : v).trim();
+  return s ? { en: s, ar: null } : { en: '\u2014', ar: null };
+}
+function splitVal(v) {
+  const s = String(v == null ? '' : v).trim();
+  if (!s) return { en: '\u2014', ar: null };
+  if (hasArabic(s)) return { en: null, ar: s };
+  const ar = OPTION_AR[s] || gradeAr(s) || null;
+  return ar ? { en: null, ar } : { en: s, ar: null };
+}
+async function ensurePdfFonts() {
+  try {
+    if (document.fonts && document.fonts.load) {
+      await document.fonts.load('700 24px "Cormorant Garamond"');
+      await document.fonts.load('700 14px "Cormorant Garamond"');
+      await document.fonts.load('700 17px Amiri');
+      await document.fonts.load('600 7.5px "Plus Jakarta Sans"');
+      await document.fonts.load('700 13.5px "Plus Jakarta Sans"');
+      await document.fonts.load('400 11px "Plus Jakarta Sans"');
+      await document.fonts.load('400 11px Tajawal');
+    }
+  } catch (e) { /* web fonts unavailable; fall back to local system fonts */ }
+}
+const PRINT_LABELS = { faOcc: "Father's Occupation", moOcc: "Mother's Occupation" };
+const PRINT_AR_LABELS = { faOcc: 'وظيفة الأب', moOcc: 'وظيفة الأم' };
+const PRINT_GROUPS = [
+  { title: 'Student Information', titleAr: 'بيانات الطالب', keys: [
+    'sname', 'arname', 'gender', 'dob', 'age', 'citizenship', 'stNid', 'religion', 'lang2',
+    'tongue', 'tongueOther', 'country', 'countryOther', 'address',
+    'bus', 'busRoute', 'busRouteOther' ] },
+  { title: 'Parent / Guardian Information', titleAr: 'بيانات ولي الأمر', keys: [
+    'faName', 'faMobile', 'faNid', 'faEmail', 'faOcc', 'moName', 'faAddress', 'moOcc',
+    'moOccCat', 'moMobile', 'moCitizenship', 'moNid', 'moEmail', 'moAddress',
+    'marital', 'siblingsNo', 'birthOrder', 'guardian', 'guardianOther' ] },
+  { title: 'Medical Information', titleAr: 'البيانات الطبية', keys: ['cHealth', 'cPsych', 'cAcademic'] },
+  { title: 'Emergency Contact', titleAr: 'جهات الاتصال في حالات الطوارئ', keys: [
+    'eName', 'ePhone', 'eRelation', 'eRelationOther', 'eAddress',
+    'eName_2', 'ePhone_2', 'eRelation_2', 'eRelationOther_2', 'eAddress_2' ] },
+];
+
+function roundedRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function wrapLines(ctx, text, maxW) {
+  const s = String(text == null ? '' : text);
+  const words = s.split(/\s+/).filter(Boolean);
+  const out = [];
+  let cur = '';
+  for (const w of words) {
+    const t = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(t).width <= maxW || !cur) { cur = t; continue; }
+    if (ctx.measureText(w).width > maxW) {
+      if (cur) out.push(cur);
+      cur = '';
+      let c = '';
+      for (const ch of w) {
+        const t2 = c + ch;
+        if (ctx.measureText(t2).width > maxW) { out.push(c); c = ch; } else { c = t2; }
+      }
+      if (c) cur = c;
+    } else {
+      out.push(cur); cur = w;
+    }
+  }
+  if (cur) out.push(cur);
+  return out.length ? out : [''];
+}
+function printFieldGroups(r) {
   const f = r.fields || {};
-  $('#d-id').textContent = r.id;
+  const used = new Set();
+  const groups = [];
+  const make = (k) => Object.assign({
+    key: k,
+    label: PRINT_LABELS[k] || LABELS[k] || pretty(k),
+    labelAr: PRINT_AR_LABELS[k] || AR_LABELS[k] || null,
+  }, k === 'grade' || k === 'year' ? enOnlyVal(f[k]) : splitVal(f[k]));
 
-  let html = '';
-  const order = ['name', 'phone', 'email_2', 'position', 'years', 'edu'];
-  const present = order.filter(k => String(f[k] || '').trim());
-  if (present.length) {
-    html += `<div class="sec">Candidate</div><dl class="kv">` +
-      present.map(k => `<dt>${esc(CAREER_LABELS[k] || pretty(k))}</dt><dd>${esc(f[k])}</dd>`).join('') +
-      `</dl>`;
+  const specialKeys = new Set(['sname', 'arname']);
+  for (const g of PRINT_GROUPS) {
+    let rows = [];
+    if (g.title === 'Student Information') {
+      used.add('sname'); used.add('arname');
+      const en = String(f.sname || '').trim();
+      const ar = String(f.arname || '').trim();
+      rows.push({ key: 'sname', label: "Student's Full Name (English)", labelAr: 'الاسم الكامل للطالب باللغة الإنجليزية', en, ar: null, full: true });
+      rows.push({ key: 'arname', label: "Student's Full Name (Arabic)", labelAr: 'الاسم الكامل للطالب باللغة العربية', en: null, ar, full: true });
+    }
+    for (const k of g.keys) {
+      used.add(k);
+      if (specialKeys.has(k)) continue;
+      if (g.title === 'Parent / Guardian Information' && (k === 'faName' || k === 'moName')) {
+        const v = String(f[k] || '').trim();
+        const isAr = hasArabic(v);
+        rows.push({ key: k, label: k === 'faName' ? 'Father Full Name' : 'Mother Full Name', labelAr: k === 'faName' ? 'اسم الأب بالكامل' : 'اسم الأم بالكامل', en: isAr ? null : v, ar: isAr ? v : null });
+        continue;
+      }
+      if (String(f[k] || '').trim()) rows.push(make(k));
+    }
+    if (g.title === 'Emergency Contact') {
+      const pairs = [
+        ['eName', 'eName_2'], ['ePhone', 'ePhone_2'], ['eRelation', 'eRelation_2'],
+        ['eRelationOther', 'eRelationOther_2'], ['eAddress', 'eAddress_2'],
+      ];
+      const byKey = new Map(rows.map(r => [r.key, r]));
+      const blank = k => ({ key: k, label: LABELS[k] || pretty(k), labelAr: AR_LABELS[k] || null, en: '\u2014', ar: null });
+      const aligned = [];
+      for (const [k1, k2] of pairs) {
+        const a = byKey.get(k1), b = byKey.get(k2);
+        if (a || b) aligned.push(a || blank(k1), b || blank(k2));
+      }
+      const pairKeys = new Set(['eName', 'eName_2', 'ePhone', 'ePhone_2', 'eRelation', 'eRelation_2', 'eRelationOther', 'eRelationOther_2', 'eAddress', 'eAddress_2']);
+      rows = aligned.concat(rows.filter(r => !pairKeys.has(r.key)));
+    }
+    groups.push({ title: g.title, titleAr: g.titleAr, rows });
+  }
+  const sibLabEn = { name: 'Name', school: 'Current school', age: 'Age', grade: 'Grade', apply: 'Applying?' };
+  const sibLabAr = { name: 'الاسم', school: 'المدرسة الحالية', age: 'العمر', grade: 'الصف', apply: 'التقديم إلى ماسترز؟' };
+  const sibIdx = [...new Set(Object.keys(f)
+    .map(k => (/^sib(\d+)_/.exec(k) || [])[1]).filter(Boolean))].sort((a, b) => a - b);
+  const removedSectionKeys = new Set(['psName', 'psSystem', 'psGrades', 'psYears', 'psLocation', 'd4Desc']);
+  for (const k of removedSectionKeys) used.add(k);
+  const extra = Object.keys(f).filter(k => !used.has(k) && String(f[k] || '').trim());
+  if (sibIdx.length || extra.length) {
+    const rows = [];
+    for (const n of sibIdx) {
+      for (const p of ['name', 'school', 'age', 'grade', 'apply']) {
+        const k = 'sib' + n + '_' + p;
+        used.add(k);
+        if (String(f[k] || '').trim()) {
+          rows.push(Object.assign({
+            key: k,
+            label: 'Sibling ' + n + ' \u2014 ' + sibLabEn[p],
+            labelAr: 'الأخ/الأخت ' + n + ' \u2014 ' + sibLabAr[p],
+          }, p === 'grade' ? enOnlyVal(f[k]) : splitVal(f[k])));
+        }
+      }
+    }
+    for (const k of extra) rows.push(make(k));
+    const parentIdx = groups.findIndex(g => g.title === 'Parent / Guardian Information');
+    if (parentIdx >= 0) groups[parentIdx].rows = groups[parentIdx].rows.concat(rows);
+  }
+  return groups.filter(g => g.rows.length);
+}
+
+function drawPageHeader(ctx, a, logo, year) {
+  const hx = PDF_M.left;
+  let lx = hx;
+  if (logo) {
+    const lhh = 22;
+    const lww = lhh * (logo.width / Math.max(1, logo.height));
+    ctx.drawImage(logo, hx, 8, lww, lhh);
+    lx = hx + lww + 10;
+  } else {
+    roundedRectPath(ctx, hx, 8, 22, 22, 5);
+    ctx.fillStyle = '#0B2346'; ctx.fill();
+    ctx.fillStyle = '#C89A2B'; ctx.font = '700 12px "Cormorant Garamond", Amiri, Georgia, serif'; ctx.textAlign = 'center';
+    ctx.fillText('M', hx + 11, 23);
+    ctx.textAlign = 'left';
+    lx = hx + 30;
+  }
+  ctx.textAlign = 'left';
+  ctx.font = F.h1n; ctx.fillStyle = '#0B2346';
+  setLsp(ctx, '1.5px');
+  ctx.fillText('MASTERS LANGUAGE SCHOOL', lx, 19);
+  setLsp(ctx, '0px');
+  ctx.font = F.h2n; ctx.fillStyle = '#0B2346';
+  ctx.fillText('مدرسة ماسترز للغات', lx, 35);
+  ctx.strokeStyle = '#0B2346'; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(PDF_M.left, 44); ctx.lineTo(PDF_W - PDF_M.right, 44); ctx.stroke();
+  ctx.strokeStyle = '#C89A2B'; ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.moveTo(PDF_M.left, 47); ctx.lineTo(PDF_W - PDF_M.right, 47); ctx.stroke();
+}
+
+function drawSectionHead(ctx, x, y, w, title, titleAr) {
+  ctx.fillStyle = '#C89A2B';
+  ctx.fillRect(x, y, 4, 13);
+  ctx.font = F.h3;
+  ctx.fillStyle = '#0B2346';
+  ctx.textAlign = 'left';
+  setLsp(ctx, '0.8px');
+  ctx.fillText(String(title || '').toUpperCase(), x + 10, y + 12);
+  setLsp(ctx, '0px');
+  if (titleAr && ctx.measureText(String(title || '').toUpperCase()).width + 10 + ctx.measureText(String(titleAr)).width <= w) {
+    ctx.textAlign = 'right';
+    ctx.fillText(String(titleAr), x + w, y + 12);
+    ctx.textAlign = 'left';
+  }
+  const ruleY = y + 23;
+  ctx.strokeStyle = '#C3CAD4'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, ruleY); ctx.lineTo(x + w, ruleY); ctx.stroke();
+  return ruleY + 11;
+}
+
+function fieldCols(w) {
+  const gutter = 12;
+  const enW = Math.max(40, Math.floor((w - gutter) * 0.56));
+  return { enW, arW: w - gutter - enW };
+}
+function measureFormField(ctx, row, w) {
+  ctx.font = F.value;
+  const cols = row.en != null && row.ar != null ? fieldCols(w) : { enW: w, arW: w };
+  const enLines = row.en != null ? wrapLines(ctx, row.en, cols.enW) : [];
+  const arLines = row.ar != null ? wrapLines(ctx, row.ar, cols.arW) : [];
+  const valLines = Math.max(1, enLines.length, arLines.length);
+  return Math.max(36, 21 + valLines * 15);
+}
+
+function drawFormField(ctx, x, y, w, row) {
+  const h = measureFormField(ctx, row, w);
+  const enLabel = String(row.label || '').toUpperCase();
+  ctx.font = F.label; ctx.fillStyle = '#5F6B7A'; ctx.textAlign = 'left';
+  setLsp(ctx, '0.5px');
+  const enW = ctx.measureText(enLabel).width;
+  ctx.fillText(enLabel, x, y + 9);
+  setLsp(ctx, '0px');
+  if (row.labelAr && enW + 10 + ctx.measureText(row.labelAr).width <= w) {
+    ctx.textAlign = 'right';
+    ctx.fillText(String(row.labelAr), x + w, y + 9);
+    ctx.textAlign = 'left';
+  }
+  const cols = row.en != null && row.ar != null ? fieldCols(w) : { enW: w, arW: w };
+  if (row.en != null) {
+    ctx.font = F.value;
+    ctx.fillStyle = row.en === '\u2014' ? '#9AA3AF' : '#1A1A1A';
+    ctx.textAlign = 'left';
+    let ty = y + 27;
+    for (const ln of wrapLines(ctx, row.en, cols.enW)) { ctx.fillText(ln, x, ty); ty += 15; }
+  }
+  if (row.ar != null) {
+    ctx.font = F.value;
+    ctx.fillStyle = row.ar === '\u2014' ? '#9AA3AF' : '#1A1A1A';
+    ctx.textAlign = 'right';
+    let ty = y + 27;
+    for (const ln of wrapLines(ctx, row.ar, cols.arW)) { ctx.fillText(ln, x + w, ty); ty += 15; }
+    ctx.textAlign = 'left';
+  }
+  ctx.strokeStyle = '#D5DAE1'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, y + h - 2); ctx.lineTo(x + w, y + h - 2); ctx.stroke();
+  return h;
+}
+
+function drawMetaBox(ctx, x, y, w, h, label, labelAr, value, valueAr) {
+  const v = String(value == null || value === '' ? '\u2014' : value);
+  const va = valueAr || null;
+  roundedRectPath(ctx, x, y, w, h, 6);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.strokeStyle = '#C3CAD4'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.font = F.label; ctx.fillStyle = '#5F6B7A';
+  if (label) {
+    ctx.textAlign = 'left';
+    setLsp(ctx, '0.5px');
+    ctx.fillText(String(label).toUpperCase(), x + 9, y + 11);
+    setLsp(ctx, '0px');
+  }
+  if (labelAr) {
+    ctx.textAlign = 'right';
+    ctx.fillText(String(labelAr), x + w - 9, label ? y + 16 : y + 13);
+    ctx.textAlign = 'left';
+  }
+  ctx.font = F.value; ctx.fillStyle = '#111827';
+  if (va) { ctx.textAlign = 'right'; ctx.fillText(String(va), x + w - 9, y + 32); ctx.textAlign = 'left'; }
+  if (v) { ctx.textAlign = 'left'; ctx.fillText(String(v), x + 9, y + 32); }
+}
+
+function drawPhotoFrame(ctx, x, y, w, h, photo) {
+  roundedRectPath(ctx, x, y, w, h, 5);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.strokeStyle = '#C3CAD4'; ctx.lineWidth = 1; ctx.stroke();
+  if (photo) {
+    const ph = { w: Math.max(1, photo.width), h: Math.max(1, photo.height) };
+    const innerW = w - 10, innerH = h - 18;
+    const s = Math.min(innerW / ph.w, innerH / ph.h);
+    const dw = ph.w * s, dh = ph.h * s;
+    ctx.save();
+    roundedRectPath(ctx, x + 5, y + 5, w - 10, h - 10, 3);
+    ctx.clip();
+    ctx.drawImage(photo, x + (w - dw) / 2, y + 5 + (innerH - dh) / 2, dw, dh);
+    ctx.restore();
+  } else {
+    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = '#D3D8DF'; ctx.lineWidth = 1;
+    ctx.strokeRect(x + 6, y + 6, w - 12, h - 12);
+    ctx.setLineDash([]);
+    ctx.font = F.small; ctx.fillStyle = '#8A93A1'; ctx.textAlign = 'center';
+    ctx.fillText('No Student Photo', x + w / 2, y + h / 2 - 5);
+    ctx.fillText('Available', x + w / 2, y + h / 2 + 5);
+    ctx.fillText('لا توجد صورة للطالب', x + w / 2, y + h / 2 + 16);
+  }
+  ctx.font = F.caption; ctx.fillStyle = '#566075'; ctx.textAlign = 'center';
+  setLsp(ctx, '1px');
+  ctx.fillText('STUDENT PHOTOGRAPH', x + w / 2, y + h + 12);
+  setLsp(ctx, '0px');
+  ctx.fillText('الصورة الشخصية للطالب', x + w / 2, y + h + 21);
+}
+
+function drawSigBlock(ctx, x, y, w, title, titleAr, rows) {
+  ctx.font = F.h3; ctx.fillStyle = '#122A4D'; ctx.textAlign = 'left';
+  setLsp(ctx, '0.6px');
+  const tW = ctx.measureText(title).width;
+  ctx.fillText(title, x, y);
+  setLsp(ctx, '0px');
+  if (titleAr && tW + 10 + ctx.measureText(titleAr).width <= w) {
+    ctx.textAlign = 'right';
+    ctx.fillText(String(titleAr), x + w, y);
+    ctx.textAlign = 'left';
+  }
+  let ry = y + 26;
+  for (const row of rows) {
+    const lab = String(row.label || '').toUpperCase();
+    ctx.font = F.label; ctx.fillStyle = '#566075';
+    ctx.textAlign = 'left';
+    setLsp(ctx, '0.5px');
+    ctx.fillText(lab, x, ry);
+    const lw = ctx.measureText(lab).width;
+    setLsp(ctx, '0px');
+    const ar = row.labelAr ? String(row.labelAr) : null;
+    if (ar && lw + 10 + ctx.measureText(ar).width <= w) {
+      ctx.textAlign = 'right';
+      ctx.fillText(ar, x + w, ry);
+      ctx.textAlign = 'left';
+      ctx.strokeStyle = '#B7BFCB'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x + lw + 10, ry + 1); ctx.lineTo(x + w - ctx.measureText(ar).width - 10, ry + 1); ctx.stroke();
+      ry += 30;
+      continue;
+    }
+    ctx.strokeStyle = '#B7BFCB'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x + lw + 8, ry + 1); ctx.lineTo(x + w, ry + 1); ctx.stroke();
+    ry += 30;
+  }
+  return ry;
+}
+
+function drawStampBox(ctx, x, y) {
+  ctx.setLineDash([2, 2]);
+  ctx.strokeStyle = '#5B6472'; ctx.lineWidth = 0.8;
+  ctx.strokeRect(x, y, 66, 38);
+  ctx.setLineDash([]);
+  ctx.font = F.label; ctx.fillStyle = '#5B6472'; ctx.textAlign = 'center';
+  ctx.fillText('OFFICIAL SCHOOL', x + 33, y + 12);
+  ctx.fillText('STAMP', x + 33, y + 21);
+  ctx.fillText('ختم المدرسة', x + 33, y + 31);
+}
+function newPdfCanvas() {
+  const c = document.createElement('canvas');
+  c.width = PDF_W * PDF_SCALE;
+  c.height = PDF_H * PDF_SCALE;
+  const ctx = c.getContext('2d');
+  ctx.setTransform(PDF_SCALE, 0, 0, PDF_SCALE, 0, 0);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, PDF_W, PDF_H);
+  return { canvas: c, ctx };
+}
+
+async function generateApplicationPdf(a) {
+  const pages = await buildPdfPages(a);
+  return pdfFromJpegs(pages);
+}
+
+async function buildPdfPages(a) {
+  await ensurePdfFonts();
+  const f = a.fields || {};
+  const files = a.files || [];
+  const logo = await loadImageSafe('uploads/mssters-logo.png');
+  const photoFile = files.find(x => x.field === 'photo');
+  const photo = photoFile ? await loadImageSafe(fileUrl(a.id, photoFile, 'inline')) : null;
+  const groups = printFieldGroups(a);
+  const year = f.year || '\u2014';
+  const stat = statusInfo(a.status);
+
+  const pages = [];
+  let page = newPdfCanvas();
+  let ctx = page.ctx;
+  let y = PDF_M.top;
+
+  const newPage = () => {
+    pages.push(page);
+    page = newPdfCanvas();
+    ctx = page.ctx;
+    y = PDF_M.top;
+    drawPageHeader(ctx, a, logo, year);
+  };
+  const ensure = h => {
+    if (y + h > PDF_H - PDF_M.bottom) newPage();
+  };
+
+  drawPageHeader(ctx, a, logo, year);
+
+  /* ---- document title block ---- */
+  y = PDF_M.top + 10;
+  ctx.textAlign = 'center';
+  ctx.font = F.display; ctx.fillStyle = '#0B2346';
+  setLsp(ctx, '3px');
+  ctx.fillText('ADMISSION APPLICATION', PDF_W / 2, y);
+  setLsp(ctx, '0px');
+  ctx.font = F.arTitle; ctx.fillStyle = '#A87F1F';
+  ctx.fillText('طلب التحاق', PDF_W / 2, y + 32);
+  y += 80;
+
+  /* ---- reference / academic year / submission meta ---- */
+  const meta = [
+    ['رقم الطلب', a.id],
+    ['العام الدراسي', year],
+    ['الصف المتقدم إليه', f.grade],
+    ['تاريخ التقديم', fmtDate(a.submittedAt)],
+    ['الحالة', stat.label],
+  ];
+  const mw = (PDF_CW - 4 * 14) / 5;
+  ensure(48);
+  meta.forEach((m, i) => drawMetaBox(ctx, PDF_M.left + i * (mw + 14), y, mw, 42, null, m[0], m[1], null));
+  y += 56;
+
+  const cellW = (PDF_CW - 14) / 2;
+
+  /* ---- Student Information (photo frame on the right) ---- */
+  const student = groups[0];
+  if (student && student.rows.length) {
+    const photoW = 76, photoH = 94, bandH = photoH + 34;
+    const plans = [];
+    let planY = 0;
+    for (let i = 0; i < student.rows.length; i++) {
+      const A = student.rows[i];
+      if (A.full) {
+        const ha = measureFormField(ctx, A, cellW);
+        plans.push({ A, B: null, cw: cellW, rh: ha });
+        planY += ha;
+        continue;
+      }
+      const B = student.rows[i + 1];
+      const hasB = B && !B.full;
+      const narrow = planY < bandH && hasB;
+      const cw = narrow ? cellW - (photoW + 16) : cellW;
+      const ha = measureFormField(ctx, A, cw);
+      const hb = hasB ? measureFormField(ctx, B, cw) : 0;
+      const rh = Math.max(ha, hb);
+      plans.push({ A, B: hasB ? B : null, cw, rh });
+      if (hasB) i++;
+      planY += rh;
+    }
+    const total = SEC_HEAD_H + planY + 8;
+    ensure(total);
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, student.title, student.titleAr);
+    const pt = y - 3;
+    const px = PDF_W - PDF_M.right - photoW;
+    drawPhotoFrame(ctx, px, pt, photoW, photoH, photo);
+    for (const pl of plans) {
+      drawFormField(ctx, PDF_M.left, y, pl.cw, pl.A);
+      if (pl.B) drawFormField(ctx, PDF_M.left + pl.cw + 14, y, pl.cw, pl.B);
+      y += pl.rh;
+    }
+    y += 16;
+  } else if (photo) {
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, 'Student Information', AR_TITLES['Student Information']);
+    drawPhotoFrame(ctx, PDF_W - PDF_M.right - 76, y - 3, 76, 94, photo);
+    y += 10;
   }
 
-  html += `<div class="sec">Documents</div>`;
-  const canView = x => x.contentType === 'application/pdf' || /^image\//.test(x.contentType || '');
-  html += (r.files && r.files.length)
-    ? `<div class="files">` + r.files.map(x => {
-        const base = `/api/careerfile?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(x.storedAs)}`;
-        const view = canView(x)
-          ? `<a href="${base}&mode=inline" target="_blank" rel="noopener">View</a>` : '';
-        return `<div class="file"><span>${esc(CAREER_FIELD_LABELS[x.field] || pretty(x.field))} — ${esc(x.filename)}
-           <span style="color:var(--faint)">(${Math.max(1, Math.round(x.bytes / 1024))} KB)</span></span>
-           <span class="filelinks">${view}<a href="${base}">Download</a></span></div>`;
-      }).join('') + `</div>`
-    : `<p style="color:var(--faint);font-size:14px;margin:0">No documents were uploaded.</p>`;
-
-  // Same auto-save pattern as the admissions drawer: status on change, notes
-  // on blur, no Update button to press or forget.
-  html += `<div class="sec">Status</div>
-    <div class="row" style="margin-top:0;align-items:center">
-      <select class="field" id="d-status" style="flex:1;min-width:180px">${CAREER_STATUSES.map(s =>
-        `<option value="${esc(s)}"${s === r.status ? ' selected' : ''}>${esc(pretty(s))}</option>`).join('')}</select>
-      <span id="d-saved" class="saved hidden">Saved</span>
-    </div>
-    <div class="sec">Internal notes</div>
-    <textarea class="field" id="d-notes" rows="3" placeholder="Visible to HR only">${esc(r.notes || '')}</textarea>
-    <p style="color:var(--faint);font-size:12px;margin:8px 0 0">Changes save automatically.</p>
-
-    <div class="row" style="margin-top:22px;justify-content:flex-end">
-      <button class="danger" id="d-delete">Delete</button>
-    </div>
-    <div class="confirm hidden" id="d-confirm">
-      <h4>Delete this application permanently?</h4>
-      <p>
-        <strong>${esc(r.id)}</strong>${f.name ? ' — ' + esc(f.name) : ''} will be erased,
-        along with ${(r.files || []).length} uploaded document${(r.files || []).length === 1 ? '' : 's'}.
-        This cannot be undone.
-      </p>
-      <div class="row" style="margin-top:0">
-        <button class="danger-solid" id="d-delete-yes">Yes, delete permanently</button>
-        <button class="ghost" id="d-delete-no" style="border-color:#DCDAD2;color:var(--navy)">Cancel</button>
-      </div>
-    </div>
-    <p style="color:var(--faint);font-size:12.5px;margin-top:18px">
-      Received ${esc(new Date(r.submittedAt).toLocaleString())}${r.updatedAt ? ' · updated ' + esc(new Date(r.updatedAt).toLocaleString()) : ''}
-    </p>`;
-
-  $('#d-body').innerHTML = html;
-  $('#drawer').classList.remove('hidden');
-  $('#backdrop').classList.remove('hidden');
-
-  async function patch(payload, control) {
-    if (control) control.disabled = true;
-    try {
-      await api('/api/career?id=' + encodeURIComponent(r.id), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      Object.assign(r, payload);
-      $('#d-saved').classList.remove('hidden');
-      setTimeout(() => { const s = $('#d-saved'); if (s) s.classList.add('hidden'); }, 1600);
-      await loadCareers(); // keep the row, chips and counts in step
-    } catch (e) {
-      alert('Could not save: ' + e.message);
-    } finally {
-      if (control) control.disabled = false;
+  /* ---- remaining form sections (kept together on pages) ---- */
+  for (let gIdx = 1; gIdx < groups.length; gIdx++) {
+    const g = groups[gIdx];
+    if (!g.rows.length) continue;
+    const plan = [];
+    let planH = 0;
+    for (let i = 0; i < g.rows.length; i++) {
+      const A = g.rows[i];
+      if (A.full) {
+        const ha = measureFormField(ctx, A, PDF_CW);
+        plan.push({ A, B: null, full: true, rh: ha });
+        planH += ha;
+        continue;
+      }
+      const B = g.rows[i + 1];
+      const hasB = B && !B.full;
+      const rh = Math.max(
+        measureFormField(ctx, A, hasB ? cellW : PDF_CW),
+        hasB ? measureFormField(ctx, B, cellW) : 0);
+      plan.push({ A, B: hasB ? B : null, full: !hasB, rh });
+      if (hasB) i++;
+      planH += rh;
     }
+    ensure(SEC_HEAD_H + planH + 10);
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, g.title, g.titleAr);
+    for (const pl of plan) {
+      if (pl.full) {
+        drawFormField(ctx, PDF_M.left, y, PDF_CW, pl.A);
+      } else {
+        drawFormField(ctx, PDF_M.left, y, cellW, pl.A);
+        drawFormField(ctx, PDF_M.left + cellW + 14, y, cellW, pl.B);
+      }
+      y += pl.rh;
+    }
+    y += 16;
   }
 
-  $('#d-status').addEventListener('change', e =>
-    patch({ status: e.currentTarget.value }, e.currentTarget));
+  /* ---- Declaration & Signatures (always kept together on one page) ---- */
+  {
+    ctx.font = F.value;
+    const enLines = wrapLines(ctx, DECLARATION_TEXT, PDF_CW);
+    const arLines = wrapLines(ctx, DECLARATION_TEXT_AR, PDF_CW);
+    const declTotal = SEC_HEAD_H + 10 + (enLines.length + arLines.length) * 16 + 8;
+    const sigW = (PDF_CW - 14) / 2;
+    const parentRows = 2, officerRows = 3, adminRows = 2;
+    const sigTotal = SEC_HEAD_H + 10 + 26 + parentRows * 30 + 12 + officerRows * 30 + 12 + adminRows * 30 + 6;
+    ensure(declTotal + 16 + sigTotal);
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, 'Declaration', AR_TITLES['Declaration']);
+    y += 10;
+    ctx.font = F.value; ctx.fillStyle = '#1A1A1A'; ctx.textAlign = 'left';
+    for (const ln of enLines) { ctx.fillText(ln, PDF_M.left, y); y += 16; }
+    ctx.textAlign = 'right';
+    for (const ln of arLines) { ctx.fillText(ln, PDF_W - PDF_M.right, y); y += 16; }
+    ctx.textAlign = 'left';
+    y += 16;
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, 'Signatures & Approval', AR_TITLES['Signatures & Approval']);
+    y += 10;
+    drawSigBlock(ctx, PDF_M.left, y, sigW, 'Parent / Guardian Signature', 'توقيع ولي الأمر',
+      [{ label: 'Signature', labelAr: 'التوقيع' }, { label: 'Date', labelAr: 'التاريخ' }]);
+    drawSigBlock(ctx, PDF_M.left + sigW + 14, y, sigW, 'Admissions Officer', 'موظف القبول',
+      [{ label: 'Name', labelAr: 'الاسم' }, { label: 'Signature', labelAr: 'التوقيع' }, { label: 'Date', labelAr: 'التاريخ' }]);
+    const maxBlock = Math.max(y + 26 + parentRows * 30, y + 26 + officerRows * 30) + 12;
+    y = maxBlock;
+    drawSigBlock(ctx, PDF_M.left, y, sigW, 'School Administration', 'إدارة المدرسة',
+      [{ label: 'Approved By', labelAr: 'الاعتماد' }, { label: 'Signature', labelAr: 'التوقيع' }]);
+    drawStampBox(ctx, PDF_W - PDF_M.right - 66, y + 2);
+    y = Math.max(y + 26 + adminRows * 30, y + 40) + 4;
+  }
 
-  let lastNotes = r.notes || '';
-  $('#d-notes').addEventListener('blur', e => {
-    const v = e.currentTarget.value;
-    if (v === lastNotes) return;
-    lastNotes = v;
-    patch({ notes: v }, e.currentTarget);
+  if (String(a.notes || '').trim()) {
+    const isAr = hasArabic(a.notes);
+    const lines = wrapLines(ctx, a.notes, PDF_CW);
+    const total = SEC_HEAD_H + lines.length * 16 + 8;
+    ensure(total);
+    y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, 'Internal Notes', AR_TITLES['Internal Notes']);
+    ctx.font = F.value; ctx.fillStyle = '#1A1A1A';
+    ctx.textAlign = isAr ? 'right' : 'left';
+    for (const ln of lines) { ctx.fillText(ln, isAr ? PDF_W - PDF_M.right : PDF_M.left, y); y += 16; }
+    ctx.textAlign = 'left';
+    y += 6;
+  }
+
+  pages.push(page);
+  stampPages(pages, a, year);
+  return pages.map(p => ({ w: p.canvas.width, h: p.canvas.height, dataUrl: p.canvas.toDataURL('image/jpeg', 0.82) }));
+}
+
+function stampPages(pages, a, year) {
+  const n = pages.length;
+  const generated = fmtDateTime(new Date());
+  pages.forEach((p, i) => {
+    const ctx = p.ctx;
+    const yBase = PDF_H - 42;
+    ctx.save();
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, yBase - 10, PDF_W, 40);
+    ctx.strokeStyle = '#C3CAD4'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PDF_M.left, yBase - 6); ctx.lineTo(PDF_W - PDF_M.right, yBase - 6); ctx.stroke();
+    ctx.textAlign = 'left';
+    ctx.font = F.small; ctx.fillStyle = '#5B6472';
+    ctx.fillText('Application ' + a.id + '  \u00B7  Generated ' + generated, PDF_M.left, yBase + 4);
+    ctx.textAlign = 'right';
+    ctx.font = F.sub; ctx.fillStyle = '#0B2346';
+    ctx.fillText('Page ' + (i + 1) + ' of ' + n, PDF_W - PDF_M.right, yBase + 4);
+    ctx.restore();
+  });
+}
+
+function pdfFromJpegs(imgs) {
+  const enc = new TextEncoder();
+  const parts = [];
+  const offsets = [];
+  let pos = 0;
+  const add = b => { parts.push(b); pos += b.byteLength; };
+  const addStr = s => add(enc.encode(s));
+  const begin = () => offsets.push(pos);
+  const end = () => addStr('endobj\n');
+  const n = imgs.length;
+
+  addStr('%PDF-1.4\n');
+  begin(); addStr('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\n'); end();
+  begin(); addStr('2 0 obj\n<< /Type /Pages /Kids [' + imgs.map((_, i) => (3 + i) + ' 0 R').join(' ') + '] /Count ' + n + ' >>\n'); end();
+
+  imgs.forEach((im, i) => {
+    const p = 3 + i, c = 3 + n + i, imId = 3 + 2 * n + i;
+    begin(); addStr(p + ' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PDF_W + ' ' + PDF_H + '] /Resources << /XObject << /Im0 ' + imId + ' 0 R >> /ProcSet [/PDF /ImageC] >> /Contents ' + c + ' 0 R >>\n'); end();
+    const stream = 'q ' + PDF_W + ' 0 0 ' + PDF_H + ' 0 0 cm /Im0 Do Q\n';
+    const sBytes = enc.encode(stream);
+    begin(); addStr(c + ' 0 obj\n<< /Length ' + sBytes.byteLength + ' >>\nstream\n'); add(sBytes); addStr('\nendstream\n'); end();
+    const b64 = im.dataUrl.split(',')[1];
+    const bin = Uint8Array.from(atob(b64), ch => ch.charCodeAt(0));
+    begin(); addStr(imId + ' 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + im.w + ' /Height ' + im.h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + bin.byteLength + ' >>\nstream\n'); add(bin); addStr('\nendstream\n'); end();
   });
 
-  $('#d-delete').addEventListener('click', () => {
-    $('#d-confirm').classList.remove('hidden');
-    $('#d-delete').disabled = true;
-    $('#d-delete-yes').focus();
-  });
-  $('#d-delete-no').addEventListener('click', () => {
-    $('#d-confirm').classList.add('hidden');
-    $('#d-delete').disabled = false;
-  });
-  $('#d-delete-yes').addEventListener('click', async () => {
-    const yes = $('#d-delete-yes');
-    yes.disabled = true; yes.textContent = 'Deleting…';
-    try {
-      await api('/api/career?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
-      closeDrawer();
-      await loadCareers();
-    } catch (e) {
-      alert('Could not delete: ' + e.message);
-      yes.disabled = false; yes.textContent = 'Yes, delete permanently';
-    }
-  });
+  const xref = pos;
+  const total = 2 + 3 * n;
+  addStr('xref\n0 ' + (total + 1) + '\n');
+  addStr('0000000000 65535 f \n');
+  offsets.forEach(o => addStr(String(o).padStart(10, '0') + ' 00000 n \n'));
+  addStr('trailer\n<< /Size ' + (total + 1) + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF');
+  return new Blob(parts, { type: 'application/pdf' });
 }
 
 (async function boot() {
