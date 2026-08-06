@@ -105,6 +105,31 @@
   button:hover:not(:disabled){transform:translateY(-1px)}
   button:active:not(:disabled){transform:translateY(0)}
 
+  /* Inline validation: every field always reserves a fixed-error row so a
+     message can appear/disappear without moving any other element. The slot
+     stays in the flow; only opacity is toggled (fade ~200ms, no reflow).
+     The message itself is absolutely positioned inside the slot so its text
+     never contributes to the grid's intrinsic (max-content) size — long
+     errors can never stretch the shrink-to-fit form. */
+  .ms-err-slot{display:block;position:relative;height:21px;overflow:hidden}
+  .ms-field-err{position:absolute;top:5px;left:0;right:0;margin:0;display:flex;align-items:flex-start;gap:8px;color:#C0392B;font-size:12.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s .22s}
+  /* NID fields carry two slots (legacy hasXError + errStat.x) so their errors
+     can come from either source. They are mutually exclusive, so collapse the
+second slot onto the first: one shared 21px row, identical gap for every
+      field type. */
+  .ms-err-slot + .ms-err-slot{margin-top:-21px}
+  .ms-err-slot[data-err="true"] .ms-field-err{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s 0s}
+  div:has(> .ms-err-slot[data-err="true"]) input:not([type="hidden"]),
+  div:has(> .ms-err-slot[data-err="true"]) select,
+  div:has(> .ms-err-slot[data-err="true"]) textarea{border-color:#C0392B!important;box-shadow:0 0 0 4px rgba(192,57,43,.15)!important}
+
+  /* Full-width notice banners (photo/emergency/send errors): same reserved-slot
+     pattern so mounting an error never changes form width or height. */
+  .ms-alert-slot{display:block;position:relative;height:50px;overflow:hidden}
+  .ms-alert-slot.ms-alert-lg{height:92px}
+  .ms-alert{position:absolute;inset:0;margin:0;box-sizing:border-box;display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;color:#8E2C20;font-size:13.5px;line-height:1.5;overflow-wrap:anywhere;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s .22s}
+  .ms-alert-slot[data-err="true"] .ms-alert{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s 0s}
+
   /* White cards get a shared gentle hover lift. Both serialised and
      un-serialised spellings of the inline background/radius are matched. */
   [style*="border-radius:20px"][style*="background:#fff"],[style*="border-radius: 20px"][style*="background:#fff"],
@@ -398,8 +423,8 @@
       </sc-if>
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
       <button type="button" onClick="{{ goTerms }}" style="display:block;margin:0 auto 28px;border:1.5px solid #C89A2B;background:rgba(200,154,43,.12);color:#0B2346;cursor:pointer;font-size:15px;font-weight:800;padding:15px 36px;border-radius:999px" style-hover="background:rgba(200,154,43,.24)">{{ t.adm.termsBtn }}</button>
-      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:32px;align-items:start">
-        <form onSubmit="{{ submit }}" id="ms-apply-form" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+      <div style="display:grid;grid-template-columns:1fr;gap:32px">
+        <form onSubmit="{{ submit }}" id="ms-apply-form" style="max-width:960px;margin:0 auto;background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px"><h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0">{{ t.adm.formh }}</h2><span style="color:#C89A2B;font-weight:800;font-size:13px;letter-spacing:.04em">{{ t.adm.formsub }}</span></div>
           <p style="color:#8A93A1;font-size:13px;margin:0 0 20px">{{ t.adm.f.required }}</p>
           <div style="margin:0 0 26px">
@@ -409,20 +434,18 @@
 
           <div id="ms-step-1" data-step="1" style="{{ step1 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.student }}</div>
-          <sc-if value="{{ hasFileError }}" hint-placeholder-val="{{ false }}">
-            <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 14px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div>
-          </sc-if>
+          <div class="ms-alert-slot" data-err="{{ hasFileError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-            <label style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }} *</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label><div style="grid-column:1/-1;font-size:12.5px;color:#8A93A1;line-height:1.5">{{ t.adm.f.photoHint }}</div>
-            <div style="grid-column:1/-1"><label for="ms-year" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.year }} *</label><select name="year" id="ms-year" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.yearOpts }}" as="y" hint-placeholder-count="2"><option>{{ y }}</option></sc-for></select></div>
-            <div style="grid-column:1/-1"><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }} *</label><input name="sname" id="ms-sname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }} *</label><input name="arname" id="ms-arname" required="required" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-stDoc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.docType }} *</label><select name="stDoc" id="ms-stDoc" onChange="{{ onDocTypePick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;margin-bottom:16px"><option value="NationalID">{{ t.adm.f.docNid }}</option><option value="Passport">{{ t.adm.f.docPass }}</option></select><label for="ms-stNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.stNid }} *</label><input name="stNid" id="ms-stNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a 14-digit Egyptian national ID, or a passport number" onChange="{{ fillFromId }}" onInput="{{ normalizeId }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div style="{{ nidGovStyle }}"><span style="font-size:12px;color:#1B6B39;font-weight:700">{{ t.adm.f.govField }}: {{ govText }}</span></div><sc-if value="{{ hasNidError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;margin-top:8px;color:#8E2C20;font-size:12.5px;line-height:1.5"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ nidError }}</div></sc-if><label for="ms-govCode" style="display:none">{{ t.adm.f.govField }} code</label><label for="ms-govName" style="display:none">{{ t.adm.f.govField }} name</label><input type="hidden" name="govCode" id="ms-govCode"><input type="hidden" name="govName" id="ms-govName"></div>
-            <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select></div>
-            <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" min="2006-01-01" max="2024-12-31" onChange="{{ computeAge }}" style="width:100%;padding:14px 15px;cursor:pointer;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <label style="grid-column:1/-1;border:1.5px dashed #D2CFC4;border-radius:12px;padding:26px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.photo }} *</div><div style="{{ stylePhoto }}">{{ labelPhoto }}</div><input type="file" name="photo" onChange="{{ onFilePick }}" accept="image/*" style="display:none"></label><div style="grid-column:1/-1;font-size:12.5px;color:#8A93A1;line-height:1.5">{{ t.adm.f.photoHint }}</div>
+          <div style="grid-column:1/-1"><label for="ms-year" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.year }} *</label><select name="year" id="ms-year" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.yearOpts }}" as="y" hint-placeholder-count="2"><option>{{ y }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.year }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.year }}</span></div></div></div>
+            <div style="grid-column:1/-1"><label for="ms-sname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.sname }} *</label><input name="sname" id="ms-sname" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.sname }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.sname }}</span></div></div></div>
+            <div style="grid-column:1/-1"><label for="ms-arname" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.arname }} *</label><input name="arname" id="ms-arname" required="required" dir="rtl" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.arname }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.arname }}</span></div></div></div>
+            <div><label for="ms-stDoc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.docType }} *</label><select name="stDoc" id="ms-stDoc" onChange="{{ onDocTypePick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346;margin-bottom:16px"><option value="NationalID">{{ t.adm.f.docNid }}</option><option value="Passport">{{ t.adm.f.docPass }}</option></select><label for="ms-stNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.stNid }} *</label><input name="stNid" id="ms-stNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a valid ID number" onChange="{{ fillFromId }}" onInput="{{ normalizeId }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div style="{{ nidGovStyle }}"><span style="font-size:12px;color:#1B6B39;font-weight:700">{{ t.adm.f.govField }}: {{ govText }}</span></div><div class="ms-err-slot" data-err="{{ hasNidError }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ nidError }}</div></div><div class="ms-err-slot" data-err="{{ errStat.stNid }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.stNid }}</span></div></div><label for="ms-govCode" style="display:none">{{ t.adm.f.govField }} code</label><label for="ms-govName" style="display:none">{{ t.adm.f.govField }} name</label><input type="hidden" name="govCode" id="ms-govCode"><input type="hidden" name="govName" id="ms-govName"></div>
+            <div><label for="ms-grade" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.grade }} *</label><select name="grade" id="ms-grade" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.gradeOpts }}" as="g" hint-placeholder-count="6"><option>{{ g }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.grade }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.grade }}</span></div></div></div>
+            <div><label for="ms-dob" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.dob }} *</label><input name="dob" id="ms-dob" required="required" type="date" min="2006-01-01" max="2024-12-31" onChange="{{ computeAge }}" style="width:100%;padding:14px 15px;cursor:pointer;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.dob }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.dob }}</span></div></div></div>
             <div><label for="ms-age" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.age }}</label><input name="age" id="ms-age" type="number" readonly placeholder="—" title="Calculated from date of birth" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#F1EFE8;color:#5B6472"></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.gender }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Male" style="accent-color:#C89A2B">{{ t.adm.f.gm }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="gender" value="Female" style="accent-color:#C89A2B">{{ t.adm.f.gf }}</label></div></div>
-            <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }} *</label><input name="citizenship" id="ms-citizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-citizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.citizenship }} *</label><input name="citizenship" id="ms-citizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.citizenship }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.citizenship }}</span></div></div></div>
             <div><label for="ms-country" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.country }}</label><select name="country" id="ms-country" onChange="{{ onAreaPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.countryOpts }}" as="c" hint-placeholder-count="10"><option>{{ c }}</option></sc-for></select></div>
             <div style="{{ otherArea }}"><label for="ms-countryOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.countryOther }}</label><input name="countryOther" id="ms-countryOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-address" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.address }}</label><input name="address" id="ms-address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
@@ -433,14 +456,14 @@
           </div>
           <div id="ms-step-2" data-step="2" style="{{ step2 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.prevH }}</div>
-          <div style="margin:0 0 20px"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.firstSchool }} *</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="Yes" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsYes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="No" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsNo }}</label></div></div>
+          <div style="margin:0 0 20px"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.firstSchool }} *</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="Yes" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsYes }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="firstSchool" value="No" required="required" onChange="{{ onFirstSchoolPick }}" style="accent-color:#C89A2B">{{ t.adm.f.fsNo }}</label></div><div class="ms-err-slot" data-err="{{ errStat.firstSchool }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.firstSchool }}</span></div></div></div>
           <div style="{{ prevSchoolStyle }}">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div><label for="ms-psName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psName }} *</label><input name="psName" id="ms-psName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-psSystem" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psSystem }}</label><input name="psSystem" id="ms-psSystem" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-psGrades" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psGrades }}</label><input name="psGrades" id="ms-psGrades" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-psYears" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psYears }}</label><input name="psYears" id="ms-psYears" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-psLocation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psLocation }}</label><input name="psLocation" id="ms-psLocation" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-psName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psName }} *</label><input name="psName" id="ms-psName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psName }}</span></div></div></div>
+            <div><label for="ms-psSystem" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psSystem }} *</label><input name="psSystem" id="ms-psSystem" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psSystem }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psSystem }}</span></div></div></div>
+            <div><label for="ms-psGrades" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psGrades }} *</label><input name="psGrades" id="ms-psGrades" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psGrades }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psGrades }}</span></div></div></div>
+            <div><label for="ms-psYears" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psYears }} *</label><input name="psYears" id="ms-psYears" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psYears }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psYears }}</span></div></div></div>
+            <div style="grid-column:1/-1"><label for="ms-psLocation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.psLocation }} *</label><input name="psLocation" id="ms-psLocation" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.psLocation }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.psLocation }}</span></div></div></div>
           </div>
           </div>
 
@@ -449,32 +472,32 @@
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.parent }}</div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.fatherH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
-            <div><label for="ms-faName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faName }} *</label><input name="faName" id="ms-faName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faName }} *</label><input name="faName" id="ms-faName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faName }}</span></div></div></div>
             <div><label for="ms-faOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOcc }}</label><input name="faOcc" id="ms-faOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-faOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faOccCat }}</label><select name="faOccCat" id="ms-faOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatFatherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
-            <div><label for="ms-faMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faMobile }} *</label><input name="faMobile" id="ms-faMobile" required="required" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid Egyptian mobile — 11 digits starting with 010, 011, 012 or 015" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-faNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faNid }} *</label><input name="faNid" id="ms-faNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a 14-digit Egyptian national ID, or a passport number" onChange="{{ onParentNid }}" onInput="{{ onParentNid }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-if value="{{ hasFaNidError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;margin-top:8px;color:#8E2C20;font-size:12.5px;line-height:1.5"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ faNidError }}</div></sc-if></div>
-            <div><label for="ms-faCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faCitizenship }} *</label><input name="faCitizenship" id="ms-faCitizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-faEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faEmail }}</label><input name="faEmail" id="ms-faEmail" type="email" pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address with a real domain and top-level domain (e.g. name@school.edu.eg)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-faAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faAddress }} *</label><input name="faAddress" id="ms-faAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-faMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faMobile }} *</label><input name="faMobile" id="ms-faMobile" required="required" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faMobile }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faMobile }}</span></div></div></div>
+            <div><label for="ms-faNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faNid }} *</label><input name="faNid" id="ms-faNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a valid ID number" onChange="{{ onParentNid }}" onInput="{{ onParentNid }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ hasFaNidError }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ faNidError }}</div></div><div class="ms-err-slot" data-err="{{ errStat.faNid }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faNid }}</span></div></div></div>
+            <div><label for="ms-faCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faCitizenship }} *</label><input name="faCitizenship" id="ms-faCitizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faCitizenship }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faCitizenship }}</span></div></div></div>
+            <div><label for="ms-faEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faEmail }}</label><input name="faEmail" id="ms-faEmail" type="email" pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faEmail }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faEmail }}</span></div></div></div>
+            <div><label for="ms-faAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.faAddress }} *</label><input name="faAddress" id="ms-faAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.faAddress }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.faAddress }}</span></div></div></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.motherH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
-            <div><label for="ms-moName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moName }} *</label><input name="moName" id="ms-moName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moName }} *</label><input name="moName" id="ms-moName" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moName }}</span></div></div></div>
             <div><label for="ms-moOcc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOcc }}</label><input name="moOcc" id="ms-moOcc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-moOccCat" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moOccCat }}</label><select name="moOccCat" id="ms-moOccCat" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.occCatMotherOpts }}" as="o" hint-placeholder-count="3"><option>{{ o }}</option></sc-for></select></div>
-            <div><label for="ms-moMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moMobile }} *</label><input name="moMobile" id="ms-moMobile" required="required" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid Egyptian mobile — 11 digits starting with 010, 011, 012 or 015" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-moNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moNid }} *</label><input name="moNid" id="ms-moNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a 14-digit Egyptian national ID, or a passport number" onChange="{{ onParentNid }}" onInput="{{ onParentNid }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-if value="{{ hasMoNidError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:8px;align-items:flex-start;margin-top:8px;color:#8E2C20;font-size:12.5px;line-height:1.5"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ moNidError }}</div></sc-if></div>
-            <div><label for="ms-moCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moCitizenship }} *</label><input name="moCitizenship" id="ms-moCitizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-moEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moEmail }}</label><input name="moEmail" id="ms-moEmail" type="email" pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address with a real domain and top-level domain (e.g. name@school.edu.eg)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div style="grid-column:1/-1"><label for="ms-moAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moAddress }} *</label><input name="moAddress" id="ms-moAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-moMobile" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moMobile }} *</label><input name="moMobile" id="ms-moMobile" required="required" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moMobile }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moMobile }}</span></div></div></div>
+            <div><label for="ms-moNid" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moNid }} *</label><input name="moNid" id="ms-moNid" required="required" inputmode="text" pattern="[0-9]{14}|[A-Za-z][A-Za-z0-9]{5,11}" maxlength="14" title="Enter a valid ID number" onChange="{{ onParentNid }}" onInput="{{ onParentNid }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ hasMoNidError }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ moNidError }}</div></div><div class="ms-err-slot" data-err="{{ errStat.moNid }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moNid }}</span></div></div></div>
+            <div><label for="ms-moCitizenship" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moCitizenship }} *</label><input name="moCitizenship" id="ms-moCitizenship" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moCitizenship }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moCitizenship }}</span></div></div></div>
+            <div><label for="ms-moEmail" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moEmail }}</label><input name="moEmail" id="ms-moEmail" type="email" pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moEmail }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moEmail }}</span></div></div></div>
+            <div style="grid-column:1/-1"><label for="ms-moAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.moAddress }} *</label><input name="moAddress" id="ms-moAddress" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.moAddress }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.moAddress }}</span></div></div></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.familyH }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
             <div style="grid-column:1/-1"><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.marital }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Married" style="accent-color:#C89A2B">{{ t.adm.f.mMarried }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Separated" style="accent-color:#C89A2B">{{ t.adm.f.mSeparated }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Divorced" style="accent-color:#C89A2B">{{ t.adm.f.mDivorced }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="marital" value="Widowed" style="accent-color:#C89A2B">{{ t.adm.f.mWidowed }}</label></div></div>
             <div><label for="ms-siblingsNo" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.siblingsNo }}</label><input name="siblingsNo" id="ms-siblingsNo" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-birthOrder" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.birthOrder }}</label><input name="birthOrder" id="ms-birthOrder" type="number" min="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }} *</label><select name="guardian" id="ms-guardian" required="required" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><option value="" disabled selected hidden>{{ t.adm.f.guardianSelect }}</option><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-guardian" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardian }} *</label><select name="guardian" id="ms-guardian" required="required" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><option value="" disabled selected hidden>{{ t.adm.f.guardianSelect }}</option><sc-for list="{{ t.adm.guardianOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.guardian }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.guardian }}</span></div></div></div>
             <div style="{{ otherGuardian }}"><label for="ms-guardianOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.guardianOther }}</label><input name="guardianOther" id="ms-guardianOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><span style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongue }}</span><div style="display:flex;gap:16px;flex-wrap:wrap;padding-top:8px"><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Arabic" style="accent-color:#C89A2B">{{ t.adm.f.tA }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="English" style="accent-color:#C89A2B">{{ t.adm.f.tB }}</label><label style="display:inline-flex;gap:7px;align-items:center;font-size:14.5px;color:#0B2346;font-weight:500;cursor:pointer"><input type="radio" name="tongue" onChange="{{ onOtherPick }}" value="Other" style="accent-color:#C89A2B">{{ t.adm.f.tC }}</label></div></div>
             <div style="{{ otherTongue }}"><label for="ms-tongueOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.tongueOther }}</label><input name="tongueOther" id="ms-tongueOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
@@ -505,22 +528,20 @@
           <div id="ms-step-5" data-step="5" style="{{ step5 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px">{{ t.adm.f.emergencyH }}</div>
           <p style="color:#8A93A1;font-size:12.5px;margin:0 0 16px">{{ t.adm.f.emergencyNote }}</p>
-          <sc-if value="{{ hasEmergencyError }}" hint-placeholder-val="{{ false }}">
-            <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 14px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ emergencyError }}</div>
-          </sc-if>
+          <div class="ms-alert-slot" data-err="{{ hasEmergencyError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ emergencyError }}</div></div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person1 }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
-            <div><label for="ms-eName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName" id="ms-eName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-ePhone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone" id="ms-ePhone" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid Egyptian mobile — 11 digits starting with 010, 011, 012 or 015" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-eRelation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation" id="ms-eRelation" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eName" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName" id="ms-eName" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.eName }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eName }}</span></div></div></div>
+            <div><label for="ms-ePhone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone" id="ms-ePhone" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.ePhone }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.ePhone }}</span></div></div></div>
+            <div><label for="ms-eRelation" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation" id="ms-eRelation" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.eRelation }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eRelation }}</span></div></div></div>
             <div style="{{ otherRelation }}"><label for="ms-eRelationOther" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelationOther }}</label><input name="eRelationOther" id="ms-eRelationOther" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eAddress" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress" id="ms-eAddress" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
           <div style="font-weight:800;color:#0B2346;font-size:14px;margin:0 0 12px">{{ t.adm.f.person2 }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
-            <div><label for="ms-eName-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName_2" id="ms-eName-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-ePhone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone_2" id="ms-ePhone-2" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid Egyptian mobile — 11 digits starting with 010, 011, 012 or 015" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-eRelation-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation_2" id="ms-eRelation-2" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select></div>
+            <div><label for="ms-eName-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eName }}</label><input name="eName_2" id="ms-eName-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.eName_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eName_2 }}</span></div></div></div>
+            <div><label for="ms-ePhone-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.ePhone }}</label><input name="ePhone_2" id="ms-ePhone-2" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid mobile number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ errStat.ePhone_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.ePhone_2 }}</span></div></div></div>
+            <div><label for="ms-eRelation-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelation }}</label><select name="eRelation_2" id="ms-eRelation-2" onChange="{{ onOtherPick }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.adm.relationOpts }}" as="o" hint-placeholder-count="5"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ errStat.eRelation_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ fieldErrors.eRelation_2 }}</span></div></div></div>
             <div style="{{ otherRelation2 }}"><label for="ms-eRelationOther-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eRelationOther }}</label><input name="eRelationOther_2" id="ms-eRelationOther-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-eAddress-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.eAddress }}</label><input name="eAddress_2" id="ms-eAddress-2" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
@@ -544,21 +565,17 @@
           </div>
           <div id="ms-step-7" data-step="7" style="{{ step7 }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.adm.f.docs }}</div>
-          <sc-if value="{{ hasFileError }}" hint-placeholder-val="{{ false }}">
-            <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 14px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div>
-          </sc-if>
+          <div class="ms-alert-slot" data-err="{{ hasFileError }}"><div role="alert" class="ms-alert"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ fileError }}</div></div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px">
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d1 }} *</div><div style="{{ styleD1 }}">{{ labelD1 }}</div><input type="file" name="d1" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d1 }} *</div><div style="{{ styleD1 }}">{{ labelD1 }}</div><input type="file" name="d1" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d2 }} *</div><div style="{{ styleD2 }}">{{ labelD2 }}</div><input type="file" name="d2" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d3 }} *</div><div style="{{ styleD3 }}">{{ labelD3 }}</div><input type="file" name="d3" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:32px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13.5px;font-weight:700;color:#0B2346">{{ t.adm.f.d4 }}</div><div style="{{ styleD4 }}">{{ labelD4 }}</div><input type="file" name="d4" onChange="{{ onFilePick }}" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none"></label>
             <div style="grid-column:1/-1"><label for="ms-d4Desc" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.adm.f.d4Desc }}</label><input name="d4Desc" id="ms-d4Desc" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
 
           </div>
-          <sc-if value="{{ hasSendError }}" hint-placeholder-val="{{ false }}">
-            <div role="alert" style="display:flex;gap:11px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:14px 16px;margin:0 0 18px;color:#8E2C20;font-size:13.5px;line-height:1.55"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span><strong style="display:block;margin-bottom:2px">{{ t.adm.f.errorH }}</strong>{{ t.adm.f.errorHint }}</span></div>
-          </sc-if>
+          <div class="ms-alert-slot ms-alert-lg" data-err="{{ hasSendError }}"><div role="alert" class="ms-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span><strong style="display:block;margin-bottom:2px">{{ t.adm.f.errorH }}</strong>{{ t.adm.f.errorHint }}</span></div></div>
           <sc-if value="{{ sending }}" hint-placeholder-val="{{ true }}">
             <div style="margin:0 0 16px">
               <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:700;color:#0B2346;margin-bottom:8px"><span>{{ t.adm.f.uploadingLabel }}</span><span style="font-variant-numeric:tabular-nums">{{ pctLabel }}</span></div>
@@ -575,7 +592,7 @@
           </div>
         </form>
 
-        <aside style="display:flex;flex-direction:column;gap:20px;position:sticky;top:100px">
+        <aside style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:960px;margin:0 auto">
           <div style="background:#0B2346;border-radius:20px;padding:30px 28px;color:#fff">
             <h3 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:24px;margin:0 0 18px">{{ t.adm.need.h }}</h3>
             <div style="display:flex;flex-direction:column;gap:13px"><sc-for list="{{ t.adm.need.items }}" as="it" hint-placeholder-count="4"><div style="display:flex;gap:11px;align-items:flex-start;color:rgba(255,255,255,.9);font-size:14.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.6" style="flex-shrink:0;margin-top:3px"><path d="M20 6 9 17l-5-5"/></svg>{{ it }}</div></sc-for></div>
@@ -804,7 +821,7 @@
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.personal }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
             <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
-            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number (7-20 digits; + and spaces allowed)" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
             <div style="grid-column:1/-1"><label for="ms-position" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.position }} *</label><select name="position" id="ms-position" required="required" value="{{ careerPosition }}" onChange="{{ setCareerPosition }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.careers.posOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
           </div>
@@ -815,9 +832,9 @@
           </div>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.docs }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:30px">
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cv" onChange="{{ onFilePick }}" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cert" onChange="{{ onFilePick }}" style="display:none"></label>
-            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="portfolio" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cv" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cert" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="portfolio" onChange="{{ onFilePick }}" style="display:none"></label>
           </div>
           <sc-if value="{{ hasCareerSendError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 16px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ careerSendError }}</div></sc-if>
           <button type="submit" disabled="{{ careerSending }}" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ careerSubmitLabel }}</button>
@@ -1076,10 +1093,10 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", emergencyError: "", parentNidError: {}, navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
+  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, fileError: "", emergencyError: "", parentNidError: {}, fieldErrors: {}, navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {}, fileError: "", emergencyError: "", parentNidError: {}, uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {}, fileError: "", emergencyError: "", parentNidError: {}, fieldErrors: {}, uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1087,7 +1104,7 @@ class Component extends DCLogic {
   toggleLang() {
     const next = this.state.lang === "en" ? "ar" : "en";
     this.applyDocLang(next);
-    this.setState({ lang: next });
+    this.setState({ lang: next, fieldErrors: {} });
   }
   toggleNav() {
     this.setState({ navOpen: !this.state.navOpen });
@@ -1135,6 +1152,96 @@ class Component extends DCLogic {
     for (let i = 0; i < els.length; i++) if (!els[i].checkValidity()) return els[i];
     return null;
   }
+  // ── Inline validation ────────────────────────────────────────────────────
+  // Replaces the browser's native bubbles: every invalid field gets a red
+  // message underneath plus a red border/glow, the first invalid control is
+  // scrolled to smoothly, and the error clears as soon as the field is valid.
+  // Name fields are also checked against their own script while the parent
+  // types (English names: letters, spaces, apostrophes, hyphens; Arabic names:
+  // Arabic letters, spaces, diacritics and tatweel only).
+  enNameRe() { return /^[A-Za-z][A-Za-z' -]*$/; }
+  arNameRe() { return /^[\u0621-\u064A\u064B-\u065F\u0670\u0640 ]+$/; }
+  fieldMessage(el) {
+    const t = this.content()[this.state.lang].adm.f;
+    if (el.getAttribute("type") === "file" || el.getAttribute("type") === "hidden" || el.readOnly) return "";
+    const raw = (el.value || "") + "";
+    if (el.id === "ms-arname") { if (raw && !this.arNameRe().test(raw)) return t.err.arabic; }
+    else if (el.id === "ms-sname") {
+      if (raw && !this.enNameRe().test(raw)) return t.err.english;
+    }
+    if (!el.checkValidity()) {
+      const v = el.validity;
+      if (v.valueMissing) return el.tagName === "SELECT" ? t.err.choice : t.err.required;
+      if (v.typeMismatch || v.patternMismatch) {
+        if (el.getAttribute("type") === "email") return t.err.email;
+        if (el.id === "ms-stNid" || el.id === "ms-faNid" || el.id === "ms-moNid") return t.err.nid;
+        if (el.getAttribute("type") === "tel") return t.err.phone;
+        return t.err.required;
+      }
+      if (v.rangeUnderflow || v.rangeOverflow) return t.err.date;
+      return t.err.required;
+    }
+    return "";
+  }
+  // Re-check every control of a step, merge the results into the shared
+  // fieldErrors map and return the first invalid control (or null). Errors stay
+  // visible on the steps the parent has already left, so nothing is silently
+  // lost when the final submit re-checks every step.
+  validateStep(n) {
+    const out = { ...(this.state.fieldErrors || {}) };
+    const seen = {};
+    let first = null;
+    for (const el of this.stepControls(n)) {
+      const name = el.getAttribute("name") || el.id || "";
+      if (!name || el.getAttribute("type") === "hidden" || el.getAttribute("type") === "file" || el.readOnly) continue;
+      if (seen[name]) continue;
+      seen[name] = 1;
+      const msg = this.fieldMessage(el);
+      if (msg) { out[name] = msg; if (!first) first = el; }
+      else delete out[name];
+    }
+    this.setState({ fieldErrors: out });
+    return first;
+  }
+  // Live re-validation of one control, fired from delegated document listeners
+  // (see componentDidMount). The listeners survive every React re-render, so
+  // the inline errors keep updating no matter how the component re-renders.
+  validateField(el) {
+    const name = el.getAttribute("name") || el.id || "";
+    if (!name || el.getAttribute("type") === "hidden" || el.getAttribute("type") === "file" || el.readOnly) return;
+    const cur = this.state.fieldErrors || {};
+    const msg = this.fieldMessage(el);
+    if (msg ? cur[name] === msg : !cur[name]) return;
+    const fe = { ...cur };
+    if (msg) fe[name] = msg; else delete fe[name];
+    this.setState({ fieldErrors: fe });
+  }
+  onFieldEvent(e) {
+    const el = e && e.target;
+    if (!el || el.nodeType !== 1) return;
+    if (el.tagName !== "INPUT" && el.tagName !== "SELECT" && el.tagName !== "TEXTAREA") return;
+    const form = document.getElementById("ms-apply-form");
+    if (!form || !form.contains(el)) return;
+    this.validateField(el);
+  }
+  componentDidMount() {
+    this.__onFieldEvent = (e) => this.onFieldEvent(e);
+    document.addEventListener("input", this.__onFieldEvent, true);
+    document.addEventListener("change", this.__onFieldEvent, true);
+  }
+  componentWillUnmount() {
+    if (this.__onFieldEvent) {
+      document.removeEventListener("input", this.__onFieldEvent, true);
+      document.removeEventListener("change", this.__onFieldEvent, true);
+      this.__onFieldEvent = null;
+    }
+  }
+  // Scroll the first invalid field into view and focus it — focus() alone never
+  // triggers a native validation bubble.
+  focusInvalid(el) {
+    try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
+    try { el.focus({ preventScroll: true }); } catch (e) { try { el.focus(); } catch (e2) {} }
+  }
   showStep(n) {
     this.setState({ step: n });
     const f = document.getElementById("ms-apply-form");
@@ -1147,8 +1254,8 @@ class Component extends DCLogic {
   submit(e) {
     if (e && e.preventDefault) e.preventDefault();
     const form = document.getElementById("ms-apply-form");
-    const here = this.firstInvalid(this.state.step);
-    if (here) { here.reportValidity(); return; }
+    const here = this.validateStep(this.state.step);
+    if (here) { this.focusInvalid(here); return; }
     const badNid = this.parentNidIssue(this.state.step);
     if (badNid) { this.focusNidProblem(badNid); return; }
     // The student photo is the one attachment that must exist before the parent
@@ -1161,10 +1268,10 @@ class Component extends DCLogic {
     // A field left invalid on an earlier step would be invisible from here, so
     // go back to it rather than failing silently.
     for (let n = 1; n < this.totalSteps(); n++) {
-      const el = this.firstInvalid(n);
+      const el = this.validateStep(n);
       if (el) {
         this.showStep(n);
-        setTimeout(() => { try { el.reportValidity(); } catch (err) {} }, 0);
+        setTimeout(() => { try { this.focusInvalid(el); } catch (err) {} }, 0);
         return;
       }
       const nid = this.parentNidIssue(n);
@@ -1373,16 +1480,20 @@ class Component extends DCLogic {
       gender: Number(s[12]) % 2 === 1 ? "Male" : "Female"
     };
   }
+  // The citizenship field is auto-filled from the national ID, using the exact
+  // bilingual wording — "Egyptian / مصري" for a male holder and "Egyptian /
+  // مصرية" for a female one — derived from the gender digit of the ID.
+  citizenFromId(gender) { return gender === "Female" ? "Egyptian / مصرية" : "Egyptian / مصري"; }
   nidErrorFor(reason) {
     const ar = this.state.lang === "ar";
     const msg = {
-      length: ar ? "الرقم القومي يجب أن يتكوّن من 14 رقمًا." : "National ID must be exactly 14 digits.",
-      digits: ar ? "الرقم القومي يجب أن يحتوي أرقامًا فقط." : "National ID must contain digits only.",
-      century: ar ? "رقم القرن غير مدعوم في الرقم القومي." : "Unsupported century digit in the National ID.",
-      month: ar ? "شهر ميلاد غير صالح داخل الرقم القومي." : "Invalid birth month encoded in the National ID.",
-      day: ar ? "يوم ميلاد غير صالح لهذا الشهر." : "Invalid day for the birth month (check leap years).",
-      future: ar ? "تاريخ الميلاد لا يمكن أن يكون في المستقبل." : "Date of birth cannot be in the future.",
-      gov: ar ? "رمز المحافظة غير مدعوم في الرقم القومي." : "Unsupported governorate code in the National ID."
+      length: ar ? "الرقم القومي يجب أن يتكوّن من 14 رقمًا." : "ID must be exactly 14 digits.",
+      digits: ar ? "الرقم القومي يجب أن يحتوي أرقامًا فقط." : "ID must contain digits only.",
+      century: ar ? "رقم الجيل غير صالح." : "Invalid generation.",
+      month: ar ? "شهر ميلاد غير صالح." : "Invalid birth month.",
+      day: ar ? "يوم ميلاد غير صالح لهذا الشهر." : "Invalid day for the month.",
+      future: ar ? "تاريخ ميلاد مستقبلي غير صالح." : "Birth date can't be in the future.",
+      gov: ar ? "رمز محافظة غير صالح." : "Invalid governorate code."
     };
     return msg[reason] || "";
   }
@@ -1428,7 +1539,7 @@ class Component extends DCLogic {
     const radio = form.querySelector('[name="gender"][value="' + r.gender + '"]');
     if (radio) radio.checked = true;
     const cit = form.querySelector('[name="citizenship"]');
-    if (cit) cit.value = r.govCode === "88" ? "" : (this.state.lang === "ar" ? "مصري" : "Egyptian");
+    if (cit && r.gender) cit.value = this.citizenFromId(r.gender);
     const gc = form.querySelector('[name="govCode"]'); if (gc) gc.value = r.govCode;
     const gn = form.querySelector('[name="govName"]'); if (gn) gn.value = r.govEn;
     this.setState({ nidError: "", govCode: r.govCode, govNameEn: r.govEn, govNameAr: r.govAr });
@@ -1444,8 +1555,8 @@ class Component extends DCLogic {
       inp.pattern = passport ? "[A-Za-z][A-Za-z0-9]{5,11}" : "[0-9]{14}";
       inp.inputmode = passport ? "text" : "numeric";
       inp.title = passport
-        ? (this.state.lang === "ar" ? "أدخل رقم جواز السفر (حرف يليه حروف أو أرقام)" : "Enter a passport number (a letter followed by letters or digits)")
-        : (this.state.lang === "ar" ? "أدخل الرقم القومي المكوّن من 14 رقمًا" : "Enter your 14-digit Egyptian national ID");
+        ? (this.state.lang === "ar" ? "أدخل رقم جواز سفر صحيحًا" : "Enter a valid passport number")
+        : (this.state.lang === "ar" ? "أدخل رقمك القومي" : "Enter your national ID");
     }
     if (passport) {
       const gc = sel.form.querySelector('[name="govCode"]'); if (gc) gc.value = "";
@@ -1476,9 +1587,12 @@ class Component extends DCLogic {
     const el = e && e.target;
     if (!el) return;
     const transferred = el.value === "No";
-    const psName = el.form && el.form.querySelector('[name="psName"]');
-    if (psName) psName.required = transferred;
-    this.setState({ firstSchool: transferred ? "No" : "Yes" });
+    const names = ["psName", "psSystem", "psGrades", "psYears", "psLocation"];
+    const form = el.form;
+    if (form) names.forEach(n => { const f = form.querySelector('[name="' + n + '"]'); if (f) f.required = transferred; });
+    const fe = Object.assign({}, this.state.fieldErrors || {});
+    if (!transferred) names.forEach(n => { delete fe[n]; });
+    this.setState({ firstSchool: transferred ? "No" : "Yes", fieldErrors: fe });
   }
   prevSchoolStyle() { return this.state.firstSchool === "No" ? "" : "display:none"; }
 
@@ -1665,6 +1779,12 @@ class Component extends DCLogic {
     if (/^\d{14}$/.test(v)) {
       const r = this.parseNid(v);
       if (!r.isValid) err = this.nidErrorFor(r.reason);
+      else {
+        // A valid parent ID identifies the holder first handily, so the
+        // citizenship is auto-filled with the gender-appropriate bilingual text.
+        const cit = el.form && el.form.querySelector('[name="' + (name === "faNid" ? "faCitizenship" : "moCitizenship") + '"]');
+        if (cit) cit.value = this.citizenFromId(r.gender);
+      }
     }
     const next = Object.assign({}, this.state.parentNidError);
     next[name] = err;
@@ -1959,6 +2079,19 @@ class Component extends DCLogic {
       onDocTypePick: (e) => this.onDocTypePick(e),
       nidError: this.state.nidError || "",
       hasNidError: !!this.state.nidError,
+      fieldErrors: this.state.fieldErrors || {},
+      errStat: (() => {
+        const fe = this.state.fieldErrors || {};
+        const pe = this.state.parentNidError || {};
+        const st = {};
+        ["year","sname","arname","stNid","grade","dob","citizenship",
+         "firstSchool","psName","psSystem","psGrades","psYears","psLocation",
+         "faName","faMobile","faNid","faCitizenship","faEmail","faAddress",
+         "moName","moMobile","moNid","moCitizenship","moEmail","moAddress",
+         "guardian","eName","ePhone","eRelation",
+         "eName_2","ePhone_2","eRelation_2"].forEach(k => { st[k] = fe[k] ? "true" : "false"; });
+        return st;
+      })(),
       onParentNid: (e) => this.onParentNid(e),
       hasFaNidError: !!(this.state.parentNidError && this.state.parentNidError.faNid),
       faNidError: (this.state.parentNidError && this.state.parentNidError.faNid) || "",
@@ -2140,15 +2273,16 @@ class Component extends DCLogic {
           relationOpts: ["Uncle", "Aunt", "Grandparent", "Family friend", "Other"],
           busRouteOpts: ["El Santa", "Tanta", "Basyoun", "Qutur", "Kafr El Zayat", "Other"],
           f: {
-            required: "Fields marked * are required. Please upload files as PDF, JPG or PNG.",
+            err: { required: "This field is required.", email: "Enter a valid email address.", phone: "Enter a valid phone number.", nid: "Enter a valid ID number.", date: "Enter a valid date of birth.", choice: "Please make a selection.", english: "Enter the name in English.", arabic: "Enter the name in Arabic." },
+            required: "Fill in all required fields.",
             firstSchool: "Is this the student's first school?", fsYes: "Yes (First School)", fsNo: "No (Transferred from another school)",
             guardianSelect: "Select the responsible guardian",
-            photoRequired: "Please upload the student's personal photo before submitting.",
+            photoRequired: "Photo required.",
             photoHint: "Recent photo — plain white background, portrait orientation with a 2:3–3:4 ratio (e.g. 4×6 cm). JPEG or PNG.",
-            photoInvalid: "That file is not a readable image. Please choose a JPEG or PNG photo.",
-            photoSpecs: "This photo does not meet the requirements — it must have a plain white background and a portrait ratio close to 3:4 (e.g. 4×6 cm).",
-            docsRequired: "All required attachments must be uploaded (Guardian's National ID, the student's birth certificate, and the certificate of the last educational stage).",
-            emergencyRequired: "Please complete at least one emergency contact (name and number).",
+            photoInvalid: "Invalid image file.",
+            photoSpecs: "Photo must be white-background and portrait (3:4).",
+            docsRequired: "Upload all required files.",
+            emergencyRequired: "Emergency contact required.",
             student: "Student information",
             photo: "Personal photo", year: "Academic year",
               sname: "Full name in English", arname: "Full name in Arabic", docType: "Identity document type", docNid: "National ID", docPass: "Passport", govField: "Governorate", stNid: "Student's national ID or passport",
@@ -2180,12 +2314,12 @@ class Component extends DCLogic {
             d4hint: "Multiple files allowed", d4Desc: "Describe the other attachments", upload: "Upload file", submit: "Submit application",
             next: "Next", back: "Back", skip: "Skip this step", stepOf: "Step {n} of {total}",
             sending: "Sending…", errorH: "We could not send your application",
-            errorHint: "Please check your connection and try again — your answers are still in the form.",
+            errorHint: "Check your connection and try again.",
             uploadingLabel: "Uploading your application…",
             uploadingHint: "Please keep this page open until it finishes.",
             filesWord: "files",
-            tooLarge: "“{name}” is too large. Each file must be under {max}. Try a smaller scan or photo.",
-            totalTooLarge: "Your documents total {size}, which is over the {max} limit. Please upload smaller scans or photos."
+            tooLarge: "File exceeds the {max} limit.",
+            totalTooLarge: "Uploads ({size}) exceed the {max} limit."
           },
           need: {
             h: "To schedule your assessment", items: ["Pre-K & KG1: current nursery report", "Transfer students: last two years' reports", "Letter of Good Conduct from current school", "Assessment fee: 600 EGP (non-refundable)"],
@@ -2348,15 +2482,16 @@ class Component extends DCLogic {
           relationOpts: ["عم/خال", "عمة/خالة", "جد/جدة", "صديق العائلة", "أخرى"],
           busRouteOpts: ["السنطة", "طنطا", "بسيون", "قطور", "كفر الزيات", "أخرى"],
           f: {
-            required: "الحقول المعلّمة بـ * مطلوبة. يُرجى رفع الملفات بصيغة PDF أو JPG أو PNG.",
+            err: { required: "هذا الحقل مطلوب.", email: "أدخل بريدًا إلكترونيًا صحيحًا.", phone: "أدخل رقم هاتف صحيحًا.", nid: "أدخل رقمًا قوميًا صحيحًا.", date: "أدخل تاريخ ميلاد صحيحًا.", choice: "يرجى الاختيار.", english: "أدخل الاسم بالإنجليزية.", arabic: "أدخل الاسم بالعربية." },
+            required: "أكمل جميع الحقول المطلوبة.",
             firstSchool: "هل هذه أول مدرسة للطالب؟", fsYes: "نعم (أول مدرسة)", fsNo: "لا (منقول من مدرسة أخرى)",
             guardianSelect: "اختر ولي الأمر المسؤول",
-            photoRequired: "يُرجى رفع الصورة الشخصية للطالب قبل إرسال الطلب.",
+            photoRequired: "الصورة الشخصية مطلوبة.",
             photoHint: "صورة حديثة — خلفية بيضاء بسيطة، وضع عمودي بنسبة 2:3 إلى 3:4 (مثل 4×6 سم). JPEG أو PNG.",
-            photoInvalid: "هذا الملف ليس صورة قابلة للقراءة. يُرجى اختيار صورة JPEG أو PNG.",
-            photoSpecs: "هذه الصورة لا تنطبق عليها الشروط — يجب أن تكون بخلفية بيضاء بسيطة وبنسبة عمودية قريبة من 3:4 (مثل 4×6 سم).",
-            docsRequired: "يجب رفع جميع المرفقات الإلزامية (بطاقة الرقم القومي لولي الأمر، شهادة ميلاد الطالب، وشهادة آخر مرحلة دراسية).",
-            emergencyRequired: "يُرجى استكمال بيانات جهة اتصال واحدة على الأقل في حالات الطوارئ (الاسم ورقم الهاتف).",
+            photoInvalid: "ملف الصورة غير صالح.",
+            photoSpecs: "الصورة يجب أن تكون بخلفية بيضاء وبوضع عمودي.",
+            docsRequired: "ارفع جميع الملفات المطلوبة.",
+            emergencyRequired: "جهة اتصال الطوارئ مطلوبة.",
             student: "بيانات الطالب",
             photo: "الصورة الشخصية", year: "العام الدراسي",
               sname: "الاسم بالكامل بالإنجليزية", arname: "الاسم بالكامل بالعربية", docType: "نوع مستند الهوية", docNid: "الرقم القومي", docPass: "جواز السفر", govField: "المحافظة", stNid: "الرقم القومي للطالب أو رقم الجواز",
@@ -2388,12 +2523,12 @@ class Component extends DCLogic {
             d4hint: "يمكن رفع أكثر من ملف", d4Desc: "وصف المرفقات الإضافية", upload: "رفع ملف", submit: "إرسال الطلب",
             next: "التالي", back: "السابق", skip: "تخطّي هذه الخطوة", stepOf: "الخطوة {n} من {total}",
             sending: "جارٍ الإرسال…", errorH: "تعذّر إرسال طلبك",
-            errorHint: "يرجى التحقق من الاتصال والمحاولة مرة أخرى — إجاباتك ما زالت موجودة في النموذج.",
+            errorHint: "تحقق من اتصالك وحاول مرة أخرى.",
             uploadingLabel: "جارٍ رفع طلبك…",
             uploadingHint: "يُرجى إبقاء الصفحة مفتوحة حتى اكتمال الرفع.",
             filesWord: "ملفات",
-            tooLarge: "الملف «{name}» كبير جدًا. يجب ألا يتجاوز حجم كل ملف {max}. جرّب صورة أو نسخة ممسوحة أصغر.",
-            totalTooLarge: "إجمالي حجم مستنداتك {size} وهو يتجاوز الحد المسموح {max}. يُرجى رفع نسخ أو صور أصغر حجمًا."
+            tooLarge: "الملف يتجاوز الحد الأقصى {max}.",
+            totalTooLarge: "إجمالي الملفات ({size}) يتجاوز الحد الأقصى {max}."
           },
           need: {
             h: "لتحديد موعد التقييم", items: ["Pre-K و KG1: تقرير الحضانة الحالي", "الطلاب المحوّلون: تقارير آخر عامين", "خطاب حسن سير وسلوك من المدرسة الحالية", "رسوم التقييم: 600 جنيه (غير مستردة)"],
