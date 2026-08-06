@@ -16,7 +16,7 @@
  * stored, so every error is caught and logged instead of propagated.
  */
 
-const NOTIFY_TO = process.env.MS_NOTIFY_EMAIL || 'admission@masters-edu.com';
+const NOTIFY_TO = process.env.MS_NOTIFY_EMAIL || 'admissions@masters-edu.com';
 const FROM = process.env.MS_FROM_EMAIL || 'Masters School <onboarding@resend.dev>';
 
 async function notifyNewApplication(row, fields) {
