@@ -663,8 +663,7 @@ function renderApplication(r) {
     '<span class="stickybar-id">' + icon('inbox') + esc(r.id) + '</span>' +
     '<div class="stickybar-actions">' +
       '<button class="btn btn-sm btn-secondary" data-act="edit">' + icon('pen') + 'Edit</button>' +
-      '<button class="btn btn-sm btn-primary" data-act="pdf">' + icon('download') + 'Download PDF</button>' +
-      '<button class="btn btn-sm btn-secondary" data-act="print">' + icon('printer') + 'Print</button>' +
+      '<button class="btn btn-sm btn-primary" data-act="print">' + icon('printer') + 'Print / Download PDF</button>' +
       '<button class="btn btn-sm btn-outline" data-act="zip">' + icon('folder') + '+ Attachments</button>' +
       '<button class="btn btn-sm btn-outline" data-act="zipattach">' + icon('paperclip') + 'Attachments</button>' +
       '<button class="btn btn-sm btn-ghost" id="close-drawer" data-act="close">' + icon('x') + 'Close</button>' +
@@ -686,15 +685,14 @@ function renderApplication(r) {
     '</div>' +
     '<div class="app-head-actions no-print">' +
       '<button class="btn btn-secondary" data-act="edit">' + icon('pen') + 'Edit</button>' +
-      '<button class="btn btn-primary" data-act="pdf">' + icon('download') + 'Download PDF</button>' +
-      '<button class="btn btn-secondary" data-act="print">' + icon('printer') + 'Print</button>' +
+      '<button class="btn btn-primary" data-act="print">' + icon('printer') + 'Print / Download PDF</button>' +
       '<button class="btn btn-outline" data-act="zipattach">' + icon('paperclip') + 'Attachments</button>' +
       '<div class="menu-wrap">' +
         '<button class="btn btn-ghost iconbtn" id="more-btn" data-act="more" aria-haspopup="menu" aria-expanded="false" aria-label="More actions">' + icon('more') + '</button>' +
         '<div class="menu hidden" id="more-menu" role="menu" aria-label="More actions">' +
           '<button class="menu-item" role="menuitem" data-act="zip">' + icon('folder') + 'Download with Attachments</button>' +
           '<button class="menu-item" role="menuitem" data-act="zipattach">' + icon('paperclip') + 'Download Attachments Only</button>' +
-          '<button class="menu-item" role="menuitem" data-act="print">' + icon('printer') + 'Print Application</button>' +
+          '<button class="menu-item" role="menuitem" data-act="print">' + icon('printer') + 'Print / Download PDF</button>' +
           '<div class="menu-sep"></div>' +
           '<button class="menu-item danger" role="menuitem" data-act="delete">' + icon('trash') + 'Delete application…</button>' +
         '</div>' +
@@ -1030,13 +1028,32 @@ document.addEventListener('keydown', e => {
 
 /* ------------------------- file downloads ------------------------- */
 
+function showToast(msg) {
+  let t = document.getElementById('pdf-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'pdf-toast';
+    t.setAttribute('role', 'status');
+    t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;' +
+      'background:#111;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.4 Arial,sans-serif;' +
+      'box-shadow:0 4px 14px rgba(0,0,0,.35);opacity:0;transition:opacity .25s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(showToast._h);
+  showToast._h = setTimeout(() => { t.style.opacity = '0'; }, 6000);
+}
+
 function downloadBlob(blob, name) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = name;
+  a.style.display = 'none';
   document.body.appendChild(a);
-  a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 2000);
+  showToast('Downloading ' + name + '…');
 }
 
 async function fetchFileBytes(id, name) {
@@ -1057,33 +1074,42 @@ function loadImageSafe(src) {
 async function downloadApplicationPdf() {
   const a = currentApp;
   if (!a) return;
-  const pdf = await generateApplicationPdf(a);
-  downloadBlob(pdf, 'Application-' + a.id + '.pdf');
+  try {
+    const pdf = await generateApplicationPdf(a);
+    downloadBlob(pdf, 'Application-' + a.id + '.pdf');
+  } catch (e) {
+    console.error('[PDF] generation failed for application', a.id, e);
+    throw e;
+  }
 }
 
 async function printOfficialApplication() {
   const a = currentApp;
   if (!a) return;
-  const w = window.open('', '_blank', 'width=900,height=1240');
-  if (!w) { alert('Please allow pop-ups for this site so the admission form can be printed.'); return; }
-  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Preparing the admission form…</title>' +
-    '<style>body{font-family:Arial,sans-serif;text-align:center;color:#444;background:#fff;padding:80px 20px}</style>' +
-    '</head><body><p>Preparing the official admission form for printing…</p></body></html>');
-  w.document.close();
+  let pages;
   try {
-    const pages = await buildPdfPages(a);
-    populatePrintWindow(w, pages, 'Masters Language School — Admission Application ' + a.id);
+    pages = await buildPdfPages(a);
   } catch (e) {
-    w.close();
     alert('Could not generate the printable form: ' + e.message);
+    return;
   }
+  const title = 'Masters Language School — Admission Application ' + a.id;
+  const w = window.open('', '_blank', 'width=900,height=1240');
+  if (w && w.document) {
+    try {
+      populatePrintWindow(w, pages, title);
+      return;
+    } catch (e) {
+      try { w.close(); } catch (e2) {}
+    }
+  }
+  printViaIframe(pages, title);
 }
 
-function populatePrintWindow(w, pages, title) {
+function printDocumentHtml(pages, title) {
   const imgs = pages.map((p, i) =>
     '<img class="pg" src="' + p.dataUrl + '" alt="Page ' + (i + 1) + ' of ' + pages.length + '"/>').join('');
-  w.document.open();
-  w.document.write('<!doctype html><html><head><meta charset="utf-8">' +
+  return '<!doctype html><html><head><meta charset="utf-8">' +
     '<title>' + esc(title) + '</title>' +
     '<style>' +
       'html,body{margin:0;padding:0;background:#E7E9EE}' +
@@ -1103,9 +1129,28 @@ function populatePrintWindow(w, pages, title) {
       'if(!ims[i].complete||ims[i].naturalWidth===0){ok=false;break;}}' +
       'if(ok){window.focus();setTimeout(function(){window.print();},250);}else{setTimeout(go,150);}}' +
       'setTimeout(go,200);' +
-    '<\/script></body></html>');
+    '<\/script></body></html>';
+}
+
+function populatePrintWindow(w, pages, title) {
+  w.document.open();
+  w.document.write(printDocumentHtml(pages, title));
   w.document.close();
   return w;
+}
+
+function printViaIframe(pages, title) {
+  let f = document.getElementById('print-frame');
+  if (!f) {
+    f = document.createElement('iframe');
+    f.id = 'print-frame';
+    f.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;';
+    document.body.appendChild(f);
+  }
+  const doc = f.contentDocument;
+  doc.open();
+  doc.write(printDocumentHtml(pages, title));
+  doc.close();
 }
 
 async function downloadPdfWithAttachments() {
@@ -1348,17 +1393,24 @@ function splitVal(v) {
   return ar ? { en: null, ar } : { en: s, ar: null };
 }
 async function ensurePdfFonts() {
-  try {
-    if (document.fonts && document.fonts.load) {
-      await document.fonts.load('700 24px "Cormorant Garamond"');
-      await document.fonts.load('700 14px "Cormorant Garamond"');
-      await document.fonts.load('700 17px Amiri');
-      await document.fonts.load('600 7.5px "Plus Jakarta Sans"');
-      await document.fonts.load('700 13.5px "Plus Jakarta Sans"');
-      await document.fonts.load('400 11px "Plus Jakarta Sans"');
-      await document.fonts.load('400 11px Tajawal');
+  if (!(document.fonts && document.fonts.load)) return;
+  const specs = [
+    '700 24px "Cormorant Garamond"',
+    '700 14px "Cormorant Garamond"',
+    '700 17px Amiri',
+    '600 7.5px "Plus Jakarta Sans"',
+    '700 13.5px "Plus Jakarta Sans"',
+    '400 11px "Plus Jakarta Sans"',
+    '400 11px Tajawal',
+  ];
+  await Promise.all(specs.map(spec =>
+    document.fonts.load(spec).catch(e => { console.warn('[PDF] font failed to load: ' + spec, e); return null; })));
+  try { await document.fonts.ready; } catch (e) { console.warn('[PDF] waiting on fonts.ready failed', e); }
+  for (const fam of ['Cormorant Garamond', 'Amiri']) {
+    if (!document.fonts.check('700 24px ' + fam)) {
+      console.warn('[PDF] custom font "' + fam + '" is not available — output may use a fallback typeface.');
     }
-  } catch (e) { /* web fonts unavailable; fall back to local system fonts */ }
+  }
 }
 const PRINT_LABELS = { faOcc: "Father's Occupation", moOcc: "Mother's Occupation" };
 const PRINT_AR_LABELS = { faOcc: 'وظيفة الأب', moOcc: 'وظيفة الأم' };
@@ -1696,8 +1748,51 @@ function newPdfCanvas() {
   return { canvas: c, ctx };
 }
 
+function nextPaint() {
+  return new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+}
+
+function canvasLooksBlank(canvas) {
+  const w = 96, h = Math.max(8, Math.round((w * canvas.height) / canvas.width));
+  const probe = document.createElement('canvas');
+  probe.width = w; probe.height = h;
+  const pctx = probe.getContext('2d', { willReadFrequently: true });
+  pctx.drawImage(canvas, 0, 0, w, h);
+  const d = pctx.getImageData(0, 0, w, h).data;
+  let colored = 0, dark = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const r = d[i], g = d[i + 1], b = d[i + 2];
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (mx - mn > 14 || mx < 246) {
+      colored++;
+      if (mx < 190) dark++;
+    }
+  }
+  const px = d.length / 4;
+  return colored / px < 0.004 || dark / px < 0.0012;
+}
+
+function toJpegDataUrl(canvas) {
+  let url = canvas.toDataURL('image/jpeg', 0.82);
+  if (!/^data:image\/jpeg/i.test(url)) {
+    const c = document.createElement('canvas');
+    c.width = canvas.width; c.height = canvas.height;
+    c.getContext('2d').drawImage(canvas, 0, 0);
+    url = c.toDataURL('image/jpeg', 0.82);
+    if (!/^data:image\/jpeg/i.test(url)) throw new Error('The PDF page could not be encoded as JPEG.');
+  }
+  return url;
+}
+
 async function generateApplicationPdf(a) {
   const pages = await buildPdfPages(a);
+  if (typeof CompressionStream === 'function') {
+    try {
+      return await pdfFromPrintRaster(pages);
+    } catch (e) {
+      console.warn('[PDF] FlateDecode raster failed — falling back to JPEG pages.', e);
+    }
+  }
   return pdfFromJpegs(pages);
 }
 
@@ -1706,8 +1801,12 @@ async function buildPdfPages(a) {
   const f = a.fields || {};
   const files = a.files || [];
   const logo = await loadImageSafe('uploads/mssters-logo.png');
+  if (!logo) console.warn('[PDF] school logo failed to load — using the fallback mark.');
   const photoFile = files.find(x => x.field === 'photo');
   const photo = photoFile ? await loadImageSafe(fileUrl(a.id, photoFile, 'inline')) : null;
+  if (photoFile && !photo) {
+    throw new Error('The student photo could not be loaded, so the PDF was not generated. Use the Preview link on the file card to open it directly.');
+  }
   const groups = printFieldGroups(a);
   const year = f.year || '\u2014';
   const stat = statusInfo(a.status);
@@ -1803,6 +1902,65 @@ async function buildPdfPages(a) {
   for (let gIdx = 1; gIdx < groups.length; gIdx++) {
     const g = groups[gIdx];
     if (!g.rows.length) continue;
+
+    if (g.title === 'Parent / Guardian Information') {
+      /* Two-column parent layout: mother left, father right, then the
+         remaining family/guardian fields full-width below the columns. */
+      const faRows = [], moRows = [], restRows = [];
+      for (const row of g.rows) {
+        if (/^fa/i.test(row.key)) faRows.push(row);
+        else if (/^mo/i.test(row.key)) moRows.push(row);
+        else restRows.push(row);
+      }
+      const pairCount = Math.max(faRows.length, moRows.length);
+      const plan = [];
+      let planH = 0;
+      for (let i = 0; i < pairCount; i++) {
+        const A = faRows[i] || null, B = moRows[i] || null;
+        const rh = Math.max(
+          A ? measureFormField(ctx, A, cellW) : 0,
+          B ? measureFormField(ctx, B, cellW) : 0);
+        plan.push({ A, B, rh });
+        planH += rh;
+      }
+      const restPlan = [];
+      for (let i = 0; i < restRows.length; i++) {
+        const A = restRows[i];
+        if (A.full) {
+          const rh = measureFormField(ctx, A, PDF_CW);
+          restPlan.push({ A, B: null, full: true, rh });
+        } else {
+          const B = restRows[i + 1];
+          const hasB = B && !B.full;
+          const rh = Math.max(
+            measureFormField(ctx, A, hasB ? cellW : PDF_CW),
+            hasB ? measureFormField(ctx, B, cellW) : 0);
+          restPlan.push({ A, B: hasB ? B : null, full: !hasB, rh });
+          if (hasB) i++;
+        }
+        planH += restPlan[restPlan.length - 1].rh;
+      }
+      ensure(SEC_HEAD_H + planH + 10);
+      y = drawSectionHead(ctx, PDF_M.left, y, PDF_CW, g.title, g.titleAr);
+      for (const pl of plan) {
+        if (pl.B) drawFormField(ctx, PDF_M.left, y, cellW, pl.B);
+        if (pl.A) drawFormField(ctx, PDF_M.left + cellW + 14, y, cellW, pl.A);
+        y += pl.rh;
+      }
+      y += 8;
+      for (const pl of restPlan) {
+        if (pl.full) {
+          drawFormField(ctx, PDF_M.left, y, PDF_CW, pl.A);
+        } else {
+          drawFormField(ctx, PDF_M.left, y, cellW, pl.A);
+          drawFormField(ctx, PDF_M.left + cellW + 14, y, cellW, pl.B);
+        }
+        y += pl.rh;
+      }
+      y += 16;
+      continue;
+    }
+
     const plan = [];
     let planH = 0;
     for (let i = 0; i < g.rows.length; i++) {
@@ -1883,7 +2041,17 @@ async function buildPdfPages(a) {
 
   pages.push(page);
   stampPages(pages, a, year);
-  return pages.map(p => ({ w: p.canvas.width, h: p.canvas.height, dataUrl: p.canvas.toDataURL('image/jpeg', 0.82) }));
+  await nextPaint();
+  for (let i = 0; i < pages.length; i++) {
+    const c = pages[i].canvas;
+    if (!c.width || !c.height) {
+      throw new Error('A PDF page was created with zero dimensions — rendering failed.');
+    }
+    if (canvasLooksBlank(c)) {
+      throw new Error('Page ' + (i + 1) + ' rendered blank, so the PDF was not downloaded. The rendering error was logged in the browser console.');
+    }
+  }
+  return pages.map(p => ({ w: p.canvas.width, h: p.canvas.height, dataUrl: toJpegDataUrl(p.canvas) }));
 }
 
 function stampPages(pages, a, year) {
@@ -1907,7 +2075,7 @@ function stampPages(pages, a, year) {
   });
 }
 
-function pdfFromJpegs(imgs) {
+function writePdfDoc(imgs) {
   const enc = new TextEncoder();
   const parts = [];
   const offsets = [];
@@ -1924,13 +2092,11 @@ function pdfFromJpegs(imgs) {
 
   imgs.forEach((im, i) => {
     const p = 3 + i, c = 3 + n + i, imId = 3 + 2 * n + i;
-    begin(); addStr(p + ' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PDF_W + ' ' + PDF_H + '] /Resources << /XObject << /Im0 ' + imId + ' 0 R >> /ProcSet [/PDF /ImageC] >> /Contents ' + c + ' 0 R >>\n'); end();
+    begin(); addStr(p + ' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PDF_W + ' ' + PDF_H + '] /Resources << /XObject << /Im0 ' + imId + ' 0 R >> /ProcSet [/PDF /ImageC /ImageB] >> /Contents ' + c + ' 0 R >>\n'); end();
     const stream = 'q ' + PDF_W + ' 0 0 ' + PDF_H + ' 0 0 cm /Im0 Do Q\n';
     const sBytes = enc.encode(stream);
     begin(); addStr(c + ' 0 obj\n<< /Length ' + sBytes.byteLength + ' >>\nstream\n'); add(sBytes); addStr('\nendstream\n'); end();
-    const b64 = im.dataUrl.split(',')[1];
-    const bin = Uint8Array.from(atob(b64), ch => ch.charCodeAt(0));
-    begin(); addStr(imId + ' 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + im.w + ' /Height ' + im.h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + bin.byteLength + ' >>\nstream\n'); add(bin); addStr('\nendstream\n'); end();
+    begin(); addStr(imId + ' 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + im.w + ' /Height ' + im.h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /' + im.filter + ' /Length ' + im.data.byteLength + ' >>\nstream\n'); add(im.data); addStr('\nendstream\n'); end();
   });
 
   const xref = pos;
@@ -1940,6 +2106,76 @@ function pdfFromJpegs(imgs) {
   offsets.forEach(o => addStr(String(o).padStart(10, '0') + ' 00000 n \n'));
   addStr('trailer\n<< /Size ' + (total + 1) + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF');
   return new Blob(parts, { type: 'application/pdf' });
+}
+
+function pdfFromJpegs(imgs) {
+  return writePdfDoc(imgs.map(im => {
+    const b64 = im.dataUrl.split(',')[1];
+    if (!b64) throw new Error('PDF image data is missing — a page failed to encode.');
+    const bin = Uint8Array.from(atob(b64), ch => ch.charCodeAt(0));
+    if (bin.length < 4 || bin[0] !== 0xFF || bin[1] !== 0xD8) {
+      const b0 = (bin[0] || 0).toString(16).padStart(2, '0'), b1 = (bin[1] || 0).toString(16).padStart(2, '0');
+      throw new Error('A rendered page is not a JPEG (magic bytes 0x' + b0 + b1 + '), so the PDF was not downloaded.');
+    }
+    return { w: im.w, h: im.h, filter: 'DCTDecode', data: bin };
+  }));
+}
+
+async function pdfFromPrintRaster(pages) {
+  const imgs = [];
+  for (const p of pages) {
+    const c = await decodePageCanvas(p);
+    const rgb = await canvasRgbBytes(c);
+    const zlib = await deflateRawBytes(rgb);
+    if (!zlib || !zlib.length) throw new Error('Page ' + (imgs.length + 1) + ' produced no compressible data.');
+    imgs.push({ w: p.w, h: p.h, filter: 'FlateDecode', data: zlib });
+  }
+  return writePdfDoc(imgs);
+}
+
+function decodePageCanvas(page) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = page.w; c.height = page.h;
+        const g = c.getContext('2d', { willReadFrequently: true });
+        g.drawImage(img, 0, 0, page.w, page.h);
+        res(c);
+      } catch (e) { rej(e); }
+    };
+    img.onerror = () => rej(new Error('A rendered PDF page could not be decoded for embedding.'));
+    img.src = page.dataUrl;
+  });
+}
+
+function canvasRgbBytes(canvas) {
+  const w = canvas.width, h = canvas.height;
+  const d = canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, w, h).data;
+  const out = new Uint8Array(w * h * 3);
+  for (let i = 0, j = 0; i < d.length; i += 4, j += 3) {
+    out[j] = d[i]; out[j + 1] = d[i + 1]; out[j + 2] = d[i + 2];
+  }
+  return out;
+}
+
+async function deflateRawBytes(bytes) {
+  const cs = new CompressionStream('deflate');
+  const writer = cs.writable.getWriter();
+  writer.write(bytes);
+  writer.close();
+  const reader = cs.readable.getReader();
+  const chunks = [];
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+  }
+  const out = new Uint8Array(chunks.reduce((a, b) => a + b.length, 0));
+  let o = 0;
+  for (const c of chunks) { out.set(c, o); o += c.length; }
+  return out;
 }
 
 (async function boot() {
