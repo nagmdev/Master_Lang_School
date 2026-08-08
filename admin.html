@@ -92,6 +92,18 @@
   .warn{background:#FDF4E3;border:1px solid #E8C97A;color:#7A5B12;
         padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
 
+  /* ------------------- inline field errors (jobs form) ------------------ */
+  /* Same reserved-slot pattern as the public site: every field owns an
+     error slot so mounting an error never shifts the layout; only the field
+     whose own slot is flagged is highlighted. */
+  .ms-err-slot{display:block;position:relative;height:21px;overflow:hidden}
+  .ms-field-err{position:absolute;top:5px;left:0;right:0;margin:0;display:flex;align-items:flex-start;gap:8px;color:#C0392B;font-size:12.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility 0s .22s}
+  .ms-err-slot[data-err="true"] .ms-field-err{opacity:1;visibility:visible;transition:opacity .22s ease,visibility 0s 0s}
+  .ms-field-err svg{flex-shrink:0;margin-top:1px}
+  div:has(> .ms-err-slot[data-err="true"]) > input:not([type="hidden"]),
+  div:has(> .ms-err-slot[data-err="true"]) > select,
+  div:has(> .ms-err-slot[data-err="true"]) > textarea{border-color:var(--red)!important;box-shadow:0 0 0 4px rgba(192,57,43,.15)!important}
+
   /* ------------------------------ toolbar ------------------------------ */
   .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
   .searchbox{flex:1;min-width:250px;position:relative;display:flex;align-items:center}
@@ -476,57 +488,83 @@
       <h2 class="modal-title" id="job-modal-title">Add position</h2>
       <button class="btn btn-ghost iconbtn" id="job-modal-close" type="button" aria-label="Close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
     </div>
-    <form id="job-form">
+    <form id="job-form" novalidate>
       <input type="hidden" name="id">
       <div id="job-form-error" class="error hidden" role="alert"></div>
       <div class="fld-grid">
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Title (English) *</label>
           <input class="field" name="titleEn" required maxlength="120">
+          <div class="ms-err-slot" data-field="titleEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Title (Arabic) *</label>
           <input class="field" name="titleAr" dir="rtl" required maxlength="120">
+          <div class="ms-err-slot" data-field="titleAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Department (English)</label>
           <input class="field" name="deptEn" maxlength="80">
+          <div class="ms-err-slot" data-field="deptEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Department (Arabic)</label>
           <input class="field" name="deptAr" dir="rtl" maxlength="80">
+          <div class="ms-err-slot" data-field="deptAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
-          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (English)</label>
-          <input class="field" name="typeEn" maxlength="60">
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (English) *</label>
+          <select class="field" name="typeEn" required>
+            <option value="" disabled selected hidden>Select an employment type…</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Temporary">Temporary</option>
+            <option value="Internship">Internship</option>
+          </select>
+          <div class="ms-err-slot" data-field="typeEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
-          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (Arabic)</label>
-          <input class="field" name="typeAr" dir="rtl" maxlength="60">
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (Arabic) *</label>
+          <select class="field" name="typeAr" dir="rtl" required>
+            <option value="" disabled selected hidden>اختر نوع الوظيفة…</option>
+            <option value="دوام كامل">دوام كامل</option>
+            <option value="دوام جزئي">دوام جزئي</option>
+            <option value="عقد">عقد</option>
+            <option value="مؤقت">مؤقت</option>
+            <option value="تدريب">تدريب</option>
+          </select>
+          <div class="ms-err-slot" data-field="typeAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div style="grid-column:1/-1">
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Short description (English)</label>
           <textarea class="field" name="descEn" rows="3" maxlength="1000"></textarea>
+          <div class="ms-err-slot" data-field="descEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div style="grid-column:1/-1">
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Short description (Arabic)</label>
           <textarea class="field" name="descAr" dir="rtl" rows="3" maxlength="1000"></textarea>
+          <div class="ms-err-slot" data-field="descAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Responsibilities (English)</label>
           <textarea class="field" name="respEn" rows="4" placeholder="One per line"></textarea>
+          <div class="ms-err-slot" data-field="respEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">المسؤوليات (Arabic)</label>
           <textarea class="field" name="respAr" dir="rtl" rows="4" placeholder="سطر لكل بند"></textarea>
+          <div class="ms-err-slot" data-field="respAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Qualifications (English)</label>
           <textarea class="field" name="qualEn" rows="4" placeholder="One per line"></textarea>
+          <div class="ms-err-slot" data-field="qualEn"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <div>
           <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">المؤهلات (Arabic)</label>
           <textarea class="field" name="qualAr" dir="rtl" rows="4" placeholder="سطر في بند"></textarea>
+          <div class="ms-err-slot" data-field="qualAr"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg><span></span></div></div>
         </div>
         <label class="fld-hint" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#5B6472">
           <input type="checkbox" name="active" checked style="width:16px;height:16px"> Active — visible on the public Careers page
@@ -683,7 +721,12 @@ async function api(path, opts) {
   let data = {};
   try { data = await res.json(); } catch (e) {}
   if (res.status === 401) { showLogin(); throw new Error('not authenticated'); }
-  if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+  if (!res.ok) {
+    const err = new Error(data.error || ('HTTP ' + res.status));
+    err.status = res.status;
+    err.fields = data.fields || null;
+    throw err;
+  }
   return data;
 }
 
@@ -2638,6 +2681,102 @@ async function loadJobs() {
   }
 }
 
+/* --------------------- jobs form validation (EN/AR) ---------------------- */
+
+const ARABIC_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+const LATIN_RE = /[A-Za-z]/;
+const JOB_EN_TYPES = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
+const JOB_AR_TYPES = ['دوام كامل', 'دوام جزئي', 'عقد', 'مؤقت', 'تدريب'];
+const JOB_FIELD_MSGS = {
+  en: { required: 'This field is required.', lang: 'Please enter this field in English.', type: 'Please select an employment type.' },
+  ar: { required: 'هذا الحقل مطلوب.', lang: 'يرجى إدخال هذا الحقل باللغة العربية.', type: 'يرجى اختيار نوع الوظيفة.' },
+};
+
+// Field -> rules. `lang` marks the designated language of the field; `type`
+// fields are controlled dropdowns whose value must come from the fixed list.
+const JOB_FIELD_RULES = {
+  titleEn: { lang: 'en', required: true },
+  titleAr: { lang: 'ar', required: true },
+  deptEn: { lang: 'en' },
+  deptAr: { lang: 'ar' },
+  typeEn: { lang: 'en', type: true, required: true },
+  typeAr: { lang: 'ar', type: true, required: true },
+  descEn: { lang: 'en' },
+  descAr: { lang: 'ar' },
+  respEn: { lang: 'en' },
+  respAr: { lang: 'ar' },
+  qualEn: { lang: 'en' },
+  qualAr: { lang: 'ar' },
+};
+
+function jobFieldLang(name) { return name.slice(-2) === 'Ar' ? 'ar' : 'en'; }
+
+function jobFieldError(form, name) {
+  const rule = JOB_FIELD_RULES[name];
+  if (!rule) return '';
+  const lang = rule.lang || jobFieldLang(name);
+  const msgs = JOB_FIELD_MSGS[lang];
+  const el = form.elements[name];
+  if (!el) return '';
+  const value = String(el.value == null ? '' : el.value).trim();
+  if (rule.required && !value) return msgs.required;
+  if (!value) return '';
+  if (rule.type) {
+    const list = lang === 'en' ? JOB_EN_TYPES : JOB_AR_TYPES;
+    return list.indexOf(value) === -1 ? msgs.type : '';
+  }
+  const re = lang === 'en' ? ARABIC_RE : LATIN_RE;
+  return re.test(value) ? msgs.lang : '';
+}
+
+function jobErrSlot(form, name) {
+  return form.querySelector('.ms-err-slot[data-field="' + name + '"]');
+}
+
+function setJobFieldError(form, name, msg) {
+  const slot = jobErrSlot(form, name);
+  if (!slot) return;
+  const text = slot.querySelector('.ms-field-err span');
+  if (text) text.textContent = msg || '';
+  slot.setAttribute('data-err', msg ? 'true' : 'false');
+}
+
+function clearJobErrors(form) {
+  for (const name in JOB_FIELD_RULES) {
+    if (Object.prototype.hasOwnProperty.call(JOB_FIELD_RULES, name)) setJobFieldError(form, name, '');
+  }
+}
+
+function validateJobForm(form) {
+  const errors = {};
+  for (const name in JOB_FIELD_RULES) {
+    if (!Object.prototype.hasOwnProperty.call(JOB_FIELD_RULES, name)) continue;
+    const msg = jobFieldError(form, name);
+    if (msg) errors[name] = msg;
+  }
+  return errors;
+}
+
+// Employment-type selects are fixed lists; a stored legacy value that is not
+// in the list is added back as a selectable option so editing never discards
+// existing data silently.
+function setJobTypeValue(sel, value) {
+  if (!sel) return;
+  const list = sel.name === 'typeEn' ? JOB_EN_TYPES : JOB_AR_TYPES;
+  const known = list.indexOf(value) !== -1;
+  if (value && !known) {
+    let has = false;
+    for (const o of sel.options) if (o.value === value) has = true;
+    if (!has) {
+      const o = document.createElement('option');
+      o.value = value;
+      o.textContent = value;
+      sel.appendChild(o);
+    }
+  }
+  sel.value = value || '';
+}
+
 function openJobModal(job) {
   const form = $('#job-form');
   form.reset();
@@ -2649,8 +2788,8 @@ function openJobModal(job) {
     form.elements.titleAr.value = ar.r || '';
     form.elements.deptEn.value = en.d || '';
     form.elements.deptAr.value = ar.d || '';
-    form.elements.typeEn.value = en.ty || '';
-    form.elements.typeAr.value = ar.ty || '';
+    setJobTypeValue(form.elements.typeEn, en.ty || '');
+    setJobTypeValue(form.elements.typeAr, ar.ty || '');
     form.elements.descEn.value = en.desc || '';
     form.elements.descAr.value = ar.desc || '';
     form.elements.respEn.value = (en.resp || []).join('\n');
@@ -2659,6 +2798,7 @@ function openJobModal(job) {
     form.elements.qualAr.value = (ar.qual || []).join('\n');
     form.elements.active.checked = !!job.active;
   }
+  clearJobErrors(form);
   $('#job-form-error').classList.add('hidden');
   $('#job-modal').classList.remove('hidden');
   form.elements.titleEn.focus();
@@ -2675,6 +2815,20 @@ $('#job-form').addEventListener('submit', async e => {
   const form = e.target;
   const errBox = $('#job-form-error');
   errBox.classList.add('hidden');
+
+  // Client-side validation: every field's own error slot is surfaced, only
+  // invalid fields are highlighted, and submission is blocked until all pass.
+  const errors = validateJobForm(form);
+  const badFields = Object.keys(errors);
+  if (badFields.length) {
+    for (const name of badFields) setJobFieldError(form, name, errors[name]);
+    const first = badFields.find(n => form.elements[n]);
+    if (first) {
+      try { form.elements[first].focus({ preventScroll: true }); } catch (x) { try { form.elements[first].focus(); } catch (x2) {} }
+    }
+    return;
+  }
+
   const lines = (v) => v.split('\n').map(s => s.trim()).filter(Boolean);
   const payload = {
     id: form.elements.id.value || undefined,
@@ -2704,11 +2858,37 @@ $('#job-form').addEventListener('submit', async e => {
       alert('Position created (id: ' + created.id + '). It is now visible on the public Careers page.');
     }
   } catch (err) {
-    errBox.textContent = err.message;
-    errBox.classList.remove('hidden');
+    // Server-side validation rejected specific fields — map them back onto
+    // the same inline slots so the administrator sees exactly what to fix.
+    if (err.fields && err.fields.length) {
+      for (const name of err.fields) {
+        setJobFieldError(form, name, jobFieldError(form, name) ||
+          (jobFieldLang(name) === 'ar' ? JOB_FIELD_MSGS.ar.lang : JOB_FIELD_MSGS.en.lang));
+      }
+      const first = err.fields.find(n => form.elements[n]);
+      if (first) {
+        try { form.elements[first].focus({ preventScroll: true }); } catch (x) { try { form.elements[first].focus(); } catch (x2) {} }
+      }
+    } else {
+      errBox.textContent = err.message;
+      errBox.classList.remove('hidden');
+    }
   } finally {
     btn.disabled = false; btn.textContent = 'Save position';
   }
+});
+
+// Live re-validation: correcting a field clears its error immediately, and a
+// field regains its error state only while its own value is invalid.
+$('#job-form').addEventListener('input', e => {
+  const el = e.target;
+  if (!el || !el.name || !JOB_FIELD_RULES[el.name]) return;
+  setJobFieldError(el.form, el.name, jobFieldError(el.form, el.name));
+});
+$('#job-form').addEventListener('change', e => {
+  const el = e.target;
+  if (!el || !el.name || !JOB_FIELD_RULES[el.name]) return;
+  setJobFieldError(el.form, el.name, jobFieldError(el.form, el.name));
 });
 
 $('#jrows').addEventListener('click', async e => {
