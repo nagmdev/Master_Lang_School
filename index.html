@@ -1139,7 +1139,7 @@ second slot onto the first: one shared 21px row, identical gap for every
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "", care: {}, careFiles: {} };
+  state = { lang: (function () { try { return localStorage.getItem("ms_lang") === "ar" ? "ar" : "en"; } catch (e) { return "en"; } })(), page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "", care: {}, careFiles: {} };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
   go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {},  emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.pushHistory(page, null); this.scrollTop(); }
@@ -1150,6 +1150,7 @@ class Component extends DCLogic {
   toggleLang() {
     const next = this.state.lang === "en" ? "ar" : "en";
     this.applyDocLang(next);
+    try { localStorage.setItem("ms_lang", next); } catch (e) {}
     this.setState({ lang: next, fieldErrors: {} });
   }
   toggleNav() {
@@ -1297,6 +1298,7 @@ class Component extends DCLogic {
     document.addEventListener("change", this.__onCareerInput, true);
     this.__onPopState = () => this.syncFromHash(false);
     window.addEventListener("popstate", this.__onPopState);
+    this.applyDocLang(this.state.lang);
     this.syncFromHash(true);
   }
   componentWillUnmount() {
