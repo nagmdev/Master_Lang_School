@@ -32,6 +32,28 @@
     'bus-driver', 'bus-supervisor'
   ];
 
+  // ── Careers attachment file policy (spec 15–20) ───────────────────────────
+  // The `accept` hint gates the picker; the real gate is the file's magic
+  // bytes, so renaming monkey.jpg → resume.pdf cannot bypass validation.
+  var FILE_SIGS = {
+    pdf: [0x25, 0x50, 0x44, 0x46, 0x2d],                        // "%PDF-"
+    doc: [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1],      // OLE2/Compound File
+    docx: [0x50, 0x4b, 0x03, 0x04],                             // ZIP (OOXML)
+    jpg: [0xff, 0xd8, 0xff],
+    png: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]
+  };
+  var CV_TYPES = { pdf: 1, doc: 1, docx: 1 };
+  var CERT_TYPES = { pdf: 1, jpg: 1, png: 1 };
+  function fileKind(head) {
+    for (var k in FILE_SIGS) {
+      var sig = FILE_SIGS[k];
+      var ok = head && head.length >= sig.length;
+      for (var i = 0; ok && i < sig.length; i++) ok = head[i] === sig[i];
+      if (ok) return k;
+    }
+    return '';
+  }
+
   var DICT = {
     en: {
       brand: { name: 'Masters', tag: 'Language School' },
@@ -58,14 +80,19 @@
           { r: 'Bus Supervisors', key: 'Bus Supervisor', d: 'Transport', ty: 'Full-time', desc: 'Look after students during bus journeys and coordinate smoothly with drivers and parents.', resp: ['Supervise students on board at all times', 'Maintain route rosters and attendance records', 'Communicate updates to parents and the school'], qual: ['Experience caring for children in a similar role', 'Responsible and alert', 'Good communication skills'] }
         ],
         apply: 'Apply', formh: 'Application form', formsub: 'Tell us about yourself', applybtn: 'Apply for this position', jobeyebrow: 'Careers at Masters', jobh: 'About the role', resph: 'Main responsibilities', qualh: 'Required qualifications', jobback: 'Back to all positions', back: 'Back', tyLabel: 'Employment type', locLabel: 'Location', loc: 'El Santa, Gharbia Governorate, Egypt', applying: 'Complete the form below to apply for this position. Our HR team will review your application and contact shortlisted candidates.', ptitle: 'Careers — Masters Language School', footernote: 'Have a question before applying? Chat with our team on WhatsApp.', contactbtn: 'Chat on WhatsApp',
-        f: { personal: 'Personal information', name: 'Full name', phone: 'Phone number', email: 'Email address', position: 'Position applying for', exp: 'Experience & education', years: 'Years of experience', edu: 'Highest qualification', docs: 'Documents', cv: 'CV / Résumé', cert: 'Certificates', portfolio: 'Portfolio (optional)', upload: 'Upload file', submit: 'Submit application', sending: 'Sending…', required: 'Fields marked * are required.' },
+        f: { personal: 'Personal information', name: 'Full name', phone: 'Phone number', email: 'Email address', position: 'Position applying for', exp: 'Experience & education', years: 'Years of experience', edu: 'Highest qualification', docs: 'Documents', cv: 'CV / Résumé', cert: 'Certificates', portfolio: 'Portfolio (optional)', upload: 'Upload file', submit: 'Submit application', sending: 'Sending…', required: 'Fields marked * are required.',
+          eduSelect: 'Select your highest qualification',
+          eduOpts: ['High School / Secondary Education', 'Diploma', "Bachelor's Degree", "Master's Degree", 'Doctorate / PhD', 'Other'],
+          cvhint: 'Supported formats: PDF, DOC, DOCX. PDF is preferred for ATS compatibility. Do not upload image files.',
+          certhint: 'Supported formats: PDF, JPG, JPEG, PNG. Clear scanned copies are preferred.',
+          err: { name: 'Enter your name.', email: 'Enter a valid email address.', phone: 'Enter a valid Egyptian mobile number.', years: 'Enter a number from 0 to 50.', edu: 'Select your highest qualification.', cv: 'CV is required.', cert: 'Certificate is required.', cvtype: 'Upload a valid CV (PDF, DOC, or DOCX).', certtype: 'Upload a valid certificate file.' } },
         conf: { h: 'Thank you for applying!', sub: 'Our HR team will review your application and contact shortlisted candidates within 5 working days.', idlabel: 'Your reference number', note: 'A confirmation email has been sent to you.' }
       },
       foot: {
         about: 'A leading bilingual language school in El Santa, Gharbia — shaping curious, confident and compassionate learners since 2026.',
         explore: 'Explore', admissions: 'Admissions', contactc: 'Contact us',
         rights: '© 2026 Masters Language School. All rights reserved.',
-        addr: 'El Santa, Gharbia Governorate, Egypt', phone: '+20 109 978 7423', email: 'masterschool59@gmail.com'
+        addr: 'El Santa, Gharbia Governorate, Egypt', phone: '+20 109 978 7423', email: 'admissions@masters-edu.com'
       }
     },
     ar: {
@@ -93,21 +120,26 @@
           { r: 'مشرفو حافلات', key: 'مشرف حافلة', d: 'النقل', ty: 'دوام كامل', desc: 'الاعتناء بالطلاب أثناء رحلات الحافلة والتنسيق بسلاسة مع السائقين وأولياء الأمور.', resp: ['الإشراف على الطلاب طوال الرحلة', 'صيانة جداول المسارات وسجلات الحضور', 'إبلاغ أولياء الأمور والمدرسة بالتحديثات'], qual: ['خبرة في رعاية الأطفال في دور مشابه', 'مسؤولية ويقظة دائمة', 'مهارات تواصل جيدة'] }
         ],
         apply: 'تقديم', formh: 'نموذج التقديم', formsub: 'عرّفنا بنفسك', applybtn: 'تقدّم لهذه الوظيفة', jobeyebrow: 'وظائف ماسترز', jobh: 'عن الوظيفة', resph: 'المسؤوليات الرئيسية', qualh: 'المؤهلات المطلوبة', jobback: 'العودة إلى كل الوظائف', back: 'رجوع', tyLabel: 'نوع الوظيفة', locLabel: 'الموقع', loc: 'السنطة، محافظة الغربية، مصر', applying: 'أكمل النموذج أدناه للتقديم على هذه الوظيفة. سيراجع فريق الموارد البشرية طلبك وسيتواصل مع المرشحين المختارين.', ptitle: 'الوظائف — مدرسة ماسترز للغات', footernote: 'لديك سؤال قبل التقديم؟ تحدّث مع فريقنا عبر واتساب.', contactbtn: 'تواصل عبر واتساب',
-        f: { personal: 'البيانات الشخصية', name: 'الاسم بالكامل', phone: 'رقم الهاتف', email: 'البريد الإلكتروني', position: 'الوظيفة المتقدَّم لها', exp: 'الخبرة والتعليم', years: 'سنوات الخبرة', edu: 'أعلى مؤهل', docs: 'المستندات', cv: 'السيرة الذاتية', cert: 'الشهادات', portfolio: 'معرض الأعمال (اختياري)', upload: 'رفع ملف', submit: 'إرسال الطلب', sending: 'جارٍ الإرسال…', required: 'الحقول المعلّمة بـ * مطلوبة.' },
+        f: { personal: 'البيانات الشخصية', name: 'الاسم بالكامل', phone: 'رقم الهاتف', email: 'البريد الإلكتروني', position: 'الوظيفة المتقدَّم لها', exp: 'الخبرة والتعليم', years: 'سنوات الخبرة', edu: 'أعلى مؤهل', docs: 'المستندات', cv: 'السيرة الذاتية', cert: 'الشهادات', portfolio: 'معرض الأعمال (اختياري)', upload: 'رفع ملف', submit: 'إرسال الطلب', sending: 'جارٍ الإرسال…', required: 'الحقول المعلّمة بـ * مطلوبة.',
+          eduSelect: 'اختر أعلى مؤهل',
+          eduOpts: ['ثانوية عامة', 'دبلوم', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'أخرى'],
+          cvhint: 'الصيغ المدعومة: PDF، DOC، DOCX. يُفضّل استخدام PDF لضمان توافق أفضل مع أنظمة ATS. لا يمكن رفع الصور كملف سيرة ذاتية.',
+          certhint: 'الصيغ المدعومة: PDF، JPG، JPEG، PNG. يُفضّل رفع نسخ ممسوحة ضوئيًا واضحة.',
+          err: { name: 'أدخل اسمك بالكامل.', email: 'أدخل بريدًا إلكترونيًا صحيحًا.', phone: 'أدخل رقم محمول مصري صحيح.', years: 'أدخل رقمًا من 0 إلى 50.', edu: 'اختر أعلى مؤهل.', cv: 'السيرة الذاتية مطلوبة.', cert: 'الشهادات مطلوبة.', cvtype: 'ارفع سيرة ذاتية صالحة (PDF أو DOC أو DOCX).', certtype: 'ارفع ملف شهادة صالحًا.' } },
         conf: { h: 'شكرًا لتقديمك!', sub: 'سيراجع فريق الموارد البشرية طلبك ويتواصل مع المرشحين خلال 5 أيام عمل.', idlabel: 'رقمك المرجعي', note: 'تم إرسال بريد تأكيد إليك.' }
       },
       foot: {
         about: 'مدرسة لغات ثنائية رائدة في السنطة، الغربية — نصنع متعلّمين فضوليين واثقين ومتعاطفين منذ 2026.',
         explore: 'استكشف', admissions: 'القبول', contactc: 'تواصل معنا',
         rights: '© 2026 مدرسة ماسترز للغات. جميع الحقوق محفوظة.',
-        addr: 'السنطة، محافظة الغربية، مصر', phone: '+20 109 978 7423', email: 'masterschool59@gmail.com'
+        addr: 'السنطة، محافظة الغربية، مصر', phone: '+20 109 978 7423', email: 'admissions@masters-edu.com'
       }
     }
   };
 
   function makeBase(DCLogic) {
     return class CareersPage extends DCLogic {
-      state = { lang: 'en', navOpen: true, careerSubmitted: false, careerId: '', careerSending: false, careerSendError: '' };
+      state = { lang: 'en', navOpen: true, careerSubmitted: false, careerId: '', careerSending: false, careerSendError: '', care: {}, careFiles: {} };
 
       cfg() {
         return (this.constructor && this.constructor.cfg) || { mode: 'list' };
@@ -146,7 +178,7 @@
       }
       toggleNav() { this.setState({ navOpen: !this.state.navOpen }); }
 
-      // Fallback reference shown only in demo mode (no careersEndpoint
+// Fallback reference shown only in demo mode (no careersEndpoint
       // configured) — mirrors the admissions form's localId() so an
       // unconfigured deployment stays usable but never claims a real save.
       careerLocalId() { return 'MST-HR-' + Math.floor(1000 + Math.random() * 9000); }
@@ -155,9 +187,161 @@
         return (typeof window !== 'undefined' && window.MS_CONFIG && window.MS_CONFIG.careersEndpoint) || '';
       }
 
+      // ── Inline validation (same UX as the Admissions form) ────────────────
+      // Every field owns its own error state: a red border/glow, a short
+      // message in a reserved slot beneath the field, and instant clearing as
+      // soon as the value becomes valid. No field is blamed for another's
+      // error, and the reserved slots keep the layout stable.
+      careerFieldError(form, k) {
+        const t = this.content()[this.state.lang].careers.f;
+        const val = (n) => String((form.elements[n] || { value: '' }).value || '').trim();
+        const file = (n) => { const el = form.elements[n]; return (el && el.files && el.files.length) ? el.files[0] : null; };
+        const vot = (n) => (this.__careerdicts || {})[n];
+        switch (k) {
+          case 'name': return val('name') ? '' : t.err.name;
+          case 'email_2': return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(val('email_2')) ? '' : t.err.email;
+          case 'phone': return /^01[0125]\d{8}$/.test(val('phone')) ? '' : t.err.phone;
+          case 'years': {
+            const y = val('years');
+            return (y && !( /^\d{1,2}$/.test(y) && Number(y) <= 50 )) ? t.err.years : '';
+          }
+          case 'edu': return val('edu') ? '' : t.err.edu;
+          case 'cv': {
+            if (!file('cv')) return t.err.cv;
+            return vot('cv') === false ? t.err.cvtype : '';
+          }
+          case 'cert': {
+            if (!file('cert')) return t.err.cert;
+            return vot('cert') === false ? t.err.certtype : '';
+          }
+          default: return '';
+        }
+      }
+      careerErrors(form) {
+        const out = {};
+        const keys = ['name', 'email_2', 'phone', 'years', 'edu', 'cv', 'cert'];
+        for (let i = 0; i < keys.length; i++) {
+          const msg = this.careerFieldError(form, keys[i]);
+          if (msg) out[keys[i]] = msg;
+        }
+        return out;
+      }
+      // Live re-validation of the single control that changed — fired from the
+      // delegated input/change listeners (see componentDidMount).
+      careerLive(form, el) {
+        const name = el.getAttribute('name');
+        if (['name', 'email_2', 'phone', 'years', 'edu', 'cv', 'cert'].indexOf(name) === -1) return;
+        const cur = this.state.care || {};
+        const msg = this.careerFieldError(form, name);
+        const changed = msg ? cur[name] !== msg : !!cur[name];
+        if (!changed) return;
+        const next = { ...cur };
+        if (msg) next[name] = msg; else delete next[name];
+        this.setState({ care: next });
+      }
+      // Picking a file for an upload tile: remember the file name/size for the
+      // tile label, clear the error the moment a file is attached, and verify
+      // the file's real format (magic bytes) so a renamed image never passes.
+      careFileAllowed(name, kind) {
+        if (name === 'cv') return !!CV_TYPES[kind];
+        if (name === 'cert') return !!CERT_TYPES[kind];
+        return true; // portfolio stays optional and open
+      }
+      careerFilePick(form, el) {
+        const name = el.getAttribute && el.getAttribute('name');
+        if (name !== 'cv' && name !== 'cert' && name !== 'portfolio') return;
+        const p = this.state.careFiles || {};
+        const next = { ...p };
+        const v = this.__careerdicts = this.__careerdicts || {};
+        if (el.files && el.files.length) {
+          const f = el.files[0];
+          next[name] = { name: f.name, bytes: f.size };
+          v[name] = undefined; // pending — treated as valid until verified
+          if (f.slice && f.arrayBuffer) {
+            Promise.resolve(f.slice(0, 8).arrayBuffer())
+              .then((buf) => {
+                v[name] = !!this.careFileAllowed(name, fileKind(new Uint8Array(buf)));
+                this.careerLive(form, el);
+              })
+              .catch(() => { v[name] = false; this.careerLive(form, el); });
+          } else {
+            v[name] = true;
+          }
+        } else {
+          delete next[name];
+          delete v[name];
+        }
+        const cur = this.state.care || {};
+        const msg = ['cv', 'cert'].indexOf(name) === -1 ? '' : this.careerFieldError(form, name);
+        const cnext = { ...cur };
+        if (msg) cnext[name] = msg; else delete cnext[name];
+        this.setState({ careFiles: next, care: cnext });
+      }
+      onCareerInput(e) {
+        const el = e && e.target;
+        if (!el || el.nodeType !== 1) return;
+        if (el.tagName !== 'INPUT' && el.tagName !== 'SELECT' && el.tagName !== 'TEXTAREA') return;
+        const form = el.form;
+        if (!form || !form.elements || !form.elements['email_2']) return; // only the careers apply form
+        if (el.getAttribute('type') === 'file') this.careerFilePick(form, el);
+        else this.careerLive(form, el);
+      }
+      focusCareerFirst(form, errors) {
+        const order = ['name', 'phone', 'email_2', 'years', 'edu', 'cv', 'cert'];
+        for (let i = 0; i < order.length; i++) {
+          const k = order[i];
+          if (!errors[k]) continue;
+          const el = form.elements[k];
+          if (!el) continue;
+          if (k === 'cv' || k === 'cert') {
+            const card = el.closest('label');
+            try { (card || el).scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { try { (card || el).scrollIntoView(); } catch (e2) {} }
+            return;
+          }
+          try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
+          try { el.focus({ preventScroll: true }); } catch (e) { try { el.focus(); } catch (e2) {} }
+          return;
+        }
+      }
+      humanSize(bytes) {
+        if (!bytes) return '';
+        if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+        return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+      }
+      slotLabel(key, fallback) {
+        const p = this.state.careFiles && this.state.careFiles[key];
+        if (!p) return fallback;
+        return '✓ ' + p.name + ' · ' + this.humanSize(p.bytes);
+      }
+      slotStyle(key) {
+        return (this.state.careFiles && this.state.careFiles[key])
+          ? 'font-size:11.5px;color:#1B6B39;font-weight:700;margin-top:3px;word-break:break-word'
+          : 'font-size:11.5px;color:#8A93A1;margin-top:3px';
+      }
+      componentDidMount() {
+        this.__onCareerInput = (e) => this.onCareerInput(e);
+        document.addEventListener('input', this.__onCareerInput, true);
+        document.addEventListener('change', this.__onCareerInput, true);
+      }
+      componentWillUnmount() {
+        if (this.__onCareerInput) {
+          document.removeEventListener('input', this.__onCareerInput, true);
+          document.removeEventListener('change', this.__onCareerInput, true);
+          this.__onCareerInput = null;
+        }
+      }
+
       submitCareer(e) {
         if (e && e.preventDefault) e.preventDefault();
         const form = e && e.target;
+        if (!form) return;
+        const errors = this.careerErrors(form);
+        if (Object.keys(errors).length) {
+          this.setState({ care: errors, careerSending: false, careerSendError: '' });
+          this.focusCareerFirst(form, errors);
+          return;
+        }
+        this.setState({ care: {} });
         const url = this.careersEndpoint();
 
         if (!url) {
@@ -239,6 +423,18 @@
           careerSubmitLabel: this.state.careerSending ? (t.careers.f.sending || 'Sending…') : t.careers.f.submit,
           hasCareerSendError: !!this.state.careerSendError,
           careerSendError: this.state.careerSendError,
+          careErr: Object.assign({ name: '', email_2: '', phone: '', years: '', edu: '', cv: '', cert: '' }, this.state.care || {}),
+          careHas: (() => {
+            const c = this.state.care || {};
+            return { name: !!c.name, email_2: !!c.email_2, phone: !!c.phone, years: !!c.years, edu: !!c.edu, cv: !!c.cv, cert: !!c.cert };
+          })(),
+          labelCV: this.slotLabel('cv', t.careers.f.upload),
+          styleCV: this.slotStyle('cv'),
+          labelCert: this.slotLabel('cert', t.careers.f.upload),
+          styleCert: this.slotStyle('cert'),
+          labelPortfolio: this.slotLabel('portfolio', t.careers.f.upload),
+          stylePortfolio: this.slotStyle('portfolio'),
+          eduOpts: t.careers.f.eduOpts,
           submitCareer: (e) => this.submitCareer(e)
         };
       }
