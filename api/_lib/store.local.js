@@ -16,6 +16,7 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
+const { SEED_JOBS, SLUG_RE, slugify } = require('./jobs.seed');
 
 const DATA_DIR = process.env.MS_DATA_DIR || path.join(__dirname, '..', '..', 'data');
 const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
@@ -375,6 +376,152 @@ async function readCareerFile(id, storedAs) {
   }
 }
 
+/*
+ * ---------------------------------------------------------------------------
+ * Job positions (the careers pages render these; the admin dashboard edits
+ * them). Stable slug ids, bilingual copy, soft-deactivate via `active`.
+ * ---------------------------------------------------------------------------
+ */
+const JOBS_INDEX_FILE = path.join(DATA_DIR, 'jobs.json');
+
+function ensureJobsFile() {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(JOBS_INDEX_FILE)) {
+    const rows = SEED_JOBS.map(j => ({
+      id: j.id,
+      active: true,
+      order: j.order,
+      en: j.en,
+      ar: j.ar,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    fs.writeFileSync(JOBS_INDEX_FILE, JSON.stringify(rows, null, 2), 'utf8');
+  }
+}
+
+async function readAllJobs() {
+  ensureJobsFile();
+  try {
+    const raw = await fsp.readFile(JOBS_INDEX_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+async function writeAllJobs(rows) {
+  ensureJobsFile();
+  const tmp = JOBS_INDEX_FILE + '.tmp';
+  await fsp.writeFile(tmp, JSON.stringify(rows, null, 2), 'utf8');
+  await fsp.rename(tmp, JOBS_INDEX_FILE);
+}
+
+async function listJobs(opts) {
+  const { q = '', activeOnly = false } = opts || {};
+  const rows = await readAllJobs();
+  let out = rows;
+  if (activeOnly) out = out.filter(j => j.active);
+  const needle = String(q).trim().toLowerCase();
+  if (needle) {
+    out = out.filter(j => {
+      const hay = [j.id, j.en && j.en.r, j.ar && j.ar.r, j.en && j.en.d, j.ar && j.ar.d]
+        .join(' ').toLowerCase();
+      return hay.includes(needle);
+    });
+  }
+  out = out.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+  return out;
+}
+
+async function getJob(id) {
+  const rows = await readAllJobs();
+  return rows.find(j => j.id === id) || null;
+}
+
+async function createJob(input) {
+  const en = input.en || {};
+  const ar = input.ar || {};
+  if (!String(en.r || '').trim()) throw new Error('an English job title is required');
+  let id = slugify(en.r);
+  if (!SLUG_RE.test(id)) throw new Error('the job title does not produce a valid id');
+  return withWriteLock(async () => {
+    const rows = await readAllJobs();
+    let candidate = id;
+    let n = 2;
+    while (rows.some(j => j.id === candidate)) candidate = id + '-' + n++;
+    const order = rows.reduce((m, j) => Math.max(m, j.order || 0), -1) + 1;
+    const row = {
+      id: candidate,
+      active: true,
+      order,
+      en,
+      ar,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    rows.push(row);
+    await writeAllJobs(rows);
+    return row;
+  });
+}
+
+async function updateJob(id, patch) {
+  return withWriteLock(async () => {
+    const rows = await readAllJobs();
+    const i = rows.findIndex(j => j.id === id);
+    if (i === -1) return null;
+    if (patch.active !== undefined) rows[i].active = !!patch.active;
+    if (patch.order !== undefined) rows[i].order = Number(patch.order) || 0;
+    if (patch.en !== undefined) rows[i].en = Object.assign({}, rows[i].en, patch.en);
+    if (patch.ar !== undefined) rows[i].ar = Object.assign({}, rows[i].ar, patch.ar);
+    rows[i].updatedAt = new Date().toISOString();
+    await writeAllJobs(rows);
+    return rows[i];
+  });
+}
+
+/**
+ * Deactivating is always allowed (spec 23 rules); a hard delete is refused
+ * while any career application still points at the job, because doing so
+ * would orphan candidates' records. Deactivate instead.
+ */
+async function deleteJob(id) {
+  if (!id) return null;
+  return withWriteLock(async () => {
+    const rows = await readAllJobs();
+    const i = rows.findIndex(j => j.id === id);
+    if (i === -1) return null;
+    const [removed] = rows.splice(i, 1);
+    const refs = countCareerApplicationsIn(id);
+    if (refs > 0) {
+      rows.splice(i, 0, removed); // undo the removal
+      await writeAllJobs(rows);
+      const err = new Error('cannot delete: ' + refs + ' application(s) still reference this job');
+      err.statusCode = 409;
+      throw err;
+    }
+    await writeAllJobs(rows);
+    return removed;
+  });
+}
+
+/** Counts, synchronously, career applications submitted against a job id. */
+function countCareerApplicationsIn(jobId) {
+  let rows = [];
+  try {
+    rows = JSON.parse(fs.readFileSync(CAREER_INDEX_FILE, 'utf8'));
+  } catch (e) { rows = []; }
+  return rows.filter(r => String(r.fields && r.fields.jobId) === jobId).length;
+}
+
+/** Counts career applications submitted against the given job (admin badge). */
+async function countCareerApplications(jobId) {
+  const rows = await readAllCareers();
+  return rows.filter(r => String(r.fields && r.fields.jobId) === jobId).length;
+}
+
 module.exports = {
   STATUSES,
   createApplication,
@@ -390,7 +537,13 @@ module.exports = {
   updateCareerApplication,
   deleteCareerApplication,
   readCareerFile,
-  _paths: { DATA_DIR, UPLOAD_DIR, INDEX_FILE, CAREER_UPLOAD_DIR, CAREER_INDEX_FILE },
+  listJobs,
+  getJob,
+  createJob,
+  updateJob,
+  deleteJob,
+  countCareerApplications,
+  _paths: { DATA_DIR, UPLOAD_DIR, INDEX_FILE, CAREER_UPLOAD_DIR, CAREER_INDEX_FILE, JOBS_INDEX_FILE },
   driver: 'local',
   async close() {},
 };
