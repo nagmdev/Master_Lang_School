@@ -16,13 +16,6 @@ function clientKey(req) {
     || (req.socket && req.socket.remoteAddress) || 'unknown';
 }
 
-function requireAdmin(req, res) {
-  const cfg = auth.configError();
-  if (cfg) { json(res, 500, { error: 'server not configured: ' + cfg }); return false; }
-  if (!auth.isAuthed(req)) { json(res, 401, { error: 'not authenticated' }); return false; }
-  return true;
-}
-
 /* ------------------------------- public ---------------------------------- */
 
 // POST /api/applications — a parent submits the admissions form.
@@ -49,6 +42,86 @@ async function createApplication(req, res) {
 /* ---------------------------- careers (public) ---------------------------- */
 
 const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+
+// Public job listing (single source of truth for the Careers pages): only
+// active positions are served to anonymous callers. An authenticated admin
+// sees every job, each with its live application count.
+async function listJobs(req, res, url) {
+  const isAdmin = auth.isAuthed(req);
+  const jobs = await store.listJobs({ q: url.searchParams.get('q') || '', activeOnly: !isAdmin });
+  if (!isAdmin) return json(res, 200, { jobs: jobs.map(j => ({ id: j.id, order: j.order, en: j.en, ar: j.ar })) });
+  const out = [];
+  for (const j of jobs) {
+    out.push({
+      id: j.id, active: j.active, order: j.order, en: j.en, ar: j.ar,
+      applications: await store.countCareerApplications(j.id),
+    });
+  }
+  return json(res, 200, { jobs: out });
+}
+
+function requireAdmin(req, res) {
+  const cfg = auth.configError();
+  if (cfg) { json(res, 500, { error: 'server not configured: ' + cfg }); return false; }
+  if (!auth.isAuthed(req)) { json(res, 401, { error: 'not authenticated' }); return false; }
+  return true;
+}
+
+// Admin-only job writes. POST /api/jobs creates (id derived from the English
+// title); POST /api/jobs?id= (or PATCH) updates; DELETE /api/jobs?id= removes
+// only when no candidate application references the job.
+function cleanJobLang(o) {
+  const s = (v, max) => String(v == null ? '' : v).trim().slice(0, max || 600);
+  const list = (v) => (Array.isArray(v) ? v : []).slice(0, 12).map(x => s(x, 400)).filter(Boolean);
+  return {
+    r: s(o.r, 120), key: s(o.key, 120), d: s(o.d, 80), ty: s(o.ty, 60),
+    desc: s(o.desc, 1000), resp: list(o.resp), qual: list(o.qual),
+  };
+}
+
+async function upsertJob(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const { fields } = await parseRequest(req);
+  const id = url.searchParams.get('id') || String(fields.id || '').trim();
+  if (id) {
+    const patch = {};
+    if (fields.active !== undefined) patch.active = fields.active === true || fields.active === 'true';
+    if (fields.order !== undefined) patch.order = Number(fields.order);
+    if (fields.en !== undefined) patch.en = cleanJobLang(fields.en);
+    if (fields.ar !== undefined) patch.ar = cleanJobLang(fields.ar);
+    if (!Object.keys(patch).length) return json(res, 400, { error: 'nothing to update' });
+    try {
+      const row = await store.updateJob(id, patch);
+      if (!row) return json(res, 404, { error: 'not found' });
+      return json(res, 200, row);
+    } catch (e) {
+      return json(res, 400, { error: String(e.message || e) });
+    }
+  }
+  try {
+    const row = await store.createJob({
+      en: cleanJobLang(fields.en || {}),
+      ar: cleanJobLang(fields.ar || {}),
+    });
+    return json(res, 201, row);
+  } catch (e) {
+    return json(res, 400, { error: String(e.message || e) });
+  }
+}
+
+async function deleteJob(req, res, url) {
+  if (!requireAdmin(req, res)) return;
+  const id = url.searchParams.get('id');
+  if (!id) return json(res, 400, { error: 'missing id' });
+  try {
+    const removed = await store.deleteJob(id);
+    if (!removed) return json(res, 404, { error: 'not found' });
+    console.log('[admin] deleted job', id);
+    return json(res, 200, { ok: true, id });
+  } catch (e) {
+    return json(res, e.statusCode || 400, { error: String(e.message || e) });
+  }
+}
 
 // Careers attachment policy (spec 15–20): validate real file signatures, not
 // just the filename — renaming monkey.jpg → resume.pdf must not pass.
@@ -104,11 +177,23 @@ async function createCareerApplication(req, res) {
     return json(res, 400, { error: 'missing or invalid required fields', fields: missing });
   }
 
+  // Stable-job link (admin job management): the apply pages send the job's
+  // slug as jobId. When present it MUST resolve to an active position — an
+  // application landing on a deactivated/removed job is a closed door.
+  const jobId = String(fields.jobId || fields.job_id || '').trim();
+  let position = String(fields.position || '').trim();
+  if (jobId) {
+    const job = await store.getJob(jobId);
+    if (!job || !job.active) {
+      return json(res, 400, { error: 'this position is no longer open for applications', fields: ['jobId'] });
+    }
+    position = (job.en && job.en.r) || position;
+  }
+
   const row = await store.createCareerApplication({
     fields: {
       name, phone, email_2: email_,
-      position: String(fields.position || '').trim(),
-      years, edu,
+      position, jobId, years, edu,
     },
     files,
   });
@@ -350,6 +435,9 @@ const ROUTES = [
   { method: 'POST', path: '/api/career', handler: updateCareerApplication },
   { method: 'DELETE', path: '/api/career', handler: deleteCareerApplication },
   { method: 'GET', path: '/api/careerfile', handler: downloadCareerFile },
+  { method: 'GET', path: '/api/jobs', handler: listJobs },
+  { method: 'POST', path: '/api/jobs', handler: upsertJob },
+  { method: 'DELETE', path: '/api/jobs', handler: deleteJob },
   { method: 'POST', path: '/api/contact', handler: submitContact },
 ];
 
