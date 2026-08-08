@@ -48,35 +48,67 @@ async function createApplication(req, res) {
 
 /* ---------------------------- careers (public) ---------------------------- */
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+
+// Careers attachment policy (spec 15–20): validate real file signatures, not
+// just the filename — renaming monkey.jpg → resume.pdf must not pass.
+const FILE_SIGS = {
+  pdf: [0x25, 0x50, 0x44, 0x46, 0x2d],                        // "%PDF-"
+  doc: [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1],      // OLE2/Compound File
+  docx: [0x50, 0x4b, 0x03, 0x04],                             // ZIP (OOXML)
+  jpg: [0xff, 0xd8, 0xff],
+  png: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]
+};
+const CV_KINDS = { pdf: 1, doc: 1, docx: 1 };
+const CERT_KINDS = { pdf: 1, jpg: 1, png: 1 };
+function fileKindOf(buf) {
+  for (const k in FILE_SIGS) {
+    const sig = FILE_SIGS[k];
+    let ok = buf && buf.length >= sig.length;
+    for (let i = 0; ok && i < sig.length; i++) ok = buf[i] === sig[i];
+    if (ok) return k;
+  }
+  return '';
+}
 
 // POST /api/careers — a candidate applies for a job from careers.html,
 // <job>.html, apply-<job>.html, or the embedded Careers section of index.html.
 // All of those pages post the same field names (name, phone, email_2,
-// position, years, edu) plus optional cv/cert/portfolio file parts.
+// position, years, edu) plus required cv/cert (and optional portfolio) file
+// parts. Validation mirrors the client-side rules on the careers pages.
 async function createCareerApplication(req, res) {
   const { fields, files } = await parseRequest(req);
 
   const name = String(fields.name || '').trim();
   const phone = String(fields.phone || '').trim();
   const email_ = String(fields.email_2 || fields.email || '').trim();
-  const position = String(fields.position || '').trim();
+  const years = String(fields.years || '').trim();
+  const edu = String(fields.edu || '').trim();
+  const hasFile = (n) => !!files.find((f) => f.field === n && f.buffer.length > 0);
+  const typeOk = (n, kinds) => {
+    const f = files.find((x) => x.field === n && x.buffer.length > 0);
+    return !!f && !!kinds[fileKindOf(f.buffer)];
+  };
 
   const missing = [];
   if (!name) missing.push('name');
   if (!phone) missing.push('phone');
-  if (!position) missing.push('position');
+  else if (!/^01[0125]\d{8}$/.test(phone)) missing.push('phone');
   if (!email_) missing.push('email');
   else if (!EMAIL_RE.test(email_)) missing.push('email');
+  if (years && !(/^\d{1,2}$/.test(years) && Number(years) <= 50)) missing.push('years');
+  if (!edu) missing.push('edu');
+  if (!hasFile('cv') || !typeOk('cv', CV_KINDS)) missing.push('cv');
+  if (!hasFile('cert') || !typeOk('cert', CERT_KINDS)) missing.push('cert');
   if (missing.length) {
     return json(res, 400, { error: 'missing or invalid required fields', fields: missing });
   }
 
   const row = await store.createCareerApplication({
     fields: {
-      name, phone, email_2: email_, position,
-      years: String(fields.years || '').trim(),
-      edu: String(fields.edu || '').trim(),
+      name, phone, email_2: email_,
+      position: String(fields.position || '').trim(),
+      years, edu,
     },
     files,
   });
