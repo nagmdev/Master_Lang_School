@@ -79,7 +79,7 @@
           { r: 'Bus Drivers', key: 'Bus Driver', d: 'Transport', ty: 'Full-time', desc: 'Transport students safely on fixed routes across El Santa and nearby areas, every school day.', resp: ['Drive school buses on assigned routes safely', 'Follow schedules and complete pre-trip safety checks', 'Report vehicle issues promptly'], qual: ["Valid driver's licence and a clean record", 'Experience driving large vehicles', 'Patient, punctual and safety-focused'] },
           { r: 'Bus Supervisors', key: 'Bus Supervisor', d: 'Transport', ty: 'Full-time', desc: 'Look after students during bus journeys and coordinate smoothly with drivers and parents.', resp: ['Supervise students on board at all times', 'Maintain route rosters and attendance records', 'Communicate updates to parents and the school'], qual: ['Experience caring for children in a similar role', 'Responsible and alert', 'Good communication skills'] }
         ],
-        apply: 'Apply', formh: 'Application form', formsub: 'Tell us about yourself', applybtn: 'Apply for this position', jobeyebrow: 'Careers at Masters', jobh: 'About the role', resph: 'Main responsibilities', qualh: 'Required qualifications', jobback: 'Back to all positions', back: 'Back', tyLabel: 'Employment type', locLabel: 'Location', loc: 'El Santa, Gharbia Governorate, Egypt', applying: 'Complete the form below to apply for this position. Our HR team will review your application and contact shortlisted candidates.', ptitle: 'Careers — Masters Language School', footernote: 'Have a question before applying? Chat with our team on WhatsApp.', contactbtn: 'Chat on WhatsApp',
+        apply: 'Apply', formh: 'Application form', formsub: 'Tell us about yourself', applybtn: 'Apply for this position', jobeyebrow: 'Careers at Masters', jobh: 'About the role', resph: 'Main responsibilities', qualh: 'Required qualifications', jobback: 'Back to all positions', back: 'Back', tyLabel: 'Employment type', locLabel: 'Location', loc: 'El Santa, Gharbia Governorate, Egypt', applying: 'Complete the form below to apply for this position. Our HR team will review your application and contact shortlisted candidates.', ptitle: 'Careers — Masters Language School', footernote: 'Have a question before applying? Chat with our team on WhatsApp.', contactbtn: 'Chat on WhatsApp', closed: 'This position is no longer open for applications.',
         f: { personal: 'Personal information', name: 'Full name', phone: 'Phone number', email: 'Email address', position: 'Position applying for', exp: 'Experience & education', years: 'Years of experience', edu: 'Highest qualification', docs: 'Documents', cv: 'CV / Résumé', cert: 'Certificates', portfolio: 'Portfolio (optional)', upload: 'Upload file', submit: 'Submit application', sending: 'Sending…', required: 'Fields marked * are required.',
           eduSelect: 'Select your highest qualification',
           eduOpts: ['High School / Secondary Education', 'Diploma', "Bachelor's Degree", "Master's Degree", 'Doctorate / PhD', 'Other'],
@@ -119,7 +119,7 @@
           { r: 'سائقو حافلات', key: 'سائق حافلة', d: 'النقل', ty: 'دوام كامل', desc: 'نقل الطلاب بأمان على مسارات ثابتة في السنطة والمناطق المجاورة طوال أيام الدراسة.', resp: ['قيادة حافلات المدرسة على المسارات المحددة بأمان', 'الالتزام بالجداول وإجراء الفحوصات قبل الانطلاق', 'الإبلاغ الفوري عن أي أعطال في المركبة'], qual: ['رخصة قيادة سارية وسجل نظيف', 'خبرة في قيادة المركبات الكبيرة', 'صبر والالتزام بالمواعيد والسلامة'] },
           { r: 'مشرفو حافلات', key: 'مشرف حافلة', d: 'النقل', ty: 'دوام كامل', desc: 'الاعتناء بالطلاب أثناء رحلات الحافلة والتنسيق بسلاسة مع السائقين وأولياء الأمور.', resp: ['الإشراف على الطلاب طوال الرحلة', 'صيانة جداول المسارات وسجلات الحضور', 'إبلاغ أولياء الأمور والمدرسة بالتحديثات'], qual: ['خبرة في رعاية الأطفال في دور مشابه', 'مسؤولية ويقظة دائمة', 'مهارات تواصل جيدة'] }
         ],
-        apply: 'تقديم', formh: 'نموذج التقديم', formsub: 'عرّفنا بنفسك', applybtn: 'تقدّم لهذه الوظيفة', jobeyebrow: 'وظائف ماسترز', jobh: 'عن الوظيفة', resph: 'المسؤوليات الرئيسية', qualh: 'المؤهلات المطلوبة', jobback: 'العودة إلى كل الوظائف', back: 'رجوع', tyLabel: 'نوع الوظيفة', locLabel: 'الموقع', loc: 'السنطة، محافظة الغربية، مصر', applying: 'أكمل النموذج أدناه للتقديم على هذه الوظيفة. سيراجع فريق الموارد البشرية طلبك وسيتواصل مع المرشحين المختارين.', ptitle: 'الوظائف — مدرسة ماسترز للغات', footernote: 'لديك سؤال قبل التقديم؟ تحدّث مع فريقنا عبر واتساب.', contactbtn: 'تواصل عبر واتساب',
+        apply: 'تقديم', formh: 'نموذج التقديم', formsub: 'عرّفنا بنفسك', applybtn: 'تقدّم لهذه الوظيفة', jobeyebrow: 'وظائف ماسترز', jobh: 'عن الوظيفة', resph: 'المسؤوليات الرئيسية', qualh: 'المؤهلات المطلوبة', jobback: 'العودة إلى كل الوظائف', back: 'رجوع', tyLabel: 'نوع الوظيفة', locLabel: 'الموقع', loc: 'السنطة، محافظة الغربية، مصر', applying: 'أكمل النموذج أدناه للتقديم على هذه الوظيفة. سيراجع فريق الموارد البشرية طلبك وسيتواصل مع المرشحين المختارين.', ptitle: 'الوظائف — مدرسة ماسترز للغات', footernote: 'لديك سؤال قبل التقديم؟ تحدّث مع فريقنا عبر واتساب.', contactbtn: 'تواصل عبر واتساب', closed: 'هذه الوظيفة لم تعد متاحة للتقديم الآن.',
         f: { personal: 'البيانات الشخصية', name: 'الاسم بالكامل', phone: 'رقم الهاتف', email: 'البريد الإلكتروني', position: 'الوظيفة المتقدَّم لها', exp: 'الخبرة والتعليم', years: 'سنوات الخبرة', edu: 'أعلى مؤهل', docs: 'المستندات', cv: 'السيرة الذاتية', cert: 'الشهادات', portfolio: 'معرض الأعمال (اختياري)', upload: 'رفع ملف', submit: 'إرسال الطلب', sending: 'جارٍ الإرسال…', required: 'الحقول المعلّمة بـ * مطلوبة.',
           eduSelect: 'اختر أعلى مؤهل',
           eduOpts: ['ثانوية عامة', 'دبلوم', 'بكالوريوس', 'ماجستير', 'دكتوراه', 'أخرى'],
@@ -139,7 +139,7 @@
 
   function makeBase(DCLogic) {
     return class CareersPage extends DCLogic {
-      state = { lang: 'en', navOpen: true, careerSubmitted: false, careerId: '', careerSending: false, careerSendError: '', care: {}, careFiles: {} };
+      state = { lang: 'en', navOpen: true, careerSubmitted: false, careerId: '', careerSending: false, careerSendError: '', care: {}, careFiles: {}, jobsLive: undefined };
 
       cfg() {
         return (this.constructor && this.constructor.cfg) || { mode: 'list' };
@@ -165,12 +165,18 @@
           const el = document.documentElement;
           el.setAttribute('lang', lang);
           el.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-          document.title = this.docTitle(this.content()[lang]);
+          document.title = this.docTitle(this.content()[lang], lang);
         } catch (e) {}
       }
-      docTitle(t) {
+      docTitle(t, lang) {
         const cfg = this.cfg();
         if (cfg.mode === 'list') return t.careers.ptitle;
+        // Dynamically generated pages embed their payload (window.MS_JOB);
+        // prefer it so the document title carries the real position name.
+        if (typeof window !== 'undefined' && window.MS_JOB && window.MS_JOB.id === cfg.slug) {
+          const l = window.MS_JOB[lang] || window.MS_JOB.en || {};
+          if (l.r) return l.r + ' — ' + t.brand.name + ' ' + t.brand.tag;
+        }
         const job = cfg.index !== undefined && cfg.index !== null
           ? t.careers.positions[cfg.index] : null;
         if (job) return job.r + ' — ' + t.brand.name + ' ' + t.brand.tag;
@@ -185,6 +191,76 @@
 
       careersEndpoint() {
         return (typeof window !== 'undefined' && window.MS_CONFIG && window.MS_CONFIG.careersEndpoint) || '';
+      }
+
+      jobsEndpoint() {
+        return (typeof window !== 'undefined' && window.MS_CONFIG && window.MS_CONFIG.jobsEndpoint) || '/api/jobs';
+      }
+
+      // Live job list (anonymous -> active only). Until the response arrives
+      // the static dictionary is shown; if the fetch fails we stay static.
+      fetchJobs() {
+        const url = this.jobsEndpoint();
+        if (!url) return;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.timeout = 15000;
+        xhr.onload = () => {
+          if (xhr.status < 200 || xhr.status >= 300) return;
+          try {
+            const data = JSON.parse(xhr.responseText || '[]');
+            this.setState({ jobsLive: Array.isArray(data) ? data : (data && data.jobs) || [] });
+          } catch (err) {}
+        };
+        xhr.send();
+      }
+
+      // The active job for this page from the live list (job/apply modes).
+      liveJob() {
+        const list = this.state.jobsLive;
+        if (!Array.isArray(list)) return null;
+        const slug = this.cfg().slug;
+        if (!slug) return null;
+        for (let i = 0; i < list.length; i++) {
+          if (list[i] && list[i].id === slug) return list[i];
+        }
+        return null;
+      }
+
+      // Pages generated dynamically for a job created in the admin dashboard
+      // embed the job payload as window.MS_JOB so this page renders correctly
+      // even before/without the live list round-trip.
+      embeddedJob() {
+        if (typeof window === 'undefined' || !window.MS_JOB || !window.MS_JOB.id) return null;
+        if (this.cfg().slug !== window.MS_JOB.id) return null;
+        return window.MS_JOB;
+      }
+
+      // Localized view of the live/embedded job, shaped like the dict entries.
+      liveData() {
+        const j = this.liveJob() || this.embeddedJob();
+        if (!j) return null;
+        const l = j[this.state.lang] || j.en || {};
+        const en = j.en || l;
+        return {
+          id: j.id || '',
+          key: l.key || en.key || l.r || en.r || '',
+          r: l.r || en.r || '',
+          d: l.d || en.d || '',
+          ty: l.ty || en.ty || '',
+          desc: l.desc || en.desc || '',
+          resp: l.resp || en.resp || [],
+          qual: l.qual || en.qual || []
+        };
+      }
+
+      // True until the live list arrives and proves this slug is missing
+      // (deactivated / removed positions keep their static page usable, but
+      // the apply path is guarded server-side anyway).
+      careerOpen() {
+        if (Array.isArray(this.state.jobsLive)) return !!this.liveJob() || !this.cfg().slug;
+        return true;
       }
 
       // ── Inline validation (same UX as the Admissions form) ────────────────
@@ -322,6 +398,7 @@
         this.__onCareerInput = (e) => this.onCareerInput(e);
         document.addEventListener('input', this.__onCareerInput, true);
         document.addEventListener('change', this.__onCareerInput, true);
+        this.fetchJobs();
       }
       componentWillUnmount() {
         if (this.__onCareerInput) {
@@ -335,6 +412,12 @@
         if (e && e.preventDefault) e.preventDefault();
         const form = e && e.target;
         if (!form) return;
+        // A position removed from the live list is closed: never even attempt
+        // the request (the server rejects it too, see POST /api/careers).
+        if (!this.careerOpen()) {
+          this.setState({ careerSending: false, careerSendError: this.content()[this.state.lang].careers.closed || '' });
+          return;
+        }
         const errors = this.careerErrors(form);
         if (Object.keys(errors).length) {
           this.setState({ care: errors, careerSending: false, careerSendError: '' });
@@ -388,10 +471,16 @@
       renderVals() {
         const t = this.content()[this.state.lang];
         const cfg = this.cfg();
-        const job = this.currentJob();
-        const rows = t.careers.positions.map(function (p, i) {
-          return { r: p.r, d: p.d, ty: p.ty, href: SLUGS[i] + '.html' };
-        });
+        const live = this.liveData();
+        const job = live || this.currentJob();
+        const rows = Array.isArray(this.state.jobsLive)
+          ? this.state.jobsLive.map(function (j) {
+              const tv = j[this.lang] || j.en || {};
+              return { r: tv.r || '', d: tv.d || '', ty: tv.ty || '', href: (j.id || '') + '.html' };
+            }.bind(this))
+          : t.careers.positions.map(function (p, i) {
+              return { r: p.r, d: p.d, ty: p.ty, href: SLUGS[i] + '.html' };
+            });
         return {
           t: t,
           lang: this.state.lang,
@@ -416,6 +505,10 @@
           jobQual: job ? job.qual : [],
           applyHref: cfg.mode === 'list' ? '' : 'apply-' + (cfg.slug || '') + '.html',
           positionKey: job ? job.key : '',
+          jobIdKey: (live && live.id) || cfg.slug || '',
+          careerOpen: this.careerOpen(),
+          careerClosed: !this.careerOpen(),
+          careerClosedNotice: t.careers.closed || '',
           careerSubmitted: this.state.careerSubmitted,
           careerNot: !this.state.careerSubmitted,
           careerId: this.state.careerId,
