@@ -751,6 +751,118 @@ const VALID = {
     eq((await req('DELETE', '/api/jobs?id=german-teacher')).status, 401, 'deletion without session');
   });
 
+  group('4c-2. Jobs — EN/AR language and employment-type validation');
+
+  async function assertJobRejected(payload, expectedField) {
+    const r = await req('POST', '/api/jobs', {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    eq(r.status, 400, 'invalid job was not rejected');
+    assert(r.json.fields && r.json.fields.includes(expectedField),
+      'expected fields to include ' + expectedField + ', got ' + JSON.stringify(r.json.fields));
+  }
+
+  await test('Arabic characters in English fields are rejected with a per-field name', async () => {
+    await assertJobRejected(
+      { en: { r: 'Science Teacher معلم', d: 'Teaching', ty: 'Full-time', desc: 'Teach العلوم', resp: ['Plan lessons'], qual: ['Degree'] },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'titleEn');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', d: 'Teaching علوم', ty: 'Full-time' },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'deptEn');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', d: 'Teaching', ty: 'Full-time', desc: 'Teach بالعربية science' },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'descEn');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', d: 'Teaching', ty: 'Full-time', resp: ['Plan lessons', 'تدريس'] },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'respEn');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', d: 'Teaching', ty: 'Full-time', qual: ['شهادة'] },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'qualEn');
+  });
+
+  await test('English characters in Arabic fields are rejected with a per-field name', async () => {
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' },
+        ar: { r: 'معلم Science علوم', ty: 'دوام كامل' } },
+      'titleAr');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' },
+        ar: { r: 'معلم علوم', d: 'إدارة ABC', ty: 'دوام كامل' } },
+      'deptAr');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل', desc: 'تدريس العلوم وXYZ' } },
+      'descAr');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل', resp: ['تخطيط دروس', 'STEM planning'] } },
+      'respAr');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' },
+        ar: { r: 'معلم علوم', ty: 'دوام كامل', qual: ['مؤهل BSc'] } },
+      'qualAr');
+  });
+
+  await test('a free-text employment type is rejected; only the fixed list is accepted', async () => {
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Freelance' }, ar: { r: 'معلم علوم', ty: 'دوام كامل' } },
+      'typeEn');
+    await assertJobRejected(
+      { en: { r: 'Science Teacher', ty: 'Full-time' }, ar: { r: 'معلم علوم', ty: 'دوام جزئي جانبي' } },
+      'typeAr');
+  });
+
+  await test('every fixed employment type value is accepted in both languages', async () => {
+    const enTypes = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
+    const arTypes = ['دوام كامل', 'دوام جزئي', 'عقد', 'مؤقت', 'تدريب'];
+    for (let i = 0; i < enTypes.length; i++) {
+      const r = await req('POST', '/api/jobs', {
+        auth: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          en: { r: 'Type Check Worker ' + i, ty: enTypes[i] },
+          ar: { r: 'عامل فحص النوع ' + i, ty: arTypes[i] },
+        }),
+      });
+      eq(r.status, 201, 'valid type pair rejected: ' + enTypes[i] + ' / ' + arTypes[i]);
+      assert(r.json.en.ty === enTypes[i] && r.json.ar.ty === arTypes[i], 'type not stored');
+      await req('DELETE', '/api/jobs?id=' + r.json.id, { auth: true });
+    }
+  });
+
+  await test('updates are validated the same way (no frontend-only bypass)', async () => {
+    const made = await req('POST', '/api/jobs', {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ en: { r: 'Validated Update Job', ty: 'Full-time' }, ar: { r: 'وظيفة محدثة', ty: 'دوام كامل' } }),
+    });
+    eq(made.status, 201, 'setup create failed');
+    const bad = await req('POST', '/api/jobs?id=' + made.json.id, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ en: { r: 'وظيفة خاطئة', ty: 'Full-time' } }),
+    });
+    eq(bad.status, 400, 'update with Arabic title in English field not rejected');
+    assert(bad.json.fields && bad.json.fields.includes('titleEn'), 'update error lacks titleEn');
+    const badType = await req('POST', '/api/jobs?id=' + made.json.id, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ar: { r: 'وظيفة محدثة', ty: 'أي شيء' } }),
+    });
+    eq(badType.status, 400, 'update with free-text type not rejected');
+    assert(badType.json.fields && badType.json.fields.includes('typeAr'), 'update error lacks typeAr');
+    const good = await req('POST', '/api/jobs?id=' + made.json.id, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ en: { r: 'Validated Teacher', ty: 'Part-time' }, ar: { r: 'وظيفة محدثة', ty: 'دوام جزئي' } }),
+    });
+    eq(good.status, 200, 'valid update rejected');
+    eq(good.json.en.ty, 'Part-time', 'type update not stored');
+    eq(good.json.ar.ty, 'دوام جزئي', 'arabic type update not stored');
+    await req('DELETE', '/api/jobs?id=' + made.json.id, { auth: true });
+  });
+
   group('4d. Contact form');
 
   await test('a valid contact message is accepted (delivery skipped: no RESEND_API_KEY in tests)', async () => {
