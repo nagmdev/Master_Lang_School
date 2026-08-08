@@ -79,6 +79,46 @@ function cleanJobLang(o) {
   };
 }
 
+// Job language policy, mirroring the admin Add/Edit-position form:
+//  - fields designated English must not contain Arabic script
+//  - fields designated Arabic must not contain Latin letters
+//  - employment type must come from the fixed list (no free text)
+const JOB_ARABIC_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+const JOB_LATIN_RE = /[A-Za-z]/;
+const JOB_EN_TYPES = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
+const JOB_AR_TYPES = ['دوام كامل', 'دوام جزئي', 'عقد', 'مؤقت', 'تدريب'];
+
+// Returns the admin-form field names (titleEn, deptAr, typeEn, …) that are
+// invalid in the given job-language object; `suffix` is "En" or "Ar" so the
+// names line up with the form controls shown to the administrator.
+function jobLangErrors(langObj, suffix) {
+  const out = [];
+  const text = (v) => Array.isArray(v) ? v.join('\n') : String(v == null ? '' : v);
+  const re = suffix === 'En' ? JOB_ARABIC_RE : JOB_LATIN_RE;
+  const check = (key, field) => {
+    const t = text(langObj[key]);
+    if (t && re.test(t)) out.push(field);
+  };
+  check('r', 'title' + suffix);
+  check('d', 'dept' + suffix);
+  check('desc', 'desc' + suffix);
+  check('resp', 'resp' + suffix);
+  check('qual', 'qual' + suffix);
+  const ty = String(langObj.ty || '').trim();
+  const types = suffix === 'En' ? JOB_EN_TYPES : JOB_AR_TYPES;
+  if (ty && types.indexOf(ty) === -1) out.push('type' + suffix);
+  return out;
+}
+
+// If either language object fails the job-language policy, send the 400 with
+// the offending admin-form field names and return true (the request is done).
+function rejectInvalidJob(res, en, ar) {
+  const fields = jobLangErrors(en, 'En').concat(jobLangErrors(ar, 'Ar'));
+  if (!fields.length) return false;
+  json(res, 400, { error: 'invalid job data', fields });
+  return true;
+}
+
 async function upsertJob(req, res, url) {
   if (!requireAdmin(req, res)) return;
   const { fields } = await parseRequest(req);
@@ -87,8 +127,16 @@ async function upsertJob(req, res, url) {
     const patch = {};
     if (fields.active !== undefined) patch.active = fields.active === true || fields.active === 'true';
     if (fields.order !== undefined) patch.order = Number(fields.order);
-    if (fields.en !== undefined) patch.en = cleanJobLang(fields.en);
-    if (fields.ar !== undefined) patch.ar = cleanJobLang(fields.ar);
+    if (fields.en !== undefined) {
+      const en = cleanJobLang(fields.en);
+      if (rejectInvalidJob(res, en, {})) return;
+      patch.en = en;
+    }
+    if (fields.ar !== undefined) {
+      const ar = cleanJobLang(fields.ar);
+      if (rejectInvalidJob(res, {}, ar)) return;
+      patch.ar = ar;
+    }
     if (!Object.keys(patch).length) return json(res, 400, { error: 'nothing to update' });
     try {
       const row = await store.updateJob(id, patch);
@@ -98,11 +146,11 @@ async function upsertJob(req, res, url) {
       return json(res, 400, { error: String(e.message || e) });
     }
   }
+  const en = cleanJobLang(fields.en || {});
+  const ar = cleanJobLang(fields.ar || {});
+  if (rejectInvalidJob(res, en, ar)) return;
   try {
-    const row = await store.createJob({
-      en: cleanJobLang(fields.en || {}),
-      ar: cleanJobLang(fields.ar || {}),
-    });
+    const row = await store.createJob({ en, ar });
     return json(res, 201, row);
   } catch (e) {
     return json(res, 400, { error: String(e.message || e) });
