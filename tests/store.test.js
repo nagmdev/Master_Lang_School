@@ -205,6 +205,82 @@ async function runSuite(label, store, cleanup) {
     eq((await store.listApplications({})).total, before + 8, 'a concurrent submission was lost');
   });
 
+  /* ------------------------------ jobs ------------------------------------- */
+  group('  jobs (' + label + ')');
+
+  let jobId = '';
+  await test('the jobs seed is present and ordered by its position field', async () => {
+    const out = await store.listJobs({});
+    assert(out.length >= 14, 'expected the 14 seeded jobs, got ' + out.length);
+    const orders = out.map(j => j.order);
+    for (let i = 1; i < orders.length; i++) assert(orders[i - 1] <= orders[i], 'jobs not ordered by position');
+  });
+
+  await test('createJob derives a valid slug id and defaults to active', async () => {
+    const row = await store.createJob({
+      en: { r: 'Science Lab Assistant & 3D Designer', key: 'Lab Assistant', d: 'Science', ty: 'Part-time', desc: 'Keep labs running.', resp: ['a'], qual: ['b'] },
+      ar: { r: 'مساعد مختبر', d: 'علوم', ty: 'دوام جزئي', desc: 'د', resp: ['س'], qual: ['ق'] },
+    });
+    assert(/^[a-z0-9-]+$/.test(row.id), 'bad slug: ' + row.id);
+    assert(row.id.includes('science-lab-assistant'), 'slug not derived from the title: ' + row.id);
+    eq(row.active, true, 'new job should start active');
+    jobId = row.id;
+  });
+
+  await test('listJobs: activeOnly hides deactivated positions, q narrows', async () => {
+    await store.updateJob(jobId, { active: false });
+    const active = await store.listJobs({ activeOnly: true });
+    assert(!active.some(j => j.id === jobId), 'deactivated job still listed as active');
+    const all = await store.listJobs({});
+    assert(all.some(j => j.id === jobId), 'deactivated job vanished from the full list');
+    const enHit = await store.listJobs({ q: 'science lab' });
+    assert(enHit.some(j => j.id === jobId), 'q did not match the English title');
+  });
+
+  await test('updateJob patches fields (including bilingual ones)', async () => {
+    const row = await store.updateJob(jobId, { active: true, en: { ty: 'Full-time' }, ar: { ty: 'دوام كامل' } });
+    eq(row.active, true, 'active not toggled');
+    eq(row.en.ty, 'Full-time', 'en.ty not merged');
+    eq(row.ar.ty, 'دوام كامل', 'ar.ty not merged');
+  });
+
+  await test('getJob returns null for unknown ids', async () => {
+    eq(await store.getJob('no-such-job'), null, 'unknown id');
+  });
+
+  await test('deleteJob is refused while a career application references the job', async () => {
+    const app = await store.createCareerApplication({
+      fields: { name: 'Test', phone: '01012345678', email_2: 't@example.com', position: 'Lab Assistant', years: '2', edu: 'Bachelor', jobId },
+      files: [],
+    });
+    assert(app && app.id, 'career application not created');
+    let threw = false, status = 0;
+    try { await store.deleteJob(jobId); } catch (e) { threw = true; status = e.statusCode || 0; }
+    assert(threw, 'deleteJob did not refuse a referenced job');
+    eq(status, 409, 'expected a 409 conflict, got ' + status);
+    const back = await store.getJob(jobId);
+    assert(back, 'deleting a referenced job removed it despite the refusal');
+    await store.deleteCareerApplication(app.id);
+    const removed = await store.deleteJob(jobId);
+    assert(removed && removed.id === jobId, 'deleteJob after references are gone failed');
+    eq(await store.getJob(jobId), null, 'job still readable after delete');
+  });
+
+  await test('countCareerApplications counts only applications for this job', async () => {
+    const j = await store.createJob({
+      title: 'Count Me Job', en: { r: 'Count Me Job' }, ar: { r: 'حساب' },
+    });
+    const a1 = await store.createCareerApplication({ fields: { name: 'A', jobId: j.id }, files: [] });
+    const a2 = await store.createCareerApplication({ fields: { name: 'B', jobId: j.id }, files: [] });
+    await store.createApplication({ fields: VALID, files: [] }); // unrelated row
+    eq(await store.countCareerApplications(j.id), 2, 'wrong count for this job');
+    eq(await store.countCareerApplications('other-job'), 0, 'count leaked across jobs');
+    eq(await store.countCareerApplications(''), 0, 'empty job id count');
+    await store.deleteCareerApplication(a1.id);
+    await store.deleteCareerApplication(a2.id);
+    await store.deleteJob(j.id);
+  });
+
   if (cleanup) await cleanup();
 }
 
