@@ -613,7 +613,145 @@ const VALID = {
     eq(gone.status, 404, 'deleted career application still readable');
   });
 
-  group('4c. Contact form');
+  /* ------------------------------ jobs API -------------------------------- */
+  group('4c. Jobs — public listing & admin management');
+
+  await test('every anonymous caller sees all active jobs, without admin fields', async () => {
+    const r = await req('GET', '/api/jobs');
+    eq(r.status, 200, 'status');
+    assert(Array.isArray(r.json.jobs) && r.json.jobs.length >= 14, 'expected the 14 seeded jobs, got ' + r.json.jobs.length);
+    for (const j of r.json.jobs) {
+      assert(j.active === undefined && j.applications === undefined,
+        'admin-only fields leaked publicly on ' + j.id + ': ' + JSON.stringify(j));
+      assert(j.en && j.en.r && j.ar && j.ar.r, 'job payload incomplete: ' + j.id);
+    }
+  });
+
+  await test('the anonymous list is the single source of truth for careers rows', async () => {
+    const r = await req('GET', '/api/jobs');
+    const rows = r.json.jobs;
+    assert(rows.some(j => j.en.r === 'German Teacher'), 'german-teacher missing');
+    assert(rows.every(j => j.en.d && j.en.ty), 'rows lack r/d/ty needed by careers.html cards');
+  });
+
+  await test('job search narrows by id, English or Arabic title', async () => {
+    const hit = await req('GET', '/api/jobs?q=german');
+    assert(hit.json.jobs.some(j => j.id === 'german-teacher'), 'q=german missed german-teacher');
+    const arHit = await req('GET', '/api/jobs?q=' + encodeURIComponent('ممرضة'));
+    assert(arHit.json.jobs.some(j => j.id === 'school-nurse'), 'arabic q missed school-nurse');
+    const miss = await req('GET', '/api/jobs?q=zzz-nope');
+    eq(miss.json.jobs.length, 0, 'nonsense q matched');
+  });
+
+  let newJobId = 'science-communicator';
+  await test('job creation requires admin auth', async () => {
+    const anon = await req('POST', '/api/jobs', {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ en: { r: 'Science Communicator' }, ar: { r: 'مثقف علمي' } }),
+    });
+    eq(anon.status, 401, 'anonymous caller created a job');
+  });
+
+  await test('an admin can create a job; the id is slugified from the English title', async () => {
+    const r = await req('POST', '/api/jobs', {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        en: { r: 'Science Communicator!', key: 'Sci Com', d: 'Science', ty: 'Full-time', desc: 'Teach science outreach.', resp: ['Plan'], qual: ['Degree'] },
+        ar: { r: 'مثقف علمي', d: 'علوم', ty: 'دوام كامل', desc: 'توعية علمية', resp: ['تخطيط'] },
+      }),
+    });
+    eq(r.status, 201, 'status');
+    assert(/^[a-z0-9-]+$/.test(r.json.id), 'bad slug: ' + r.json.id);
+    newJobId = r.json.id;
+  });
+
+  await test('duplicate-created jobs get a unique suffixed slug instead of overwriting', async () => {
+    const dup = await req('POST', '/api/jobs', {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ en: { r: 'Science Communicator' }, ar: { r: 'ثقافة علمية' } }),
+    });
+    eq(dup.status, 201, 'status');
+    assert(dup.json.id !== newJobId && /^science-communicator(-\d+)?$/.test(dup.json.id), 'no dedupe suffix: ' + dup.json.id);
+    const r = await req('DELETE', '/api/jobs?id=' + dup.json.id, { auth: true });
+    eq(r.status, 200, 'cleanup delete status');
+  });
+
+  await test('the admin listing includes active flag and live application counts', async () => {
+    const r = await req('GET', '/api/jobs', { auth: true });
+    const job = r.json.jobs.find(j => j.id === newJobId);
+    assert(job, 'created job missing from the admin list');
+    assert(job.active === true && job.applications === 0, 'admin fields wrong: ' + JSON.stringify(job));
+  });
+
+  await test('an admin can update a job and deactivate it; it then leaves the public list', async () => {
+    const up = await req('POST', '/api/jobs?id=' + newJobId, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: false }),
+    });
+    eq(up.status, 200, 'status');
+    eq(up.json.active, false, 'active not persisted');
+    const pub = await req('GET', '/api/jobs');
+    assert(!pub.json.jobs.some(j => j.id === newJobId), 'deactivated job still public');
+    const admin = await req('GET', '/api/jobs', { auth: true });
+    assert(admin.json.jobs.some(j => j.id === newJobId), 'deactivated job missing for admin');
+  });
+
+  await test('a career application for a closed job is refused with fields: [jobId]', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form({ ...VALID_CAREER, jobId: newJobId }, CAREER_FILES),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('jobId'), 'closed job not reported: ' + JSON.stringify(r.json.fields));
+  });
+
+  await test('an unknown jobId is refused the same way', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form({ ...VALID_CAREER, jobId: 'no-such-job' }, CAREER_FILES),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('jobId'), 'unknown job not reported');
+  });
+
+  let jobCareerId = '';
+  await test('a career application for an active job stores jobId and resolves the position', async () => {
+    await req('POST', '/api/jobs?id=' + newJobId, {
+      auth: true, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: true }),
+    });
+    const r = await req('POST', '/api/careers', {
+      body: form({ ...VALID_CAREER, position: 'Sci Commun', jobId: newJobId }, CAREER_FILES),
+    });
+    eq(r.status, 201, 'status');
+    jobCareerId = r.json.careerId;
+    const detail = await req('GET', '/api/career?id=' + encodeURIComponent(jobCareerId), { auth: true });
+    eq(detail.json.fields.jobId, newJobId, 'jobId not stored on the career');
+    eq(detail.json.fields.position, 'Science Communicator!', 'position not resolved from the job');
+  });
+
+  await test('a job with applications cannot be deleted while referenced (409, not silent orphaning)', async () => {
+    const r = await req('DELETE', '/api/jobs?id=' + newJobId, { auth: true });
+    eq(r.status, 409, 'status');
+    assert(/application/i.test(r.json.error), 'conflict message missing: ' + r.json.error);
+  });
+
+  await test('after the referencing application is deleted the job can be deleted', async () => {
+    await req('DELETE', '/api/career?id=' + encodeURIComponent(jobCareerId), { auth: true });
+    const r = await req('DELETE', '/api/jobs?id=' + newJobId, { auth: true });
+    eq(r.status, 200, 'status');
+    const pub = await req('GET', '/api/jobs');
+    assert(!pub.json.jobs.some(j => j.id === newJobId), 'deleted job still listed publicly');
+  });
+
+  await test('deleting an unknown job returns 404; a missing id returns 400', async () => {
+    eq((await req('DELETE', '/api/jobs?id=no-such-job', { auth: true })).status, 404, 'unknown id');
+    eq((await req('DELETE', '/api/jobs', { auth: true })).status, 400, 'missing id');
+  });
+
+  await test('job writes are refused without a session', async () => {
+    eq((await req('DELETE', '/api/jobs?id=german-teacher')).status, 401, 'deletion without session');
+  });
+
+  group('4d. Contact form');
 
   await test('a valid contact message is accepted (delivery skipped: no RESEND_API_KEY in tests)', async () => {
     const r = await req('POST', '/api/contact', {
