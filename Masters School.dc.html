@@ -790,6 +790,7 @@ second slot onto the first: one shared 21px row, identical gap for every
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:58px 32px 68px">
       <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:40px;color:#0B2346;text-align:center;margin:0 0 36px">{{ t.about.accredh }}</h2>
+
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
         <sc-for list="{{ t.about.accred }}" as="a" hint-placeholder-count="4"><div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #E0DCCF;border-radius:14px;padding:15px 22px;font-weight:700;color:#0B2346;font-size:15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2.4"><path d="M12 2 3 7v6c0 5 3.8 8.5 9 9 5.2-.5 9-4 9-9V7z"/><path d="m9 12 2 2 4-4"/></svg>{{ a }}</div></sc-for>
       </div>
@@ -860,29 +861,28 @@ second slot onto the first: one shared 21px row, identical gap for every
         </div>
       </sc-if>
       <sc-if value="{{ careerNot }}" hint-placeholder-val="{{ true }}">
-        <form id="ms-career-form" novalidate="novalidate" onSubmit="{{ submitCareer }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
+        <form onSubmit="{{ submitCareer }}" style="background:#fff;border:1px solid #ECEAE3;border-radius:24px;padding:40px;box-shadow:0 40px 80px -56px rgba(11,35,70,.4)">
           <h2 style="font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:32px;color:#0B2346;margin:0 0 4px">{{ careerFormTitle }}</h2>
           <p style="color:#8A93A1;font-size:13px;margin:0 0 26px">{{ careerFormSub }}</p>
-          <input type="hidden" name="position" value="{{ careerPosition }}">
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.personal }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
-            <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" autocomplete="name" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ careHas.name }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.name }}</span></div></div></div>
-            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" type="tel" inputmode="tel" pattern="01[0125][0-9]{8}" maxlength="11" title="Enter a valid Egyptian mobile number" dir="ltr" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ careHas.phone }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.phone }}</span></div></div></div>
-            <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" type="email" autocomplete="email" dir="ltr" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ careHas.email_2 }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.email_2 }}</span></div></div></div>
+            <div style="grid-column:1/-1"><label for="ms-name" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.name }} *</label><input name="name" id="ms-name" required="required" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-phone" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.phone }} *</label><input name="phone" id="ms-phone" required="required" type="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" maxlength="20" title="Enter a valid phone number" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-email-2" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.email }} *</label><input name="email_2" id="ms-email-2" required="required" type="email" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div style="grid-column:1/-1"><label for="ms-position" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.position }} *</label><select name="position" id="ms-position" required="required" value="{{ careerPosition }}" onChange="{{ setCareerPosition }}" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><sc-for list="{{ t.careers.posOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select></div>
           </div>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.exp }}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px">
-            <div><label for="ms-years" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.years }}</label><input name="years" id="ms-years" type="number" inputmode="numeric" min="0" max="50" step="1" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><div class="ms-err-slot" data-err="{{ careHas.years }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.years }}</span></div></div></div>
-            <div><label for="ms-edu" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.edu }} *</label><select name="edu" id="ms-edu" style="width:100%;padding:12px 14px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"><option value="" disabled selected hidden>{{ t.careers.f.eduSelect }}</option><sc-for list="{{ eduOpts }}" as="o" hint-placeholder-count="6"><option>{{ o }}</option></sc-for></select><div class="ms-err-slot" data-err="{{ careHas.edu }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.edu }}</span></div></div></div>
+            <div><label for="ms-years" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.years }}</label><input name="years" id="ms-years" type="number" min="0" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
+            <div><label for="ms-edu" style="display:block;font-weight:600;font-size:13px;color:#0B2346;margin-bottom:7px">{{ t.careers.f.edu }}</label><input name="edu" id="ms-edu" style="width:100%;padding:13px 15px;border:1px solid #DCDAD2;border-radius:10px;font-size:15px;background:#FCFBF8;color:#0B2346"></div>
           </div>
           <div style="color:#C89A2B;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">{{ t.careers.f.docs }}</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:30px">
-            <div><label data-err="{{ careHas.cv }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }} *</div><div style="{{ styleCV }}">{{ labelCV }}</div><input type="file" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none"></label><div class="ms-err-slot" data-err="{{ careHas.cv }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.cv }}</span></div></div><div style="font-size:11.5px;color:#8A93A1;line-height:1.5;margin-top:7px">{{ t.careers.f.cvhint }}</div></div>
-            <div><label data-err="{{ careHas.cert }}" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }} *</div><div style="{{ styleCert }}">{{ labelCert }}</div><input type="file" name="cert" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label><div class="ms-err-slot" data-err="{{ careHas.cert }}"><div role="alert" class="ms-field-err"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>{{ careErr.cert }}</span></div></div><div style="font-size:11.5px;color:#8A93A1;line-height:1.5;margin-top:7px">{{ t.careers.f.certhint }}</div></div>
-            <div><label data-err="false" style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:18px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="{{ stylePortfolio }}">{{ labelPortfolio }}</div><input type="file" name="portfolio" accept=".pdf,.jpg,.jpeg,.png" style="display:none"></label><div class="ms-err-slot" data-err="false"><div role="alert" class="ms-field-err"><span></span></div></div></div>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cv }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cv" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.cert }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="cert" onChange="{{ onFilePick }}" style="display:none"></label>
+            <label style="border:1.5px dashed #D2CFC4;border-radius:12px;padding:28px 14px;text-align:center;cursor:pointer;background:#FCFBF8;display:block" style-hover="border-color:#C89A2B;background:#FAF6EC"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="margin-bottom:10px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><div style="font-size:13px;font-weight:700;color:#0B2346">{{ t.careers.f.portfolio }}</div><div style="font-size:11px;color:#8A93A1;margin-top:2px">{{ t.careers.f.upload }}</div><input type="file" name="portfolio" onChange="{{ onFilePick }}" style="display:none"></label>
           </div>
           <sc-if value="{{ hasCareerSendError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:12px 15px;margin:0 0 16px;color:#8E2C20;font-size:13.5px;line-height:1.5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{{ careerSendError }}</div></sc-if>
-          <p style="color:#8A93A1;font-size:12.5px;margin:0 0 14px">{{ t.careers.f.required }}</p>
           <button type="submit" disabled="{{ careerSending }}" style="width:100%;background:#C89A2B;color:#0B2346;border:none;cursor:pointer;font-size:17px;font-weight:800;padding:17px;border-radius:13px" style-hover="background:#b98a1f">{{ careerSubmitLabel }}</button>
           <button type="button" onClick="{{ closeCareerForm }}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;background:transparent;border:1px solid #DCDAD2;color:#0B2346;cursor:pointer;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px;font-family:inherit" style-hover="border-color:#C89A2B;color:#a37e1f"><svg class="ms-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>{{ t.careers.jobback }}</button>
         </form>
@@ -1029,7 +1029,7 @@ second slot onto the first: one shared 21px row, identical gap for every
         <a href="https://maps.app.goo.gl/CV79bAtZbfLcC1CW8?g_st=iw" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.visitT }}</div><div style="color:#5B6472;font-size:14px;line-height:1.5">{{ t.contact.visitD }}</div></a>
         <a href="tel:+201099787423" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.callT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.callD }}</div></a>
         <a href="https://wa.me/201099787423" target="_blank" rel="noopener" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2z"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.waT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.waD }}</div></a>
-        <a href="mailto:Admissions@masters-edu.com" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.mailT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.mailD }}</div></a>
+        <a href="mailto:admissions@masters-edu.com" class="ms-contact-card" style="background:#fff;border:1px solid #ECEAE3;border-radius:18px;padding:26px 24px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(200,154,43,.13);display:flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div><div style="font-weight:800;color:#0B2346;font-size:15px;margin-bottom:5px">{{ t.contact.mailT }}</div><div dir="ltr" style="color:#5B6472;font-size:14px;line-height:1.5;unicode-bidi:isolate">{{ t.contact.mailD }}</div></a>
       </div>
     </section>
     <section style="max-width:1120px;margin:0 auto;padding:30px 32px 96px">
@@ -1122,7 +1122,7 @@ second slot onto the first: one shared 21px row, identical gap for every
         <div style="display:flex;flex-direction:column;gap:13px;font-size:14.5px">
           <div style="display:flex;gap:10px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><a href="https://maps.app.goo.gl/CV79bAtZbfLcC1CW8?g_st=iw" target="_blank" rel="noopener" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.addr }}</a></div>
           <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.36 2.07.7 3a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.98.34 2 .57 3 .7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+201099787423" dir="ltr" style="color:inherit;unicode-bidi:isolate" style-hover="color:#C89A2B">{{ t.foot.phone }}</a></div>
-          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:Admissions@masters-edu.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
+          <div style="display:flex;gap:10px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C89A2B" stroke-width="2" style="flex-shrink:0"><path d="M4 4h16v16H4z" fill="none"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:admissions@masters-edu.com" style="color:inherit" style-hover="color:#C89A2B">{{ t.foot.email }}</a></div>
         </div>
       </div>
     </div>
@@ -1139,7 +1139,7 @@ second slot onto the first: one shared 21px row, identical gap for every
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "", care: {}, careFiles: {} };
+  state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "" };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
   go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {},  emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
@@ -1292,20 +1292,12 @@ class Component extends DCLogic {
     this.__onFieldEvent = (e) => this.onFieldEvent(e);
     document.addEventListener("input", this.__onFieldEvent, true);
     document.addEventListener("change", this.__onFieldEvent, true);
-    this.__onCareerInput = (e) => this.onCareerInput(e);
-    document.addEventListener("input", this.__onCareerInput, true);
-    document.addEventListener("change", this.__onCareerInput, true);
   }
   componentWillUnmount() {
     if (this.__onFieldEvent) {
       document.removeEventListener("input", this.__onFieldEvent, true);
       document.removeEventListener("change", this.__onFieldEvent, true);
       this.__onFieldEvent = null;
-    }
-    if (this.__onCareerInput) {
-      document.removeEventListener("input", this.__onCareerInput, true);
-      document.removeEventListener("change", this.__onCareerInput, true);
-      this.__onCareerInput = null;
     }
   }
   // Scroll the first invalid field into view and focus it — focus() alone never
@@ -1938,14 +1930,6 @@ class Component extends DCLogic {
   submitCareer(e) {
     if (e && e.preventDefault) e.preventDefault();
     const form = e && e.target;
-    if (!form) return;
-    const errors = this.careerErrors(form);
-    if (Object.keys(errors).length) {
-      this.setState({ care: errors, careerSending: false, careerSendError: "" });
-      this.focusCareerFirst(form, errors);
-      return;
-    }
-    this.setState({ care: {} });
     const url = this.careersEndpoint();
     if (!url) {
       try {
@@ -1980,133 +1964,7 @@ class Component extends DCLogic {
     xhr.ontimeout = () => fail("timeout");
     xhr.send(new FormData(form));
   }
-  careerFieldError(form, k) {
-    const t = this.content()[this.state.lang].careers.f;
-    const val = (n) => String((form.elements[n] || { value: "" }).value || "").trim();
-    const file = (n) => { const el = form.elements[n]; return (el && el.files && el.files.length) ? el.files[0] : null; };
-    const vot = (n) => (this.__careerdicts || {})[n];
-    switch (k) {
-      case "name": return val("name") ? "" : t.err.name;
-      case "email_2": return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(val("email_2")) ? "" : t.err.email;
-      case "phone": return /^01[0125]\d{8}$/.test(val("phone")) ? "" : t.err.phone;
-      case "years": {
-        const y = val("years");
-        return (y && !( /^\d{1,2}$/.test(y) && Number(y) <= 50 )) ? t.err.years : "";
-      }
-      case "edu": return val("edu") ? "" : t.err.edu;
-      case "cv": {
-        if (!file("cv")) return t.err.cv;
-        return vot("cv") === false ? t.err.cvtype : "";
-      }
-      case "cert": {
-        if (!file("cert")) return t.err.cert;
-        return vot("cert") === false ? t.err.certtype : "";
-      }
-      default: return "";
-    }
-  }
-  careerErrors(form) {
-    const out = {};
-    const keys = ["name", "email_2", "phone", "years", "edu", "cv", "cert"];
-    for (let i = 0; i < keys.length; i++) {
-      const msg = this.careerFieldError(form, keys[i]);
-      if (msg) out[keys[i]] = msg;
-    }
-    return out;
-  }
-  careerSlotLabel(key, fallback) {
-    const p = this.state.careFiles && this.state.careFiles[key];
-    if (!p) return fallback;
-    return "✓ " + p.name + " · " + this.humanSize(p.bytes);
-  }
-  careerSlotStyle(key) {
-    return (this.state.careFiles && this.state.careFiles[key])
-      ? "font-size:11.5px;color:#1B6B39;font-weight:700;margin-top:3px;word-break:break-word"
-      : "font-size:11.5px;color:#8A93A1;margin-top:3px";
-  }
-  onCareerInput(e) {
-    const el = e && e.target;
-    if (!el || el.nodeType !== 1) return;
-    if (el.tagName !== "INPUT" && el.tagName !== "SELECT" && el.tagName !== "TEXTAREA") return;
-    const form = el.form;
-    if (!form || !form.id || form.id !== "ms-career-form") return;
-    if (el.getAttribute("type") === "file") this.careerFilePick(form, el);
-    else this.careerLive(form, el);
-  }
-  careerLive(form, el) {
-    const name = el.getAttribute("name");
-    if (["name", "email_2", "phone", "years", "edu", "cv", "cert"].indexOf(name) === -1) return;
-    const cur = this.state.care || {};
-    const msg = this.careerFieldError(form, name);
-    const changed = msg ? cur[name] !== msg : !!cur[name];
-    if (!changed) return;
-    const next = { ...cur };
-    if (msg) next[name] = msg; else delete next[name];
-    this.setState({ care: next });
-  }
-  fileKindOf(head) {
-    const SIGS = { pdf: [0x25, 0x50, 0x44, 0x46, 0x2d], doc: [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1], docx: [0x50, 0x4b, 0x03, 0x04], jpg: [0xff, 0xd8, 0xff], png: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] };
-    for (const k in SIGS) {
-      const sig = SIGS[k];
-      let ok = head && head.length >= sig.length;
-      for (let i = 0; ok && i < sig.length; i++) ok = head[i] === sig[i];
-      if (ok) return k;
-    }
-    return "";
-  }
-  careFileAllowed(name, kind) {
-    if (name === "cv") return kind === "pdf" || kind === "doc" || kind === "docx";
-    if (name === "cert") return kind === "pdf" || kind === "jpg" || kind === "png";
-    return true; // portfolio stays optional and open
-  }
-  careerFilePick(form, el) {
-    const name = el.getAttribute && el.getAttribute("name");
-    if (name !== "cv" && name !== "cert" && name !== "portfolio") return;
-    const p = this.state.careFiles || {};
-    const next = { ...p };
-    const v = this.__careerdicts = this.__careerdicts || {};
-    if (el.files && el.files.length) {
-      const f = el.files[0];
-      next[name] = { name: f.name, bytes: f.size };
-      v[name] = undefined; // pending — treated as valid until verified
-      if (f.slice && f.arrayBuffer) {
-        Promise.resolve(f.slice(0, 8).arrayBuffer())
-          .then((buf) => {
-            v[name] = !!this.careFileAllowed(name, this.fileKindOf(new Uint8Array(buf)));
-            this.careerLive(form, el);
-          })
-          .catch(() => { v[name] = false; this.careerLive(form, el); });
-      } else {
-        v[name] = true;
-      }
-    } else {
-      delete next[name];
-      delete v[name];
-    }
-    const cur = this.state.care || {};
-    const msg = ["cv", "cert"].indexOf(name) === -1 ? "" : this.careerFieldError(form, name);
-    const cnext = { ...cur };
-    if (msg) cnext[name] = msg; else delete cnext[name];
-    this.setState({ careFiles: next, care: cnext });
-  }
-  focusCareerFirst(form, errors) {
-    const order = ["name", "phone", "email_2", "years", "edu", "cv", "cert"];
-    for (let i = 0; i < order.length; i++) {
-      const k = order[i];
-      if (!errors[k]) continue;
-      const el = form.elements[k];
-      if (!el) continue;
-      if (k === "cv" || k === "cert") {
-        const card = el.closest("label");
-        try { (card || el).scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { (card || el).scrollIntoView(); } catch (e2) {} }
-        return;
-      }
-      try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { el.scrollIntoView(); } catch (e2) {} }
-      try { el.focus({ preventScroll: true }); } catch (e) { try { el.focus(); } catch (e2) {} }
-      return;
-    }
-  }
-  setCareerPosition(e) { const el = e && e.target; if (el && el.value) this.setState({ careerPosition: el.value }); }
+  setCareerPosition(e) { const el = e && e.target; if (el) this.setState({ careerPosition: el.value || "" }); }
   currentJob() { const j = this.content()[this.state.lang].careers.positions[this.state.job]; return j || null; }
   goJob(i) { if (i === null || i === undefined) return; this.setState({ page: "job", job: Number(i), step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
   openJobFromEvent(e) { const el = e && e.currentTarget; const v = el && el.getAttribute("data-job"); if (v === null || v === undefined || v === "") return; this.goJob(Number(v)); }
@@ -2192,7 +2050,7 @@ class Component extends DCLogic {
     const email = val("ms-email-3");
     const phone = val("ms-phone-2");
     const message = val("ms-message");
-    const emailRe = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRe = /^[+0-9 ()-]{7,20}$/;
     const errors = { name: "", email: "", phone: "", message: "" };
     if (!name) errors.name = t.name;
@@ -2399,18 +2257,6 @@ class Component extends DCLogic {
       careerFormSub: this.careerFormSub(),
       submitCareer: (e) => this.submitCareer(e),
       setCareerPosition: (e) => this.setCareerPosition(e),
-      careErr: Object.assign({ name: "", email_2: "", phone: "", years: "", edu: "", cv: "", cert: "" }, this.state.care || {}),
-      careHas: (() => {
-        const c = this.state.care || {};
-        return { name: !!c.name, email_2: !!c.email_2, phone: !!c.phone, years: !!c.years, edu: !!c.edu, cv: !!c.cv, cert: !!c.cert };
-      })(),
-      labelCV: this.careerSlotLabel("cv", t.careers.f.upload),
-      styleCV: this.careerSlotStyle("cv"),
-      labelCert: this.careerSlotLabel("cert", t.careers.f.upload),
-      styleCert: this.careerSlotStyle("cert"),
-      labelPortfolio: this.careerSlotLabel("portfolio", t.careers.f.upload),
-      stylePortfolio: this.careerSlotStyle("portfolio"),
-      eduOpts: t.careers.f.eduOpts,
       validateContact: (e) => this.validateContact(e),
       contactSending: this.state.contactSending,
       contactSubmitLabel: this.state.contactSending ? (t.contact.f.sending || "Sending…") : t.contact.f.submit,
@@ -2483,7 +2329,7 @@ class Component extends DCLogic {
           about: "A premier bilingual language school in El Santa, Gharbia — shaping curious, confident and compassionate learners since 2026.",
           explore: "Explore", admissions: "Admissions", contactc: "Contact",
           rights: "© 2026 Masters Language School. All rights reserved.",
-          addr: "El Santa, Gharbia Governorate, Egypt", phone: "+20 109 978 7423", email: "Admissions@masters-edu.com",
+          addr: "El Santa, Gharbia Governorate, Egypt", phone: "+20 109 978 7423", email: "admissions@masters-edu.com",
           links: ["About Us", "Academics", "Student Life", "News & Events", "Gallery"],
           alinks: ["Apply Online", "Book a Tour", "Tuition & Fees", "Admission Terms", "FAQ"]
         },
@@ -2522,7 +2368,7 @@ class Component extends DCLogic {
           visitsH: "School Visits & Tours",
           visitsD: "We warmly invite prospective parents to schedule a campus tour during a regular school day to experience the Masters environment and learn more about our community.",
           contactH: "Contact the Admissions Office",
-          contactPhone: "+20 109 978 7423", contactEmail: "Admissions@masters-edu.com",
+          contactPhone: "+20 109 978 7423", contactEmail: "admissions@masters-edu.com",
           formh: "Online Application Form", formsub: "Academic Year 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
@@ -2586,7 +2432,7 @@ class Component extends DCLogic {
           need: {
             h: "To schedule your assessment", items: ["Pre-K & KG1: current nursery report", "Transfer students: last two years' reports", "Letter of Good Conduct from current school", "Assessment fee: 600 EGP (non-refundable)"],
             datesh: "Key dates", dates: [{ l: "Applications", v: "Until 15 August" }, { l: "Results notified", v: "After Interview" }, { l: "Final documents", v: "Before 15 August" }],
-            helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+20 109 978 7423", helpemail: "Admissions@masters-edu.com"
+            helph: "Need help?", helpd: "Our admissions team is happy to guide you.", helpphone: "+20 109 978 7423", helpemail: "admissions@masters-edu.com"
           },
           conf: {
             h: "Application received!", sub: "Thank you. Our admissions team will review your application and contact eligible applicants to schedule the assessment and parent interview.",
@@ -2631,7 +2477,7 @@ class Component extends DCLogic {
           ],
           apply: "Apply", formh: "Application form", formsub: "Tell us about yourself", applybtn: "Apply for this position", jobeyebrow: "Careers at Masters", jobh: "About the role", resph: "Main responsibilities", qualh: "Required qualifications", jobback: "Back to all positions", footernote: "Have a question before applying? Chat with our team on WhatsApp.", contactbtn: "Chat on WhatsApp",
           posOpts: ["German Teacher", "French Teacher", "Arabic Teacher", "English Teacher", "HR Specialist", "IT Support", "Marketing Officer", "Receptionist", "Accountant", "Nurse", "Administration", "Security", "Bus Driver", "Bus Supervisor"],
-          f: { personal: "Personal information", name: "Full name", phone: "Phone number", email: "Email address", position: "Position applying for", exp: "Experience & education", years: "Years of experience", edu: "Highest qualification", linkedin: "LinkedIn profile (optional)", docs: "Documents", cv: "CV / Résumé", cert: "Certificates", portfolio: "Portfolio (optional)", cover: "Cover letter", upload: "Upload file", submit: "Submit application", sending: "Sending…", required: "Fields marked * are required.", eduSelect: "Select your highest qualification", eduOpts: ["High School / Secondary Education", "Diploma", "Bachelor's Degree", "Master's Degree", "Doctorate / PhD", "Other"], cvhint: "Supported formats: PDF, DOC, DOCX. PDF is preferred for ATS compatibility. Do not upload image files.", certhint: "Supported formats: PDF, JPG, JPEG, PNG. Clear scanned copies are preferred.", err: { name: "Enter your name.", email: "Enter a valid email address.", phone: "Enter a valid Egyptian mobile number.", years: "Enter a number from 0 to 50.", edu: "Select your highest qualification.", cv: "CV is required.", cert: "Certificate is required.", cvtype: "Upload a valid CV (PDF, DOC, or DOCX).", certtype: "Upload a valid certificate file." } },
+          f: { personal: "Personal information", name: "Full name", phone: "Phone number", email: "Email address", position: "Position applying for", exp: "Experience & education", years: "Years of experience", edu: "Highest qualification", linkedin: "LinkedIn profile (optional)", docs: "Documents", cv: "CV / Résumé", cert: "Certificates", portfolio: "Portfolio (optional)", cover: "Cover letter", upload: "Upload file", submit: "Submit application", sending: "Sending…", required: "Fields marked * are required." },
           conf: { h: "Thank you for applying!", sub: "Our HR team will review your application and contact shortlisted candidates within 5 working days.", idlabel: "Your reference number", back: "Back to home", note: "A confirmation email has been sent to you." }
         },
         gallery: {
@@ -2648,7 +2494,7 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "Contact", title: "We’d love to hear from you.", sub: "Questions about admissions, careers or a campus visit? Reach out — we reply fast.",
-          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+20 109 978 7423", waT: "WhatsApp", waD: "+20 109 978 7423", mailT: "Email", mailD: "Admissions@masters-edu.com",
+          visitT: "Visit us", visitD: "El Santa, Gharbia Governorate, Egypt", callT: "Call us", callD: "+20 109 978 7423", waT: "WhatsApp", waD: "+20 109 978 7423", mailT: "Email", mailD: "admissions@masters-edu.com",
           hoursh: "Office hours", hours: "Sunday – Thursday · 8:00 AM – 3:00 PM",
           formh: "Send us a message", f: { name: "Your name", email: "Email address", phone: "Phone number", subject: "Subject", message: "Message", submit: "Send message", sending: "Sending…", required: "Fields marked * are required." },
           err: { name: "Please enter your name.", emailRequired: "Please enter your email address.", emailInvalid: "Please enter a valid email address (e.g. name@example.com).", phoneInvalid: "Please enter a valid phone number (7–20 digits; + and spaces allowed).", messageRequired: "Please enter a message.", messageShort: "Please enter at least 10 characters so we understand your message.", network: "We could not send your message — please try WhatsApp or phone instead." },
@@ -2693,7 +2539,7 @@ class Component extends DCLogic {
           about: "مدرسة لغات ثنائية رائدة في السنطة، الغربية — نصنع متعلّمين فضوليين واثقين ومتعاطفين منذ 2026.",
           explore: "استكشف", admissions: "القبول", contactc: "تواصل معنا",
           rights: "© 2026 مدرسة ماسترز للغات. جميع الحقوق محفوظة.",
-          addr: "السنطة، محافظة الغربية، مصر", phone: "+20 109 978 7423", email: "Admissions@masters-edu.com",
+          addr: "السنطة، محافظة الغربية، مصر", phone: "+20 109 978 7423", email: "admissions@masters-edu.com",
           links: ["عن المدرسة", "البرامج الأكاديمية", "الحياة الطلابية", "الأخبار والفعاليات", "معرض الصور"],
           alinks: ["التقديم أونلاين", "احجز زيارة", "المصروفات", "شروط التقديم", "الأسئلة الشائعة"]
         },
@@ -2732,7 +2578,7 @@ class Component extends DCLogic {
           visitsH: "زيارة المدرسة والجولات الميدانية",
           visitsD: "نشجّع أولياء الأمور على تحديد موعد لزيارة المدرسة خلال يوم دراسي عادي للاطلاع على بيئتنا التعليمية والحصول على إجابات وافية حول نظام القبول.",
           contactH: "تواصل مع قسم القبول والتسجيل",
-          contactPhone: "+201099787423", contactEmail: "Admissions@masters-edu.com",
+          contactPhone: "+201099787423", contactEmail: "admissions@masters-edu.com",
           formh: "نموذج التقديم الإلكتروني", formsub: "العام الدراسي 2026–2027",
           gradeOpts: ["Pre-K", "KG1", "KG2", "الصف 1", "الصف 2", "الصف 3", "الصف 4", "الصف 5", "الصف 6", "الصف 7", "الصف 8", "الصف 9", "الصف 10", "الصف 11", "الصف 12"],
           yearOpts: ["2026 / 2027", "2027 / 2028"],
@@ -2796,7 +2642,7 @@ class Component extends DCLogic {
           need: {
             h: "لتحديد موعد التقييم", items: ["Pre-K و KG1: تقرير الحضانة الحالي", "الطلاب المحوّلون: تقارير آخر عامين", "خطاب حسن سير وسلوك من المدرسة الحالية", "رسوم التقييم: 600 جنيه (غير مستردة)"],
             datesh: "مواعيد مهمة", dates: [{ l: "التقديم", v: "حتى 15 أغسطس" }, { l: "إعلان النتائج", v: "بعد المقابلة" }, { l: "المستندات النهائية", v: "قبل 15 أغسطس" }],
-            helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201099787423", helpemail: "Admissions@masters-edu.com"
+            helph: "تحتاج مساعدة؟", helpd: "فريق القبول سعيد بإرشادك.", helpphone: "+201099787423", helpemail: "admissions@masters-edu.com"
           },
           conf: {
             h: "تم استلام طلبك!", sub: "شكرًا لك. سيراجع فريق القبول طلبك ويتواصل مع المتقدمين المؤهلين لتحديد موعد التقييم ومقابلة الوالدين.",
@@ -2841,7 +2687,7 @@ class Component extends DCLogic {
           ],
           apply: "تقديم", formh: "نموذج التقديم", formsub: "عرّفنا بنفسك", applybtn: "تقدّم لهذه الوظيفة", jobeyebrow: "وظائف ماسترز", jobh: "عن الوظيفة", resph: "المسؤوليات الرئيسية", qualh: "المؤهلات المطلوبة", jobback: "العودة إلى كل الوظائف", footernote: "لديك سؤال قبل التقديم؟ تحدّث مع فريقنا عبر واتساب.", contactbtn: "تواصل عبر واتساب",
           posOpts: ["معلم لغة ألمانية", "معلم لغة فرنسية", "معلم لغة عربية", "معلم لغة إنجليزية", "أخصائي موارد بشرية", "دعم تقني", "مسؤول تسويق", "موظف استقبال", "محاسب", "ممرضة", "موظف إداري", "أمن", "سائق حافلة", "مشرف حافلة"],
-          f: { personal: "البيانات الشخصية", name: "الاسم بالكامل", phone: "رقم الهاتف", email: "البريد الإلكتروني", position: "الوظيفة المتقدَّم لها", exp: "الخبرة والتعليم", years: "سنوات الخبرة", edu: "أعلى مؤهل", linkedin: "حساب لينكدإن (اختياري)", docs: "المستندات", cv: "السيرة الذاتية", cert: "الشهادات", portfolio: "معرض الأعمال (اختياري)", cover: "خطاب التقديم", upload: "رفع ملف", submit: "إرسال الطلب", sending: "جارٍ الإرسال…", required: "الحقول المعلّمة بـ * مطلوبة.", eduSelect: "اختر أعلى مؤهل", eduOpts: ["ثانوية عامة", "دبلوم", "بكالوريوس", "ماجستير", "دكتوراه", "أخرى"], cvhint: "الصيغ المدعومة: PDF، DOC، DOCX. يُفضّل استخدام PDF لضمان توافق أفضل مع أنظمة ATS. لا يمكن رفع الصور كملف سيرة ذاتية.", certhint: "الصيغ المدعومة: PDF، JPG، JPEG، PNG. يُفضّل رفع نسخ ممسوحة ضوئيًا واضحة.", err: { name: "أدخل اسمك بالكامل.", email: "أدخل بريدًا إلكترونيًا صحيحًا.", phone: "أدخل رقم محمول مصري صحيح.", years: "أدخل رقمًا من 0 إلى 50.", edu: "اختر أعلى مؤهل.", cv: "السيرة الذاتية مطلوبة.", cert: "الشهادات مطلوبة.", cvtype: "ارفع سيرة ذاتية صالحة (PDF أو DOC أو DOCX).", certtype: "ارفع ملف شهادة صالحًا." } },
+          f: { personal: "البيانات الشخصية", name: "الاسم بالكامل", phone: "رقم الهاتف", email: "البريد الإلكتروني", position: "الوظيفة المتقدَّم لها", exp: "الخبرة والتعليم", years: "سنوات الخبرة", edu: "أعلى مؤهل", linkedin: "حساب لينكدإن (اختياري)", docs: "المستندات", cv: "السيرة الذاتية", cert: "الشهادات", portfolio: "معرض الأعمال (اختياري)", cover: "خطاب التقديم", upload: "رفع ملف", submit: "إرسال الطلب", sending: "جارٍ الإرسال…", required: "الحقول المعلّمة بـ * مطلوبة." },
           conf: { h: "شكرًا لتقديمك!", sub: "سيراجع فريق الموارد البشرية طلبك ويتواصل مع المرشحين خلال 5 أيام عمل.", idlabel: "رقمك المرجعي", back: "العودة للرئيسية", note: "تم إرسال بريد تأكيد إليك." }
         },
         gallery: {
@@ -2858,7 +2704,7 @@ class Component extends DCLogic {
         },
         contact: {
           eyebrow: "تواصل معنا", title: "يسعدنا أن نسمع منك.", sub: "أسئلة عن القبول أو الوظائف أو زيارة المدرسة؟ تواصل معنا — نردّ بسرعة.",
-          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+20 109 978 7423", waT: "واتساب", waD: "+20 109 978 7423", mailT: "البريد", mailD: "Admissions@masters-edu.com",
+          visitT: "زُرنا", visitD: "السنطة، محافظة الغربية، مصر", callT: "اتصل بنا", callD: "+20 109 978 7423", waT: "واتساب", waD: "+20 109 978 7423", mailT: "البريد", mailD: "admissions@masters-edu.com",
           hoursh: "مواعيد العمل", hours: "الأحد – الخميس · 8:00 ص – 3:00 م",
           formh: "أرسل لنا رسالة", f: { name: "اسمك", email: "البريد الإلكتروني", phone: "رقم الهاتف", subject: "الموضوع", message: "الرسالة", submit: "إرسال الرسالة", sending: "جارٍ الإرسال…", required: "الحقول المعلّمة بـ * مطلوبة." },
           err: { name: "من فضلك أدخل اسمك.", emailRequired: "من فضلك أدخل بريدك الإلكتروني.", emailInvalid: "من فضلك أدخل بريدًا إلكترونيًا صحيحًا (مثل name@example.com).", phoneInvalid: "من فضلك أدخل رقم هاتف صحيح (٧–٢٠ رقمًا؛ يُسمح بـ + والمسافات).", messageRequired: "من فضلك أدخل رسالتك.", messageShort: "من فضلك أدخل 10 أحرف على الأقل حتى نفهم رسالتك.", network: "تعذّر إرسال رسالتك — من فضلك جرّب واتساب أو الاتصال الهاتفي." },
