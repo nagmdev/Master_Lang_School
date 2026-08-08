@@ -1142,7 +1142,7 @@ class Component extends DCLogic {
   state = { lang: "en", page: "home", job: null, step: 1, other: {}, firstSchool: "", submitted: false, appId: "", careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, galleryTab: "photos", sending: false, sendError: "", demoMode: false, picked: {}, uploadPercent: 0, emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", navOpen: true, contactErrors: { name: "", email: "", phone: "", message: "" }, contactSending: false, nidError: "", govCode: "", govNameEn: "", govNameAr: "", care: {}, careFiles: {} };
 
   scrollTop() { try { window.scrollTo(0, 0); } catch (e) {} }
-  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {},  emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  go(page) { this.setState({ page: page, job: null, step: 1, other: {}, firstSchool: "", submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, careerSending: false, careerSendError: "", contactSubmitted: false, contactSending: false, picked: {},  emergencyError: "", parentNidError: {}, fieldErrors: {}, attachErr: {}, globalErr: "", uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.pushHistory(page, null); this.scrollTop(); }
   goContact() {
     const f = document.getElementById("ms-footer");
     if (f) { try { window.scrollTo({ top: f.offsetTop, behavior: "smooth" }); } catch (e) { window.scrollTo(0, f.offsetTop); } }
@@ -1295,6 +1295,9 @@ class Component extends DCLogic {
     this.__onCareerInput = (e) => this.onCareerInput(e);
     document.addEventListener("input", this.__onCareerInput, true);
     document.addEventListener("change", this.__onCareerInput, true);
+    this.__onPopState = () => this.syncFromHash(false);
+    window.addEventListener("popstate", this.__onPopState);
+    this.syncFromHash(true);
   }
   componentWillUnmount() {
     if (this.__onFieldEvent) {
@@ -1306,6 +1309,10 @@ class Component extends DCLogic {
       document.removeEventListener("input", this.__onCareerInput, true);
       document.removeEventListener("change", this.__onCareerInput, true);
       this.__onCareerInput = null;
+    }
+    if (this.__onPopState) {
+      window.removeEventListener("popstate", this.__onPopState);
+      this.__onPopState = null;
     }
   }
   // Scroll the first invalid field into view and focus it — focus() alone never
@@ -2108,7 +2115,26 @@ class Component extends DCLogic {
   }
   setCareerPosition(e) { const el = e && e.target; if (el && el.value) this.setState({ careerPosition: el.value }); }
   currentJob() { const j = this.content()[this.state.lang].careers.positions[this.state.job]; return j || null; }
-  goJob(i) { if (i === null || i === undefined) return; this.setState({ page: "job", job: Number(i), step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.scrollTop(); }
+  goJob(i) { if (i === null || i === undefined) return; this.setState({ page: "job", job: Number(i), step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerPosition: "", careerFormOpen: false, contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); this.pushHistory("job", Number(i)); this.scrollTop(); }
+  // Keeps the address bar in sync with the SPA's virtual pages so the
+  // browser Back/Forward buttons — and a plain reload — work as expected.
+  pushHistory(page, job) {
+    try {
+      var hash = "#" + page + (job !== null && job !== undefined ? "-" + job : "");
+      if (location.hash !== hash) history.pushState({ page: page, job: job }, "", hash);
+    } catch (e) {}
+  }
+  syncFromHash(isInitial) {
+    var VALID_PAGES = ["home", "about", "academics", "admissions", "careers", "contact", "gallery", "life", "news", "terms", "job"];
+    var h = (location.hash || "").replace(/^#/, "");
+    if (!h) { if (!isInitial && this.state.page !== "home") this.setState({ page: "home", job: null }); return; }
+    var parts = h.split("-");
+    var page = parts[0];
+    var job = parts.length > 1 ? Number(parts[1]) : null;
+    if (VALID_PAGES.indexOf(page) === -1) return;
+    this.setState({ page: page, job: page === "job" ? job : null });
+    this.scrollTop();
+  }
   openJobFromEvent(e) { const el = e && e.currentTarget; const v = el && el.getAttribute("data-job"); if (v === null || v === undefined || v === "") return; this.goJob(Number(v)); }
   applyToJob() { const j = this.currentJob(); this.setState({ page: "careers", careerPosition: (j && j.key) || "", careerFormOpen: true, step: 1, other: {}, submitted: false, careerSubmitted: false, careerId: "", careerSending: false, careerSendError: "", contactSubmitted: false, picked: {},  uploadPercent: 0, contactErrors: { name: "", email: "", phone: "", message: "" } }); const el = document.getElementById("ms-career-form"); if (el) { try { window.scrollTo({ top: el.offsetTop - 70, behavior: "smooth" }); } catch (err) { window.scrollTo(0, el.offsetTop); } } }
   closeCareerForm() { this.setState({ careerFormOpen: false, careerSubmitted: false, careerId: "", careerPosition: "", careerSending: false, careerSendError: "" }); this.scrollTop(); }
