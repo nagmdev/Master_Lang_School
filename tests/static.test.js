@@ -231,7 +231,7 @@ test('School Visits & Tours section is present in both languages', () => {
 });
 
 test('Admissions Office contact details match the document', () => {
-  assertHas(EN, 'masterschool59@gmail.com'); assertHas(AR, 'masterschool59@gmail.com');
+  assertHas(EN, 'admissions@masters-edu.com'); assertHas(AR, 'admissions@masters-edu.com');
   assert(/\+20\s?109\s?978\s?7423|\+201099787423/.test(EN.replace(/\s+/g, ' ')), 'English phone missing');
   assertHas(AR, '+201099787423');
 });
@@ -1021,6 +1021,131 @@ test('applicant data is gitignored', () => {
   const ig = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
   assertHas(ig, 'data/', 'submitted applications would be committed to git');
   assertHas(ig, 'node_modules', 'node_modules is not ignored');
+});
+
+/* ------------- 10. Careers attachments — file-type policy ------------- */
+group('10. Careers attachments — file-type policy (CV / certificate)');
+
+test('the CV picker accepts only PDF/DOC/DOCX (no images)', () => {
+  const cv = '<input type="file" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"';
+  assertHas(src, cv, 'SPA CV input must advertise PDF/DOC/DOCX only');
+  assert(!src.includes('<input type="file" name="cv" accept=".pdf,.jpg'), 'SPA CV input still offers images');
+  for (const f of fs.readdirSync(ROOT).filter(n => /^apply-/.test(n) && n.endsWith('.html'))) {
+    const page = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assertHas(page, cv, f + ' CV accept is missing');
+    assert(!page.includes('<input type="file" name="cv" accept=".pdf,.jpg'), f + ' CV accept still offers images');
+  }
+});
+
+test('the certificate picker keeps PDF/JPG/PNG only (no docx/exe)', () => {
+  const cert = '<input type="file" name="cert" accept=".pdf,.jpg,.jpeg,.png"';
+  assertHas(src, cert, 'SPA certificate input must accept PDF/JPG/PNG');
+  assert(!src.includes('<input type="file" name="cert" accept=".pdf,.doc'), 'no doc formats may appear in the certificate picker');
+  for (const f of fs.readdirSync(ROOT).filter(n => /^apply-\w+\.html$/.test(n))) {
+    const page = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assertHas(page, cert, f + ' certificate accept is missing');
+  }
+});
+
+test('portfolio stays optional with its existing formats', () => {
+  // Optional means no red-asterisk label and no error slot wiring.
+  const m = src.match(/<div style="font-size:13px;font-weight:700;color:#0B2346">\{\{ t\.careers\.f\.portfolio \}\}<\/div>/g);
+  assert(m && m.length >= 1, 'portfolio label missing');
+  assert(!/t\.careers\.f\.portfolio \}\} \*/ .test(src), 'portfolio is rendered as required');
+  assertHas(src, '<input type="file" name="portfolio" accept=".pdf,.jpg,.jpeg,.png"',
+    'portfolio formats changed unexpectedly');
+});
+
+test('invalid-type errors exist in BOTH languages with the exact wording', () => {
+  assertHas(src, 'cvtype: "Upload a valid CV (PDF, DOC, or DOCX)."', 'EN cvtype message missing');
+  assertHas(src, 'certtype: "Upload a valid certificate file."', 'EN certtype message missing');
+  assertHas(src, 'cvtype: "ارفع سيرة ذاتية صالحة (PDF أو DOC أو DOCX)."', 'AR cvtype message missing');
+  assertHas(src, 'certtype: "ارفع ملف شهادة صالحًا."', 'AR certtype message missing');
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assertHas(shared, "cvtype: 'Upload a valid CV (PDF, DOC, or DOCX).'", 'EN cvtype missing from careers.js');
+  assertHas(shared, "certtype: 'Upload a valid certificate file.'", 'EN certtype missing from careers.js');
+  assertHas(shared, "cvtype: 'ارفع سيرة ذاتية صالحة (PDF أو DOC أو DOCX).'", 'AR cvtype missing from careers.js');
+  assertHas(shared, "certtype: 'ارفع ملف شهادة صالحًا.'", 'AR certtype missing from careers.js');
+});
+
+test('the server validates magic bytes, not just filenames', () => {
+  assertHas(routesSrc, '0x25, 0x50, 0x44, 0x46, 0x2d', 'PDF magic signature missing server-side');
+  assertHas(routesSrc, '0xd0, 0xcf, 0x11, 0xe0', 'OLE2/DOC magic signature missing server-side');
+  assertHas(routesSrc, '0x50, 0x4b, 0x03, 0x04', 'ZIP/DOCX signature missing server-side');
+  assertHas(routesSrc, 'CV_KINDS', 'server-side CV allowlist missing');
+  assertHas(routesSrc, 'CERT_KINDS', 'server-side certificate allowlist missing');
+  assertHas(routesSrc, "typeOk('cv', CV_KINDS)", 'server never applies the CV type check');
+});
+
+test('the client reflected-magic check lives in the twin and the shared page', () => {
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assertHas(shared, 'FILE_SIGS', 'careers.js has no signature table');
+  assertHas(shared, 'careFileAllowed', 'careers.js has no per-field allowlist');
+  assertHas(src, 'fileKindOf(head)', 'SPA missing the magic-byte sniffer');
+  assertHas(src, '.slice(0, 8).arrayBuffer()', 'SPA does not read the file header');
+});
+
+/* ------------- 11. Careers helper notes (Spec 21) ------------- */
+group('11. Careers attachments — helper notes');
+
+test('helper notes exist in BOTH languages with the exact wording', () => {
+  assertHas(src, 'cvhint: "Supported formats: PDF, DOC, DOCX. PDF is preferred for ATS compatibility. Do not upload image files."', 'EN cvhint missing');
+  assertHas(src, 'certhint: "Supported formats: PDF, JPG, JPEG, PNG. Clear scanned copies are preferred."', 'EN certhint missing');
+  assertHas(src, 'cvhint: "الصيغ المدعومة: PDF، DOC، DOCX. يُفضّل استخدام PDF لضمان توافق أفضل مع أنظمة ATS. لا يمكن رفع الصور كملف سيرة ذاتية."', 'AR cvhint missing');
+  assertHas(src, 'certhint: "الصيغ المدعومة: PDF، JPG، JPEG، PNG. يُفضّل رفع نسخ ممسوحة ضوئيًا واضحة."', 'AR certhint missing');
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assertHas(shared, "cvhint: 'Supported formats: PDF, DOC, DOCX. PDF is preferred for ATS compatibility. Do not upload image files.'", 'EN cvhint missing from careers.js');
+  assertHas(shared, "certhint: 'Supported formats: PDF, JPG, JPEG, PNG. Clear scanned copies are preferred.'", 'EN certhint missing from careers.js');
+  assertHas(shared, "cvhint: 'الصيغ المدعومة: PDF، DOC، DOCX. يُفضّل استخدام PDF لضمان توافق أفضل مع أنظمة ATS. لا يمكن رفع الصور كملف سيرة ذاتية.'", 'AR cvhint missing from careers.js');
+});
+
+test('hint markup is inline (no card), muted, small, and sits under the field', () => {
+  assertHas(src, 'font-size:11.5px;color:#8A93A1;line-height:1.5;margin-top:7px', 'CV/cert hint style missing');
+  const n = (src.match(/t\.careers\.f\.cvhint/g) || []).length;
+  const q = (src.match(/t\.careers\.f\.certhint/g) || []).length;
+  assert(n >= 1, 'cvhint not referenced in twin markup');
+  assert(q >= 1, 'certhint not referenced in twin markup');
+  for (const f of fs.readdirSync(ROOT).filter(n2 => /^apply-\w+\.html$/.test(n2))) {
+    const page = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assertHas(page, '{{ t.careers.f.cvhint }}', f + ' cvhint markup missing');
+    assertHas(page, '{{ t.careers.f.certhint }}', f + ' certhint markup missing');
+  }
+});
+
+test('hint notes do not affect validation state or rely on aria', () => {
+  assert(!/rol(?!e="alert")e="alert"[^>]*>\s*<div[^>]*cvhint/s.test(src), 'hint rendered like an error (role=alert)');
+  assert(!src.includes('onchange="careerFilePick'), 'SPA hint may not gate the change handler');
+});
+
+/* ------------- 12. Careers email — strict domain validation ------------- */
+group('12. Careers email — strict TLD validation');
+
+test('the careers email check requires a TLD of at least 2 letters', () => {
+  const re = '[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}';
+  assertHas(src, re, 'SPA uses the strict email pattern');
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assertHas(shared, re, 'careers.js uses the strict email pattern');
+  const routes = fs.readFileSync(path.join(ROOT, 'api', '_routes.js'), 'utf8');
+  assertHas(routes, '\\.[A-Za-z]{2,}', 'server EMAIL_RE still accepts a 1-char TLD');
+});
+
+test('the old permissive email regex is gone everywhere', () => {
+  const loose = '[^\\s@]+@[^\\s@]+\\.[^\\s@]+';
+  assert(!src.includes(loose), 'SPA still contains the permissive email regex');
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assert(!shared.includes(loose), 'careers.js still contains the permissive email regex');
+});
+
+test('the email error message matches the Admissions wording exactly', () => {
+  assertHas(src, 'email: "Enter a valid email address."', 'SPA EN message differs from spec');
+  assertHas(src, 'email: "أدخل بريدًا إلكترونيًا صحيحًا."', 'SPA AR message differs from spec');
+  const shared = fs.readFileSync(path.join(ROOT, 'careers.js'), 'utf8');
+  assertHas(shared, "email: 'Enter a valid email address.'", 'careers.js EN message differs from spec');
+  assertHas(shared, "email: 'أدخل بريدًا إلكترونيًا صحيحًا.'", 'careers.js AR message differs from spec');
+  for (const f of fs.readdirSync(ROOT).filter(n => /^apply-\w+\.html$/.test(n))) {
+    const page = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assertHas(page, '{{ careErr.email_2 }}', f + ' email error slot missing');
+  }
 });
 
 /* ================================= report ================================= */
