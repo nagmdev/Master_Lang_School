@@ -163,6 +163,36 @@
   .s-rejected{background:#FDECEA;color:#8E2C20}
   .s-waiting_list{background:#FBEEDC;color:#8A5A12}
   .s-withdrawn{background:#EDEEF2;color:#5B6472}
+  .s-shortlisted{background:#E3F1FB;color:#1F6FB2}
+  .s-hired{background:#DFF6E4;color:#177A37}
+
+  /* ------------------------- section tabs ------------------------- */
+  .dot-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .dot-nav .btn{flex:none}
+  .tab-split{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+  .tab-split .seg{display:flex;gap:4px;background:#F2F4F7;border:1px solid var(--line-soft);border-radius:12px;padding:4px}
+  .seg-btn{appearance:none;border:0;background:transparent;font-family:inherit;font-size:13.5px;font-weight:700;
+           color:var(--muted);padding:9px 16px;border-radius:9px;cursor:pointer;transition:background .15s ease,color .15s ease}
+  .seg-btn:hover{color:var(--navy)}
+  .seg-btn.on{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(11,35,70,.12)}
+
+  /* ------------------------- jobs management ----------------------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(11,35,70,.46);display:grid;place-items:center;
+                 z-index:80;padding:18px}
+  .modal-overlay.hidden{display:none}
+  .modal{background:#fff;border-radius:18px;box-shadow:var(--shadow-md);width:100%;max-width:780px;
+         max-height:90vh;overflow:auto;padding:22px 24px}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .modal-title{margin:0;font-size:18px;font-weight:800;color:var(--navy)}
+  .modal .fld-grid{grid-template-columns:1fr 1fr}
+  .modal .fld-hint{grid-column:1/-1;font-size:12.5px;color:var(--faint);margin-top:-6px}
+  .job-chips{display:inline-flex;gap:6px;flex-wrap:wrap}
+  .act-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;
+            font-size:11.5px;font-weight:800}
+  .act-on{background:#E4F6EA;color:#1B6B39}
+  .act-off{background:#EDEEF2;color:#5B6472}
+  .tablewrap .pos-title{font-weight:700;color:var(--navy)}
+  .tablewrap .pos-title + .pos-en{color:var(--muted);font-size:12.5px}
 
   /* --------------------------- application view ------------------------ */
   .appview{margin-top:24px;scroll-margin-top:12px}
@@ -323,6 +353,10 @@
     </div>
   </div>
   <div id="hdr-actions" class="topbar-actions hidden">
+    <div class="seg" role="group" aria-label="Dashboard section">
+      <button class="seg-btn on" id="goto-admissions" type="button">Admissions</button>
+      <button class="seg-btn" id="goto-jobs" type="button">Jobs</button>
+    </div>
     <button class="ghost" id="refresh"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>Refresh</button>
     <button class="ghost" id="logout"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>Sign out</button>
   </div>
@@ -374,6 +408,137 @@
   <!-- application viewer (same page, below the table) -->
   <section id="appview" class="appview hidden" aria-label="Application details" aria-live="polite"></section>
 </main>
+
+<!-- job / careers admin -->
+<main id="jobs-view" class="hidden" aria-label="Jobs and career applications">
+  <div class="tab-split">
+    <div class="seg" role="tablist" aria-label="Jobs admin sections">
+      <button class="seg-btn on" id="tab-applications" role="tab" aria-selected="true">Job applications</button>
+      <button class="seg-btn" id="tab-positions" role="tab" aria-selected="false">Manage positions</button>
+    </div>
+  </div>
+
+  <!-- ── job applications ─────────────────────────────────────────────── -->
+  <section id="jobs-applications" aria-label="Job applications">
+    <div class="toolbar">
+      <div class="searchbox">
+        <span class="search-ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></span>
+        <input class="field" id="cq" type="search" placeholder="Search by name, reference, position, mobile…" aria-label="Search job applications">
+        <button type="button" class="search-clear hidden" id="cq-clear" aria-label="Clear search"><svg class="icon sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+      </div>
+      <button class="btn btn-primary" id="csearch-btn"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>Search</button>
+    </div>
+    <div class="chips" id="cchips" role="group" aria-label="Filter by status"></div>
+    <div id="clist-error" class="error hidden" role="alert"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th scope="col">Application</th><th scope="col">Candidate</th><th scope="col">Position</th><th scope="col">Mobile</th><th scope="col">Received</th><th scope="col">Status</th>
+        </tr></thead>
+        <tbody id="crows"></tbody>
+      </table>
+      <div id="cempty" class="empty hidden"></div>
+    </div>
+    <div class="open-hint" id="c-open-hint">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+      <span>Select a job application to open its full record below.</span>
+    </div>
+    <section id="cappview" class="appview hidden" aria-label="Job application details" aria-live="polite"></section>
+  </section>
+
+  <!-- ── manage positions ─────────────────────────────────────────────── -->
+  <section id="jobs-positions" class="hidden" aria-label="Manage job positions">
+    <div class="toolbar">
+      <div class="searchbox">
+        <span class="search-ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg></span>
+        <input class="field" id="jq" type="search" placeholder="Search positions…" aria-label="Search positions">
+        <button type="button" class="search-clear hidden" id="jq-clear" aria-label="Clear search"><svg class="icon sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+      </div>
+      <button class="btn btn-primary" id="add-job"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Add position</button>
+    </div>
+    <div id="jlist-error" class="error hidden" role="alert"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th scope="col">Position</th><th scope="col">Department</th><th scope="col">Type</th><th scope="col">Applications</th><th scope="col">Status</th><th scope="col">Actions</th>
+        </tr></thead>
+        <tbody id="jrows"></tbody>
+      </table>
+      <div id="jempty" class="empty hidden"></div>
+    </div>
+  </section>
+</main>
+
+<!-- add / edit position modal -->
+<div class="modal-overlay hidden" id="job-modal" role="dialog" aria-modal="true" aria-labelledby="job-modal-title">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 class="modal-title" id="job-modal-title">Add position</h2>
+      <button class="btn btn-ghost iconbtn" id="job-modal-close" type="button" aria-label="Close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    </div>
+    <form id="job-form">
+      <input type="hidden" name="id">
+      <div id="job-form-error" class="error hidden" role="alert"></div>
+      <div class="fld-grid">
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Title (English) *</label>
+          <input class="field" name="titleEn" required maxlength="120">
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Title (Arabic) *</label>
+          <input class="field" name="titleAr" dir="rtl" required maxlength="120">
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Department (English)</label>
+          <input class="field" name="deptEn" maxlength="80">
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Department (Arabic)</label>
+          <input class="field" name="deptAr" dir="rtl" maxlength="80">
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (English)</label>
+          <input class="field" name="typeEn" maxlength="60">
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Employment type (Arabic)</label>
+          <input class="field" name="typeAr" dir="rtl" maxlength="60">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Short description (English)</label>
+          <textarea class="field" name="descEn" rows="3" maxlength="1000"></textarea>
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Short description (Arabic)</label>
+          <textarea class="field" name="descAr" dir="rtl" rows="3" maxlength="1000"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Responsibilities (English)</label>
+          <textarea class="field" name="respEn" rows="4" placeholder="One per line"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">المسؤوليات (Arabic)</label>
+          <textarea class="field" name="respAr" dir="rtl" rows="4" placeholder="سطر لكل بند"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Qualifications (English)</label>
+          <textarea class="field" name="qualEn" rows="4" placeholder="One per line"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">المؤهلات (Arabic)</label>
+          <textarea class="field" name="qualAr" dir="rtl" rows="4" placeholder="سطر في بند"></textarea>
+        </div>
+        <label class="fld-hint" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#5B6472">
+          <input type="checkbox" name="active" checked style="width:16px;height:16px"> Active — visible on the public Careers page
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap">
+        <button type="button" class="btn btn-ghost" id="job-form-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="job-form-save">Save position</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
 'use strict';
@@ -460,6 +625,7 @@ const ICON_PATHS = {
   folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>',
   check: '<path d="M20 6 9 17l-5-5"></path>',
   image: '<rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path>',
+  briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>',
 };
 function icon(name, cls) {
   return '<svg class="icon' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
@@ -524,14 +690,28 @@ async function api(path, opts) {
 function showLogin() {
   $('#login-view').classList.remove('hidden');
   $('#app-view').classList.add('hidden');
+  $('#jobs-view').classList.add('hidden');
   $('#hdr-actions').classList.add('hidden');
   closeViewer(true);
+  closeCareerDrawer();
 }
 function showApp() {
   $('#login-view').classList.add('hidden');
   $('#app-view').classList.remove('hidden');
+  $('#jobs-view').classList.add('hidden');
+  $('#goto-admissions').classList.add('on');
+  $('#goto-jobs').classList.remove('on');
   $('#hdr-actions').classList.remove('hidden');
 }
+function switchAdminView(view) {
+  const apps = view === 'admissions';
+  $('#app-view').classList.toggle('hidden', !apps);
+  $('#jobs-view').classList.toggle('hidden', apps);
+  $('#goto-admissions').classList.toggle('on', apps);
+  $('#goto-jobs').classList.toggle('on', !apps);
+}
+$('#goto-admissions').addEventListener('click', () => switchAdminView('admissions'));
+$('#goto-jobs').addEventListener('click', () => switchAdminView('jobs'));
 
 $('#login-form').addEventListener('submit', async e => {
   e.preventDefault();
@@ -545,7 +725,7 @@ $('#login-form').addEventListener('submit', async e => {
       body: JSON.stringify({ password: $('#pw').value }),
     });
     $('#pw').value = '';
-    showApp(); await load();
+    showApp(); await Promise.all([load(), loadCareers(), loadJobs()]);
   } catch (e2) {
     err.textContent = e2.message; err.classList.remove('hidden');
   } finally {
@@ -2178,6 +2358,411 @@ async function deflateRawBytes(bytes) {
   return out;
 }
 
+/* ============================ Jobs administration ============================ */
+
+const CAREER_STATUS_INFO = {
+  new:        { label: 'New',              cls: 's-new' },
+  reviewing:  { label: 'Reviewing',        cls: 's-reviewing' },
+  shortlisted:{ label: 'Shortlisted',      cls: 's-shortlisted' },
+  rejected:   { label: 'Rejected',         cls: 's-rejected' },
+  hired:      { label: 'Hired',            cls: 's-hired' },
+};
+function careerStatusInfo(status) {
+  return CAREER_STATUS_INFO[status] || { label: pretty(status), cls: 's-withdrawn' };
+}
+
+let CAREER_STATUSES = [];
+let careerActiveStatus = '';
+let currentCareer = null;
+
+function switchJobTab(tab) {
+  const apps = $('#jobs-applications'), pos = $('#jobs-positions');
+  const tabApps = $('#tab-applications'), tabPos = $('#tab-positions');
+  const showApps = tab === 'applications';
+  apps.classList.toggle('hidden', !showApps);
+  pos.classList.toggle('hidden', showApps);
+  tabApps.classList.toggle('on', showApps);
+  tabPos.classList.toggle('on', !showApps);
+  tabApps.setAttribute('aria-selected', String(showApps));
+  tabPos.setAttribute('aria-selected', String(!showApps));
+}
+
+function showJobError(msg) {
+  const el = $('#clist-error');
+  el.textContent = msg; el.classList.remove('hidden');
+}
+function hideJobError() { $('#clist-error').classList.add('hidden'); }
+
+async function loadCareers(btn) {
+  const label = btn ? btn.textContent : null;
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+  hideJobError();
+  try {
+    const params = new URLSearchParams();
+    if ($('#cq').value.trim()) params.set('q', $('#cq').value.trim());
+    if (careerActiveStatus) params.set('status', careerActiveStatus);
+    const data = await api('/api/careers?' + params.toString());
+    CAREER_STATUSES = data.statuses || [];
+    renderChipsC(data.counts || {});
+    const rows = data.rows || [];
+    $('#crows').innerHTML = rows.map(r => {
+      const f = r.fields || {};
+      const name = f.name || '—';
+      const pos = f.position || '—';
+      return '<tr data-id="' + esc(r.id) + '" tabindex="0" aria-label="Open application ' + esc(r.id) + '"' + (currentCareer && currentCareer.id === r.id ? ' class="selected"' : '') + '>' +
+        '<td class="id"><span class="app-id-wrap"><span class="id-dot" aria-hidden="true"></span>' + esc(r.id) + '</span></td>' +
+        '<td><span class="stud"><span class="avatar" data-i="' + esc((name.charAt(0) || 'A').toUpperCase()) + '" aria-hidden="true"></span><span class="stud-name">' + esc(name) + '</span></span></td>' +
+        '<td>' + esc(pos) + '</td>' +
+        '<td class="cell-phone">' + esc(f.phone || '—') + '</td>' +
+        '<td class="cell-date">' + esc(fmtDate(r.submittedAt)) + '</td>' +
+        '<td>' + statusBadgeC(r.status) + '</td>' +
+      '</tr>';
+    }).join('');
+    const empty = $('#cempty');
+    if (!rows.length) {
+      const searching = $('#cq').value.trim() || careerActiveStatus;
+      empty.classList.remove('hidden');
+      empty.innerHTML = '<div class="empty-ico">' + icon('inbox') + '</div><strong>' +
+        (searching ? 'No job applications match this search.' : 'No job applications yet.') + '</strong>' +
+        (searching ? 'Try a different search or filter.' : 'Applications submitted from the Careers page appear here.');
+    } else {
+      empty.classList.add('hidden');
+    }
+  } catch (e) {
+    showJobError('Could not load job applications: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+  }
+}
+
+function statusBadgeC(status) {
+  const s = careerStatusInfo(status);
+  return '<span class="status ' + s.cls + '" role="status"><span class="dot" aria-hidden="true"></span>' + esc(s.label) + '</span>';
+}
+
+function renderChipsC(counts) {
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  const items = [['', 'All', total]].concat(CAREER_STATUSES.map(s => [s, careerStatusInfo(s).label, counts[s] || 0]));
+  $('#cchips').innerHTML = items.map(([v, label, n]) =>
+    '<button class="chip ' + (v === careerActiveStatus ? 'on' : '') + '" data-status="' + esc(v) + '" aria-pressed="' + (v === careerActiveStatus) + '">' + esc(label) + '<span class="n">' + n + '</span></button>'
+  ).join('');
+  $('#cchips').querySelectorAll('.chip').forEach(c =>
+    c.addEventListener('click', () => { careerActiveStatus = c.dataset.status; loadCareers(); }));
+}
+
+function cFileUrl(id, f, mode) {
+  return '/api/careerfile?id=' + encodeURIComponent(id) + '&name=' + encodeURIComponent(f.storedAs) + (mode === 'inline' ? '&mode=inline' : '');
+}
+function careerFileName(f) {
+  const map = { cv: 'CV', cert: 'Certificate', portfolio: 'Portfolio' };
+  const base = map[f.field] || 'Document';
+  const ext = (/\.([A-Za-z0-9]+)$/.exec(f.filename || '') || [, ''])[1];
+  return ext ? base + '.' + ext.toLowerCase() : base;
+}
+
+function renderCareer(r) {
+  const f = r.fields || {};
+  const stat = careerStatusInfo(r.status);
+  const files = r.files || [];
+  const candidateRows = [
+    ['Full name', f.name], ['Phone', f.phone], ['Email', f.email_2],
+    ['Position', f.position || '—'], ['Job ID', f.jobId || '—'],
+    ['Years of experience', f.years || '—'], ['Highest qualification', f.edu || '—'],
+  ];
+  let html = '';
+  html += '<div class="stickybar no-print">' +
+    '<span class="stickybar-id">' + icon('inbox') + esc(r.id) + '</span>' +
+    '<div class="stickybar-actions">' +
+      '<button class="btn btn-sm btn-ghost" id="c-close" type="button">' + icon('x') + 'Close</button>' +
+    '</div></div>';
+  html += '<header class="app-head">' +
+    '<div class="app-head-top">' +
+      '<div class="app-head-main">' +
+        '<div class="app-eyebrow">' + icon('inbox') + 'Job application · <span class="app-num">' + esc(r.id) + '</span></div>' +
+        '<h2 class="app-title">' + esc(f.name || 'Untitled application') + '</h2>' +
+        '<div class="app-meta">' +
+          '<span class="meta-chip">' + icon('briefcase') + esc(f.position || '—') + '</span>' +
+          '<span class="meta-chip">' + icon('clock') + 'Submitted ' + esc(fmtDate(r.submittedAt)) + '</span>' +
+          statusBadgeC(r.status) +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</header>';
+  html += '<section class="app-card"><header class="app-card-head"><h3>' + icon('user') + 'Candidate</h3></header>' +
+    '<div class="fld-grid">' + candidateRows.map(([label, value]) => fld(label, value)).join('') + '</div></section>';
+  if (files.length) {
+    html += '<section class="app-card no-print"><header class="app-card-head"><h3>' + icon('paperclip') + 'Attachments</h3></header>' +
+      files.map(x => '<div class="file-row" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line-soft)">' +
+        '<div><div style="font-weight:700;color:var(--navy);font-size:14px">' + esc(careerFileName(x)) + '</div>' +
+        '<div style="color:var(--faint);font-size:12.5px">' + esc(x.filename) + ' · ' + friendlyBytes(x.bytes) + '</div></div>' +
+        '<div style="display:flex;gap:8px">' +
+        '  <a class="btn btn-sm btn-outline" href="' + cFileUrl(r.id, x, 'inline') + '" target="_blank" rel="noopener">' + icon('image') + 'View</a>' +
+        '  <a class="btn btn-sm btn-outline" href="' + cFileUrl(r.id, x) + '" download="' + esc(careerFileName(x)).replace(/"/g, '') + '">' + icon('download') + 'Download</a>' +
+        '</div></div>').join('') + '</div>';
+  }
+  html += '<section class="app-card" id="creview"><header class="app-card-head"><h3>' + icon('pen') + 'Review</h3></header>' +
+    '<div class="fld-grid" style="grid-template-columns:1fr">' +
+      '<div><label for="cd-status" style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Status</label>' +
+      '<select class="field" id="cd-status" style="max-width:320px">' + CAREER_STATUSES.map(s =>
+        '<option value="' + esc(s) + '"' + (s === r.status ? ' selected' : '') + '>' + esc(careerStatusInfo(s).label) + '</option>').join('') + '</select></div>' +
+      '<div><label for="cd-notes" style="display:block;font-weight:700;font-size:13px;color:#0B2346;margin-bottom:7px">Notes</label>' +
+      '<textarea class="field" id="cd-notes" rows="4" placeholder="Review notes, interview details…">' + esc(r.notes || '') + '</textarea></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:14px">' +
+      '<span class="saved hidden" id="cd-saved" style="color:#1B6B39;font-size:13px;font-weight:700">&check; Saved</span>' +
+      '<button class="btn btn-sm btn-ghost danger" id="cd-delete" type="button" style="color:#8E2C20">' + icon('trash') + 'Delete application</button>' +
+    '</div>' +
+    '<div id="cd-confirm" class="hidden" style="margin-top:12px;background:#FDECEA;border:1px solid #F0B4AE;border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">' +
+      '<span style="font-size:13.5px;color:#8E2C20;font-weight:600">Delete this application permanently? Its attachments are removed too.</span>' +
+      '<span style="display:flex;gap:8px"><button class="btn btn-sm btn-primary" id="cd-yes" type="button">Yes, delete</button>' +
+      '<button class="btn btn-sm btn-ghost" id="cd-no" type="button">Cancel</button></span>' +
+    '</div>' +
+  '</div>';
+  return html;
+}
+
+function bindCareerWorkflow(r) {
+  async function patchCareer(payload, control) {
+    if (control) control.disabled = true;
+    try {
+      await api('/api/career?id=' + encodeURIComponent(r.id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      Object.assign(r, payload);
+      const saved = $('#cd-saved');
+      if (saved) { saved.classList.remove('hidden'); setTimeout(() => saved.classList.add('hidden'), 1600); }
+      await loadCareers();
+    } catch (e) {
+      alert('Could not save: ' + e.message);
+    } finally {
+      if (control) control.disabled = false;
+    }
+  }
+  const st = $('#cd-status');
+  if (st) st.addEventListener('change', e => patchCareer({ status: e.currentTarget.value }, e.currentTarget));
+  let lastNotes = r.notes || '';
+  const nt = $('#cd-notes');
+  if (nt) nt.addEventListener('blur', e => {
+    const v = e.currentTarget.value;
+    if (v === lastNotes) return;
+    lastNotes = v;
+    patchCareer({ notes: v }, e.currentTarget);
+  });
+  $('#cd-delete').addEventListener('click', () => {
+    $('#cd-confirm').classList.remove('hidden');
+    $('#cd-delete').disabled = true;
+  });
+  $('#cd-no').addEventListener('click', () => {
+    $('#cd-confirm').classList.add('hidden');
+    $('#cd-delete').disabled = false;
+  });
+  $('#cd-yes').addEventListener('click', async () => {
+    const yes = $('#cd-yes');
+    yes.disabled = true; yes.textContent = 'Deleting…';
+    try {
+      await api('/api/career?id=' + encodeURIComponent(r.id), { method: 'DELETE' });
+      closeCareerDrawer();
+      await loadCareers();
+      currentCareer = null;
+    } catch (e) {
+      alert('Could not delete: ' + e.message);
+      yes.disabled = false; yes.textContent = 'Yes, delete';
+    }
+  });
+}
+
+async function openCareerDrawer(id) {
+  const r = await api('/api/career?id=' + encodeURIComponent(id));
+  currentCareer = r;
+  $('#crows').querySelectorAll('tr').forEach(tr =>
+    tr.classList.toggle('selected', tr.dataset.id === id));
+  const v = $('#cappview');
+  v.innerHTML = '<div id="cd-body" role="region" aria-label="Job application ' + esc(r.id) + '">' + renderCareer(r) + '</div>';
+  v.classList.remove('hidden', 'closing');
+  void v.offsetWidth;
+  v.classList.add('open');
+  $('#c-open-hint').classList.add('hidden');
+  bindCareerWorkflow(r);
+  try { v.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+}
+
+function closeCareerDrawer() {
+  const v = $('#cappview');
+  v.classList.add('hidden');
+  v.classList.remove('open', 'closing');
+  $('#c-open-hint').classList.remove('hidden');
+}
+
+/* ------------------------------ manage positions ---------------------------- */
+
+async function loadJobs() {
+  const jlist = $('#jlist-error');
+  jlist.classList.add('hidden');
+  try {
+    const params = new URLSearchParams();
+    const q = $('#jq').value.trim();
+    if (q) params.set('q', q);
+    const query = params.toString();
+    const rows = await api('/api/jobs' + (query ? '?' + query : ''));
+    const arr = rows.jobs || [];
+    $('#jrows').innerHTML = arr.map(j => {
+      const en = j.en || {}, ar = j.ar || {}, count = j.applications || 0;
+      const act = j.active ? '<span class="act-chip act-on">&#9679; Active</span>' : '<span class="act-chip act-off">&#9675; Inactive</span>';
+      return '<tr data-id="' + esc(j.id) + '">' +
+        '<td><div class="pos-title">' + esc(en.r || j.id) + '</div><div class="pos-en">' + esc(ar.r || '') + '</div></td>' +
+        '<td>' + esc(en.d || '—') + '</td>' +
+        '<td>' + esc(en.ty || '—') + '</td>' +
+        '<td><span class="n">' + count + '</span></td>' +
+        '<td>' + act + '</td>' +
+        '<td><div style="display:flex;gap:6px;flex-wrap:wrap">' +
+          '<button class="btn btn-sm btn-outline" data-act="edit" data-id="' + esc(j.id) + '">' + icon('pen') + 'Edit</button>' +
+          (j.active
+            ? '<button class="btn btn-sm btn-ghost" data-act="deactivate" data-id="' + esc(j.id) + '">' + icon('trash') + 'Deactivate</button>'
+            : '<button class="btn btn-sm btn-ghost" data-act="activate" data-id="' + esc(j.id) + '">' + icon('check') + 'Re-activate</button>') +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+    const empty = $('#jempty');
+    if (!arr.length) {
+      empty.classList.remove('hidden');
+      empty.innerHTML = '<div class="empty-ico">' + icon('inbox') + '</div><strong>' + (q ? 'No positions match this search.' : 'No positions yet.') + '</strong>' +
+        (q ? 'Try a different search.' : 'Add your first position to publish it on the Careers page.');
+    } else {
+      empty.classList.add('hidden');
+    }
+  } catch (e) {
+    jlist.textContent = 'Could not load positions: ' + e.message;
+    jlist.classList.remove('hidden');
+  }
+}
+
+function openJobModal(job) {
+  const form = $('#job-form');
+  form.reset();
+  form.elements.id.value = job ? job.id : '';
+  $('#job-modal-title').textContent = job ? 'Edit position — ' + job.id : 'Add position';
+  if (job) {
+    const en = job.en || {}, ar = job.ar || {};
+    form.elements.titleEn.value = en.r || '';
+    form.elements.titleAr.value = ar.r || '';
+    form.elements.deptEn.value = en.d || '';
+    form.elements.deptAr.value = ar.d || '';
+    form.elements.typeEn.value = en.ty || '';
+    form.elements.typeAr.value = ar.ty || '';
+    form.elements.descEn.value = en.desc || '';
+    form.elements.descAr.value = ar.desc || '';
+    form.elements.respEn.value = (en.resp || []).join('\n');
+    form.elements.respAr.value = (ar.resp || []).join('\n');
+    form.elements.qualEn.value = (en.qual || []).join('\n');
+    form.elements.qualAr.value = (ar.qual || []).join('\n');
+    form.elements.active.checked = !!job.active;
+  }
+  $('#job-form-error').classList.add('hidden');
+  $('#job-modal').classList.remove('hidden');
+  form.elements.titleEn.focus();
+}
+function closeJobModal() { $('#job-modal').classList.add('hidden'); }
+
+$('#add-job').addEventListener('click', () => openJobModal(null));
+$('#job-modal-close').addEventListener('click', closeJobModal);
+$('#job-form-cancel').addEventListener('click', closeJobModal);
+$('#job-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeJobModal(); });
+
+$('#job-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = e.target;
+  const errBox = $('#job-form-error');
+  errBox.classList.add('hidden');
+  const lines = (v) => v.split('\n').map(s => s.trim()).filter(Boolean);
+  const payload = {
+    id: form.elements.id.value || undefined,
+    active: form.elements.active.checked,
+    en: {
+      r: form.elements.titleEn.value.trim(), key: form.elements.titleEn.value.trim(),
+      d: form.elements.deptEn.value.trim(), ty: form.elements.typeEn.value.trim(),
+      desc: form.elements.descEn.value.trim(), resp: lines(form.elements.respEn.value), qual: lines(form.elements.qualEn.value),
+    },
+    ar: {
+      r: form.elements.titleAr.value.trim(), key: form.elements.titleAr.value.trim(),
+      d: form.elements.deptAr.value.trim(), ty: form.elements.typeAr.value.trim(),
+      desc: form.elements.descAr.value.trim(), resp: lines(form.elements.respAr.value), qual: lines(form.elements.qualAr.value),
+    },
+  };
+  const btn = $('#job-form-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const created = await api('/api/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    closeJobModal();
+    await loadJobs();
+    if (!payload.id) {
+      alert('Position created (id: ' + created.id + '). It is now visible on the public Careers page.');
+    }
+  } catch (err) {
+    errBox.textContent = err.message;
+    errBox.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save position';
+  }
+});
+
+$('#jrows').addEventListener('click', async e => {
+  const btnEl = e.target.closest('[data-act]');
+  if (!btnEl) return;
+  const id = btnEl.dataset.id;
+  const act = btnEl.dataset.act;
+  if (act === 'edit') {
+    const data = await api('/api/jobs');
+    const job = (data.jobs || []).find(j => j.id === id);
+    if (job) openJobModal(job);
+    return;
+  }
+  if (act === 'deactivate' || act === 'activate') {
+    if (!confirm(act === 'deactivate'
+      ? 'Deactivate "' + id + '"? It will disappear from the public Careers page. Applications already received stay intact.'
+      : 'Re-activate "' + id + '"? It will appear on the public Careers page again.')) return;
+    await api('/api/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, active: act === 'activate' }),
+    });
+    await loadJobs();
+  }
+});
+
+$('#crows').addEventListener('click', e => {
+  const tr = e.target.closest('tr[data-id]');
+  if (tr) openCareerDrawer(tr.dataset.id);
+});
+$('#crows').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const tr = e.target.closest('tr[data-id]');
+  if (tr) openCareerDrawer(tr.dataset.id);
+});
+$('#tab-applications').addEventListener('click', () => switchJobTab('applications'));
+$('#tab-positions').addEventListener('click', () => switchJobTab('positions'));
+$('#csearch-btn').addEventListener('click', e => loadCareers(e.currentTarget));
+$('#cq').addEventListener('keydown', e => { if (e.key === 'Enter') loadCareers($('#csearch-btn')); });
+$('#cq').addEventListener('search', () => loadCareers($('#csearch-btn')));
+$('#cq').addEventListener('input', () => $('#cq-clear').classList.toggle('hidden', !$('#cq').value.trim()));
+$('#cq-clear').addEventListener('click', () => {
+  const q = $('#cq'); q.value = ''; $('#cq-clear').classList.add('hidden');
+  q.dispatchEvent(new Event('search', { bubbles: true })); q.focus();
+});
+
+$('#jq').addEventListener('keydown', e => { if (e.key === 'Enter') loadJobs(); });
+$('#jq').addEventListener('search', () => loadJobs());
+$('#jq').addEventListener('input', () => $('#jq-clear').classList.toggle('hidden', !$('#jq').value.trim()));
+$('#jq-clear').addEventListener('click', () => {
+  const qq = $('#jq'); qq.value = ''; $('#jq-clear').classList.add('hidden');
+  qq.dispatchEvent(new Event('search', { bubbles: true })); qq.focus();
+});
+
 (async function boot() {
   try {
     const s = await fetch('/api/session', { credentials: 'same-origin' }).then(r => r.json());
@@ -2185,7 +2770,12 @@ async function deflateRawBytes(bytes) {
       $('#config-error').textContent = 'Server not configured: ' + s.configError;
       $('#config-error').classList.remove('hidden');
     }
-    if (s.authenticated) { showApp(); await load(); } else { showLogin(); }
+    if (s.authenticated) {
+      showApp();
+      await Promise.all([load(), loadCareers(), loadJobs()]);
+    } else {
+      showLogin();
+    }
   } catch (e) { showLogin(); }
 })();
 </script>
