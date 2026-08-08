@@ -13,6 +13,7 @@
 'use strict';
 const crypto = require('crypto');
 const { Pool } = require('pg');
+const { SEED_JOBS, SLUG_RE, slugify } = require('./jobs.seed');
 
 const STATUSES = ['new', 'reviewing', 'accepted', 'provisionally_accepted', 'rejected', 'waiting_list'];
 
@@ -100,11 +101,36 @@ function migrate() {
         CREATE INDEX IF NOT EXISTS career_applications_submitted_idx ON career_applications (submitted_at DESC);
         CREATE INDEX IF NOT EXISTS career_applications_status_idx    ON career_applications (status);
         CREATE INDEX IF NOT EXISTS career_application_files_app_idx  ON career_application_files (career_application_id);
+
+        CREATE TABLE IF NOT EXISTS jobs (
+          id          TEXT PRIMARY KEY,
+          active      BOOLEAN NOT NULL DEFAULT true,
+          pos         INTEGER NOT NULL DEFAULT 0,
+          en          JSONB NOT NULL DEFAULT '{}'::jsonb,
+          ar          JSONB NOT NULL DEFAULT '{}'::jsonb,
+          created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+          updated_at  TIMESTAMPTZ
+        );
+        CREATE INDEX IF NOT EXISTS jobs_pos_idx ON jobs (pos);
       `;
       await getPool().query(sql);
+      await seedJobsIfEmpty();
     })().catch(err => { readyPromise = null; throw err; });
   }
   return readyPromise;
+}
+
+// First deployment: the store starts empty, but the public Careers pages must
+// keep working immediately, so the jobs table is seeded from jobs.seed.js.
+async function seedJobsIfEmpty() {
+  const r = await getPool().query('SELECT count(*)::int AS n FROM jobs');
+  if (r.rows[0].n > 0) return;
+  for (const j of SEED_JOBS) {
+    await getPool().query(
+      'INSERT INTO jobs (id, pos, en, ar) VALUES ($1, $2, $3::jsonb, $4::jsonb) ON CONFLICT (id) DO NOTHING',
+      [j.id, j.order, JSON.stringify(j.en), JSON.stringify(j.ar)]
+    );
+  }
 }
 
 // Applicant references double as the academic code: "<year>-<seq>", numbered
@@ -453,10 +479,112 @@ async function readCareerFile(id, storedAs) {
   };
 }
 
+/*
+ * ---------------------------------------------------------------------------
+ * Job positions — stable slug id, bilingual copy, soft-deactivate.
+ * ---------------------------------------------------------------------------
+ */
+function rowToJob(r) {
+  return {
+    id: r.id,
+    active: r.active,
+    order: r.pos,
+    en: r.en || {},
+    ar: r.ar || {},
+    createdAt: new Date(r.created_at).toISOString(),
+    updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : undefined,
+  };
+}
+
+async function listJobs(opts) {
+  await migrate();
+  const where = [];
+  const params = [];
+  if (opts && opts.activeOnly) { params.push(true); where.push(`active = $${params.length}`); }
+  if (opts && String(opts.q || '').trim()) {
+    params.push('%' + String(opts.q).trim().toLowerCase() + '%');
+    where.push(`(id LIKE $${params.length} OR en->>'r' ILIKE $${params.length} OR ar->>'r' ILIKE $${params.length})`);
+  }
+  const clause = where.length ? 'WHERE ' + where.join(' AND ') : '';
+  const r = await getPool().query(
+    `SELECT id, active, pos, en, ar, created_at, updated_at FROM jobs ${clause} ORDER BY pos, id`,
+    params
+  );
+  return r.rows.map(rowToJob);
+}
+
+async function getJob(id) {
+  await migrate();
+  if (!id) return null;
+  const r = await getPool().query('SELECT * FROM jobs WHERE id = $1', [id]);
+  return r.rowCount ? rowToJob(r.rows[0]) : null;
+}
+
+async function createJob(input) {
+  await migrate();
+  const en = input.en || {};
+  const ar = input.ar || {};
+  if (!String(en.r || '').trim()) throw new Error('an English job title is required');
+  let id = slugify(en.r);
+  if (!SLUG_RE.test(id)) throw new Error('the job title does not produce a valid id');
+  const pool = getPool();
+  const pos = (await pool.query('SELECT COALESCE(MAX(pos) + 1, 0) AS n FROM jobs')).rows[0].n;
+  let candidate = id;
+  let n = 2;
+  while (await getJob(candidate)) candidate = id + '-' + n++;
+  const r = await pool.query(
+    `INSERT INTO jobs (id, pos, en, ar) VALUES ($1, $2, $3::jsonb, $4::jsonb)
+     RETURNING id`, [candidate, pos, JSON.stringify(en), JSON.stringify(ar)]
+  );
+  return getJob(r.rows[0].id);
+}
+
+async function updateJob(id, patch) {
+  await migrate();
+  if (!id) return null;
+  const sets = ['updated_at = now()'];
+  const params = [];
+  if (patch.active !== undefined) { params.push(!!patch.active); sets.push(`active = $${params.length}`); }
+  if (patch.order !== undefined) { params.push(Number(patch.order) || 0); sets.push(`pos = $${params.length}`); }
+  if (patch.en !== undefined) { params.push(JSON.stringify(patch.en)); sets.push(`en = en || $${params.length}::jsonb`); }
+  if (patch.ar !== undefined) { params.push(JSON.stringify(patch.ar)); sets.push(`ar = ar || $${params.length}::jsonb`); }
+  params.push(id);
+  const r = await getPool().query(
+    `UPDATE jobs SET ${sets.join(', ')} WHERE id = $${params.length} RETURNING id`, params
+  );
+  return r.rowCount ? getJob(id) : null;
+}
+
+async function deleteJob(id) {
+  await migrate();
+  if (!id) return null;
+  const existing = await getJob(id);
+  if (!existing) return null;
+  const refs = await getPool().query(
+    `SELECT count(*)::int AS n FROM career_applications WHERE fields->>'jobId' = $1`, [id]
+  );
+  if (refs.rows[0].n > 0) {
+    const err = new Error('cannot delete: ' + refs.rows[0].n + ' application(s) still reference this job');
+    err.statusCode = 409;
+    throw err;
+  }
+  await getPool().query('DELETE FROM jobs WHERE id = $1', [id]);
+  return existing;
+}
+
+async function countCareerApplications(jobId) {
+  await migrate();
+  const r = await getPool().query(
+    `SELECT count(*)::int AS n FROM career_applications WHERE fields->>'jobId' = $1`, [jobId]
+  );
+  return r.rows[0].n;
+}
+
 module.exports = {
   STATUSES, createApplication, listApplications, getApplication,
   updateApplication, deleteApplication, readFile, migrate, close,
   CAREER_STATUSES, createCareerApplication, listCareerApplications, getCareerApplication,
   updateCareerApplication, deleteCareerApplication, readCareerFile,
+  listJobs, getJob, createJob, updateJob, deleteJob, countCareerApplications,
   driver: 'postgres',
 };
