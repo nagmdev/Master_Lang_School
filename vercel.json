@@ -10,6 +10,7 @@
     { "src": "api/careers.js", "use": "@vercel/node" },
     { "src": "api/career.js", "use": "@vercel/node" },
     { "src": "api/careerfile.js", "use": "@vercel/node" },
+    { "src": "api/jobs.js", "use": "@vercel/node" },
     { "src": "api/contact.js", "use": "@vercel/node" },
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "admin.html", "use": "@vercel/static" },
