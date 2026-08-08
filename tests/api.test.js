@@ -366,34 +366,199 @@ const VALID = {
   group('4b. Careers (job) applications');
 
   const VALID_CAREER = { name: 'Nourhan Adel', phone: '01012345678', email_2: 'nourhan@example.com', position: 'Security Personnel', years: '3', edu: 'Bachelor' };
+  const CAREER_FILES = [
+    { field: 'cv', name: 'cv.pdf', data: Buffer.from('%PDF-1.4 fake cv content') },
+    { field: 'cert', name: 'cert.pdf', data: Buffer.from('%PDF-1.4 fake certificate content') },
+  ];
 
   let createdCareerId = '';
   await test('a complete career application is accepted and gets an MST-HR id', async () => {
-    const r = await req('POST', '/api/careers', { body: form(VALID_CAREER) });
+    const r = await req('POST', '/api/careers', { body: form(VALID_CAREER, CAREER_FILES) });
     eq(r.status, 201, 'status');
     assert(/^MST-HR-\d+$/.test(r.json.careerId), 'bad id: ' + r.json.careerId);
     createdCareerId = r.json.careerId;
   });
 
-  await test('a career application without name/phone/position/email is rejected', async () => {
+  await test('a career application without the required fields is rejected', async () => {
     const r = await req('POST', '/api/careers', { body: form({ years: '1' }) });
     eq(r.status, 400, 'status');
-    for (const k of ['name', 'phone', 'position', 'email']) {
+    for (const k of ['name', 'phone', 'email', 'edu', 'cv', 'cert']) {
       assert(r.json.fields.includes(k), 'missing field not reported: ' + k);
     }
+    assert(!r.json.fields.includes('position'), 'hidden position field should not be required');
   });
 
   await test('an invalid email is rejected on the careers endpoint too', async () => {
-    const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, email_2: 'not-an-email' }) });
+    const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, email_2: 'not-an-email' }, CAREER_FILES) });
     eq(r.status, 400, 'status');
     assert(r.json.fields.includes('email'), 'invalid email not flagged');
+  });
+
+  await test('single-letter TLDs like xxx@ggg.c are rejected (strict domain)', async () => {
+    const bad = ['xxx@ggg.c', 'xxx@ggg', 'xxx@', '@ggg.com', 'xxx@.com', 'xxx@ggg.', 'xxx@gmail',
+      'xxx@@gmail.com', 'random text', 'test test@gmail.com', 'xxx@localhost'];
+    for (const email of bad) {
+      const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, email_2: email }, CAREER_FILES) });
+      eq(r.status, 400, 'must reject: ' + email);
+      assert(r.json.fields.includes('email'), email + ' was not flagged as an invalid email');
+    }
+  });
+
+  await test('custom/company/school domains pass the strict email check', async () => {
+    const good = ['test@gmail.com', 'test@yahoo.com', 'test@outlook.com', 'test@zoho.com',
+      'person@company.com', 'person@company.org', 'person@school.edu', 'person@company.sa',
+      'person@masters-edu.com', 'name@gmail.co.uk', 'applicant@company.sa'];
+    for (const email of good) {
+      const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, email_2: email }, CAREER_FILES) });
+      eq(r.status, 201, 'must accept: ' + email + ' (status ' + r.status + ')');
+    }
+  });
+
+  await test('an invalid Egyptian mobile number is rejected on the careers endpoint', async () => {
+    const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, phone: '02 2734 1020' }, CAREER_FILES) });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('phone'), 'invalid phone not flagged');
+  });
+
+  await test('years outside 0–50 is rejected on the careers endpoint', async () => {
+    const r = await req('POST', '/api/careers', { body: form({ ...VALID_CAREER, years: '75' }, CAREER_FILES) });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('years'), 'out-of-range years not flagged');
+  });
+
+  await test('a career application without cv and cert attachments is rejected', async () => {
+    const r = await req('POST', '/api/careers', { body: form(VALID_CAREER) });
+    eq(r.status, 400, 'status');
+    for (const k of ['cv', 'cert']) {
+      assert(r.json.fields.includes(k), 'missing attachment not reported: ' + k);
+    }
+  });
+
+  // Attachment file signatures (spec 15–20): the endpoint checks real magic
+  // bytes, so a renamed image or executable can never masquerade as a CV or
+  // certificate. Buffer seeds below only need the leading signature bytes.
+  await test('a DOCX CV is accepted (OOXML zip signature)', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'cv.docx', data: Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 201, 'status');
+  });
+
+  await test('an OLE2 .doc CV is accepted (compound file signature)', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'cv.doc', data: Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 201, 'status');
+  });
+
+  await test('a JPG photo renamed resume.pdf is rejected as a CV', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'resume.pdf', data: Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cv'), 'jpg-as-pdf not flagged: ' + JSON.stringify(r.json.fields));
+  });
+
+  await test('a PNG photo is rejected as a CV', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'photo.png', data: Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cv'), 'png-as-cv not flagged');
+  });
+
+  await test('a GIF image is rejected as a CV', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'meme.gif', data: Buffer.from([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cv'), 'gif-as-cv not flagged');
+  });
+
+  await test('an executable renamed to .pdf is rejected as a CV', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        { field: 'cv', name: 'resume.pdf', data: Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00]) },
+        ...CAREER_FILES.filter(f => f.field === 'cert'),
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cv'), 'exe-as-cv not flagged');
+  });
+
+  await test('a scanned JPG certificate is accepted', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        ...CAREER_FILES.filter(f => f.field === 'cv'),
+        { field: 'cert', name: 'scan.jpg', data: Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46]) },
+      ]),
+    });
+    eq(r.status, 201, 'status');
+  });
+
+  await test('a PNG certificate is accepted', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        ...CAREER_FILES.filter(f => f.field === 'cv'),
+        { field: 'cert', name: 'cert.png', data: Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) },
+      ]),
+    });
+    eq(r.status, 201, 'status');
+  });
+
+  await test('a GIF is rejected as a certificate', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        ...CAREER_FILES.filter(f => f.field === 'cv'),
+        { field: 'cert', name: 'cert.gif', data: Buffer.from([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]) },
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cert'), 'gif-as-cert not flagged');
+  });
+
+  await test('an executable renamed to .pdf is rejected as a certificate', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        ...CAREER_FILES.filter(f => f.field === 'cv'),
+        { field: 'cert', name: 'cert.pdf', data: Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00]) },
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cert'), 'exe-as-cert not flagged');
+  });
+
+  await test('a DOCX cannot masquerade as a certificate', async () => {
+    const r = await req('POST', '/api/careers', {
+      body: form(VALID_CAREER, [
+        ...CAREER_FILES.filter(f => f.field === 'cv'),
+        { field: 'cert', name: 'cert.docx', data: Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00]) },
+      ]),
+    });
+    eq(r.status, 400, 'status');
+    assert(r.json.fields.includes('cert'), 'docx-as-cert not flagged');
   });
 
   let cvCareerId = '';
   await test('an attached CV is stored byte-for-byte', async () => {
     const bytes = Buffer.from('%PDF-1.4 fake cv content');
     const r = await req('POST', '/api/careers', {
-      body: form(VALID_CAREER, [{ field: 'cv', name: 'cv.pdf', data: bytes }]),
+      body: form(VALID_CAREER, [{ field: 'cv', name: 'cv.pdf', data: bytes }, ...CAREER_FILES.filter(f => f.field === 'cert')]),
     });
     eq(r.status, 201, 'status');
     cvCareerId = r.json.careerId;
